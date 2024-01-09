@@ -1,0 +1,76 @@
+﻿<script src="@Url.Content("~/Scripts/particles.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+@model StudentStudentClass
+<!--page top start-->
+<div class="page_top page_margin">
+    <div class="container">
+        <div class="col-md-12 col-sm-12 col-xs-12" data-sr="enter left over 1.5s">
+            <ul>
+                <li><a href="@Url.Action("Index")">HOME</a></li>
+                <li><a href="#">題庫系統</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--page top end-->
+<!--main content start-->
+<div id="particles-js" style="position:absolute; z-index:-1"></div>
+<div class="page_content">
+    <div class="container">
+        <div class="page_title" data-sr="enter left over 1.5s">題庫系統</div>
+        <div class="page_con">
+            <!--page content start-->
+            @{
+                foreach (var _class in Model.StudentClassArr)
+                {
+                    <ul class="table_info">
+                        <li><span class="title">班級</span>@_class.ClassName</li>
+                        <li><span class="title">年級</span>@(Common.GetGradeName(_class.GradeID.ToString()))</li>
+                        <li><span class="title">使用日期</span>@_class.RangeDateStr</li>
+                    </ul>
+                    var chpters = Model.ChapterList.Where(v => v.GradeID == _class.GradeID && v.YearID == _class.ClassYearID).OrderBy(v => v.Sort);
+                    if (chpters.Count() > 0)
+                    {
+                        <div class="system_con">
+                            <div class="table table_hover">
+                                <div class="table-row th">
+                                    <div class="table-cell">章節</div>
+                                    <div class="table-cell">練習模式</div>
+                                </div>
+                                @foreach (var ch in chpters)
+                                {
+                                    <div class="table-row td">
+                                        <div class="table-cell">@ch.ChapterName</div>
+                                        <div class="table-cell text-center">
+                                            <a href="#" class="exercise" chapterid="@ch.ChapterID" gradeid="@_class.GradeID" classid="@_class.ClassID"><button class="btn_01">練習</button></a>
+                                            <a href="#" class="report" chapterid="@ch.ChapterID" gradeid="@_class.GradeID" classid="@_class.ClassID"><button class="btn_grade">成績</button></a>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+            }
+
+        </div>
+    </div>
+</div>
+<!--main content end-->
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('.exercise').click(function (event) {
+                var cid = $(this).attr('chapterid');
+                var gid = $(this).attr('gradeid');
+                var classid = $(this).attr('classid');
+                CreatePost('@Url.Action("ExerciseInfo")', { chapterid: cid, gradeid: gid, classid: classid});
+            })
+            $('.report').click(function (event) {
+                var cid = $(this).attr('chapterid');
+                var classid = $(this).attr('classid');
+                CreatePost('@Url.Action("GradeReport")', { chapterid: cid,  classid: classid});
+            })
+        });
+    </script>
+}

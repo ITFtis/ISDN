@@ -1,0 +1,169 @@
+﻿@model FormSettingModel
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Model")">模組管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Form")">表單管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">表單設定</a>
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">@ViewBag.mainname </div>
+
+<div class="portlet light bordered">
+    <div class="table-toolbar">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="display_inline">
+                <p class="class_title">管理項目</p>
+                <select class="form-control_1" id="sel_unit" onChange="window.location.href=this.value">
+                    <option value="@Url.Action("MailModelItem", new { mainid = ViewBag.mainid })">信件管理</option>
+                    <option value="@Url.Action("FormManager", new { mainid = ViewBag.mainid })" >表單管理</option>
+                    <option value="#" selected>表單設定</option>
+                    <!--<option value="@Url.Action("UnitSetting", new { mainid = ViewBag.mainid })">單元設定</option>-->
+                </select>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveSetting")' enctype="multipart/form-data">
+        @Html.HiddenFor(Model => Model.ItemID)
+        @Html.HiddenFor(Model => Model.ID)
+        @Html.AntiForgeryToken()
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body2">
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">表單說明</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <textarea cols="80" id="FormDesc" rows="20">@Model.FormDesc</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">確認頁內容</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <textarea cols="80" id="ConfirmContent" rows="20">@Model.ConfirmContent</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">會員填寫表單<br />管理者通知設定</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <div class="col-md-12">
+                                    <label class="col-md-2">寄件者姓名</label>
+                                    <div class="col-md-10 margin_bottom">
+                                        @Html.EditorFor(model => model.SenderName, new { htmlAttributes = new { @class = "form-control mobile_input display_inline" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">寄件者EMail</label>
+                                    <div class="col-md-10 margin_bottom">
+                                        @Html.EditorFor(model => model.SenderEMail, new { htmlAttributes = new { @class = "form-control mobile_input display_inline" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">寄件主旨</label>
+                                    <div class="col-md-10 margin_bottom">
+                                        @Html.EditorFor(model => model.SenderTitle, new { htmlAttributes = new { @class = "form-control mobile_input display_inline" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">收件信箱設定</label>
+                                    <div class="col-md-10 margin_bottom">
+                                        @Html.EditorFor(model => model.ReceiveMail, new { htmlAttributes = new { @class = "form-control mobile_input display_inline" } })
+                                        <span style="color:red">若要設定多筆EMail帳號,可用「 ; 」區隔</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">後台管理者回覆<br />會員信件設定</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <div class="col-md-12">
+                                    <label class="col-md-2">寄件者姓名</label>
+                                    <div class="col-md-10 margin_bottom">
+                                        @Html.EditorFor(model => model.AdminSenderName, new { htmlAttributes = new { @class = "form-control mobile_input display_inline" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">寄件者EMail</label>
+                                    <div class="col-md-10 margin_bottom">
+                                        @Html.EditorFor(model => model.AdminSenderEMail, new { htmlAttributes = new { @class = "form-control mobile_input display_inline" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">寄件主旨</label>
+                                    <div class="col-md-10 margin_bottom">
+                                        @Html.EditorFor(model => model.AdminSenderTitle, new { htmlAttributes = new { @class = "form-control mobile_input display_inline" } })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+        </div>
+    </form>
+
+</div>
+@section scripts {
+    <script>
+        $(function () {
+        
+            var ckedit = CKEDITOR.replace('FormDesc', {
+                height: 300,
+                filebrowserImageUploadUrl: '@Url.Action("Upload")?command=QuickUpload&type=Images'
+            });
+            var ckedit = CKEDITOR.replace('ConfirmContent', {
+                height: 300,
+                filebrowserImageUploadUrl: '@Url.Action("Upload")?command=QuickUpload&type=Images'
+            });
+
+            $('#editform').submit(function (event) {
+
+                var formData = new FormData();
+                var array = $('#editform').serializeArray();
+                formData.append("FormDesc", encodeURIComponent(CKEDITOR.instances.FormDesc.getData()));
+                formData.append("ConfirmContent", encodeURIComponent(CKEDITOR.instances.ConfirmContent.getData()));
+                $.each(array, function () {
+                    formData.append(this.name, this.value);
+                });
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+
+}
+

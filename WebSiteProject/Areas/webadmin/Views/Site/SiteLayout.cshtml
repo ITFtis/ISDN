@@ -1,0 +1,169 @@
+﻿@model SiteLayoutModel
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>版面設定<i class="fa fa-circle"></i></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">@ViewBag.Title</div>
+
+<div class="portlet light bordered">
+
+    <div class="table-toolbar">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <p class="class_title">管理項目</p>
+            <div class="display_inline">
+                <select class="form-control_1" id="sel_unit" onChange="window.location.href=this.value">
+                    <option value="#">網站版面</option>
+                    <option value="@Url.Action("FowardSetting", new { stype =@Model.SType })">轉寄好友</option>
+                    <option value="@Url.Action("PrintSetting", new { stype =@Model.SType })">友善列印</option>
+                    <option value="@Url.Action("Page404Setting", new { stype =@Model.SType })">無法顯示頁面</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveSiteLayout")' enctype="multipart/form-data">
+        @Html.HiddenFor(Model => Model.ID)
+        @Html.HiddenFor(Model => Model.LogoImgNameOri)
+        @Html.HiddenFor(Model => Model.InnerLogoImgNameOri)
+        @Html.HiddenFor(Model => Model.SType)
+        @Html.AntiForgeryToken()
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body2">
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">LOGO 圖片</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <div class="col-md-12">
+                                    <div id="div_oldlogofile" style="display:none">
+                                        <a href="@Model.LogoImageUrl" target="preview">@Html.Raw(Model.LogoImgShowName)</a>
+                                        <label style="color:blue;margin-left:10px;cursor:pointer" id="delogolimage">刪除</label>
+                                    </div>
+                                    <div style="display:inline">
+                                        <label for="exampleInputFile" class="control-label display_inline">圖片上傳</label>
+                                        <input id="file_logoimage" type="file" class="display_inline" name="LogoImageFile" accept="image/*" />
+                                    </div>
+                                    <div>
+                                        <span style="color:red;padding-left; font-size:12px">建議尺寸 360*60px，限jpg、gif、png格式</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 search_item">網站資訊</div>
+                            <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                <textarea cols="80" id="HtmlContent" rows="20">@Model.HtmlContent</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+        </div>
+    </form>
+
+</div>
+@section scripts {
+    <script>
+        $(function () {
+           if ('@Model.ID'>0 && '@Model.LogoImgNameOri'!='') {$('#div_oldlogofile').show();}
+           $('#delogolimage').click(function () {$('#div_oldlogofile').hide(); $('#LogoImgNameOri').val('');});
+
+            var ckedit = CKEDITOR.replace('HtmlContent', {
+                height: 300,
+                filebrowserImageUploadUrl: '@Url.Action("Upload")?command=QuickUpload&type=Images',
+            });
+            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+            CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_P;
+            CKEDITOR.on('instanceReady', function (ev) {
+                ev.editor.dataProcessor.writer.setRules('p',
+                    {
+                        indent: false,
+                        breakBeforeOpen: false,
+                        breakAfterOpen: false,
+                        breakBeforeClose: false,
+                        breakAfterClose: false
+                    });
+            });
+            CKEDITOR.on('instanceReady', function (ev) {
+                ev.editor.dataProcessor.writer.setRules('div',
+                    {
+                        indent: true,
+                        breakBeforeOpen: true,
+                        breakAfterOpen: true,
+                        breakBeforeClose: false,
+                        breakAfterClose: false
+                    });
+            });
+
+           $('#editform').submit(function (event) {
+               $(".required").hide();
+
+               var file = $("#file_logoimage");
+                var _validFileExtensions= [".jpg", ".png", ".gif", ".jpeg"];
+                var sFileName = file.val();
+                if (sFileName.length > 0) {
+                    var blnValid = false;
+                    for (var j = 0; j < _validFileExtensions.length; j++) {
+                        var sCurExtension = _validFileExtensions[j];
+                        if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                            blnValid = true;
+                            break;
+                        }
+                    }
+                    if (!blnValid) {
+                        alert("LOGO圖片只能上傳Image檔案");
+                        file.outerHTML = file.outerHTML;
+                        return false;
+                    }
+               }
+
+               var formData = new FormData();
+               var array = $('#editform').serializeArray();
+               formData.append("HtmlContent", encodeURIComponent(CKEDITOR.instances.HtmlContent.getData()));
+                $.each(array, function () {
+                    formData.append(this.name, this.value);
+                });
+                var images = $('#file_logoimage').get(0).files;
+                if (images.length > 0) {
+                    formData.append("LogoImageFile", images[0]);
+                } else {
+                    formData.append("LogoImageFile", null);
+                }
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                          CreatePost('@Url.Action("SiteLayout")', { stype: $("#SType").val() });
+
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+
+}
+

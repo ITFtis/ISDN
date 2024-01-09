@@ -1,0 +1,53 @@
+﻿<!--page banner start-->
+@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel);
+}
+<!--page top start-->
+<div class="page_top page_margin">
+    <div class="container">
+        <div class="col-md-12 col-sm-12 col-xs-12" data-sr="enter left over 1.5s">
+            <ul>
+                <li><a href="@Url.Action("Index","Home")">HOME</a></li>
+                <li><a href="@Url.Action("LoginForm","Home")">系統登入</a></li>
+            </ul>
+        </div>
+        <!--<div class="col-md-3 col-sm-4 col-xs-12" data-sr="enter right over 1.5s">
+            <script>$.include("blocks/page_top_right.html");</script>
+        </div>-->
+    </div>
+</div>
+<!--page top end-->
+<!--main content start-->
+<div id="particles-js" style="position:absolute; z-index:-1"></div>
+<div class="page_content">
+    <div class="container">
+        <div class="page_title" data-sr="enter left over 1.5s">基本資料</div>
+        <div class="page_con">
+            <!--page content start-->
+            <div class="form_con info_list">
+                <div class="table form_box">
+                    <div class="table-row">
+                        <div class="form_q">姓名</div>
+                        <div class="form_a">@ViewBag.Name</div>
+                    </div>
+                    <div class="table-row">
+                        <div class="form_q">單位</div>
+                        <div class="form_a">@ViewBag.Department </div>
+                    </div>
+                    <div class="table-row">
+                        <div class="form_q">電話</div>
+                        <div class="form_a">@ViewBag.Tel</div>
+                    </div>
+                    <div class="table-row">
+                        <div class="form_q">Email</div>
+                        <div class="form_a">@ViewBag.EMail</div>
+                    </div>
+                </div>
+            </div>
+            <!--page content end-->
+
+        </div>
+
+    </div>
+</div>
+<!--main content end-->

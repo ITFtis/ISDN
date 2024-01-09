@@ -1,0 +1,113 @@
+﻿
+<script src="@Url.Content("~/Scripts/amcharts/amcharts.js")"></script>
+<script src="@Url.Content("~/Scripts/amcharts/serial.js")"></script>
+<script src="@Url.Content("~/Scripts/amcharts/plugins/export/export.min.js")"></script>
+<script src="@Url.Content("~/Scripts/amcharts/themes/light.js")"></script>
+<link href="@Url.Content("~/Scripts/amcharts/plugins/export/export.css")" rel="stylesheet" />
+<style>
+    #chartdiv {
+        width: 100%;
+        height: 500px;
+        font-size: 11px;
+    }
+</style>
+
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <span href="#">Home</span>
+            <i class="fa fa-circle"></i>
+            <span href="#">資料分析</span>
+            <i class="fa fa-circle"></i>
+            <span href="#">本年度各月會員數</span>
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<div class="member_title"> 本年度各月會員數</div>
+<div class="portlet light bordered">
+    <!--set item start-->
+    <div class="table-toolbar">
+        <div class="col-md-6 col-sm-12 col-xs-12"></div>
+
+        <div class="col-md-6 col-sm-12 col-xs-12 mobile_left">
+            <button class="btn blue-hoki alert_box" id="btn_download">下載 <i class="fa fa-file-photo-o"></i></button>
+            <button class="btn blue-hoki alert_box" id="btn_save">儲存 <i class="fa fa-download"></i></button>
+            <button class="btn blue-hoki alert_box" id="btn_print">列印 <i class="fa fa-print"></i></button>
+        </div>
+    </div>
+    <div id="chartdiv"></div>
+</div>
+
+@section scripts {
+    <script>
+        var selvalue = [];
+        var chart = null;
+        $(document).ready(function () {
+            var chart = AmCharts.makeChart("chartdiv", {
+                "type": "serial",
+                "theme": "light",        
+                "valueAxes": [{
+                    "gridColor": "#FFFFFF",
+                    "gridAlpha":0,
+                    "dashLength": 0,
+                    "gridCount": 10,
+                    "autoGridCount":false
+                }],
+                "gridAboveGraphs": true,
+                "startDuration": 1,
+                "graphs": [{
+                    "balloonText": "[[category]]: <b>[[value]]</b>",
+                    "fillAlphas": 0.8,
+                    "lineAlpha": 0.2,
+                    "type": "column",
+                    "valueField": "Value",
+                    "fixedColumnWidth":15
+                }],
+                "chartCursor": {
+                    "categoryBalloonEnabled": false,
+                    "cursorAlpha": 0,
+                    "zoomable": false
+                },
+                "categoryField": "Item",
+                "categoryAxis": {
+                    "gridPosition": "start",
+                    "gridAlpha": 0,
+                    "tickPosition": "start",
+                    "tickLength": 20
+                },
+                "export": {
+                    "enabled": true,
+                    "menu": []
+                }
+            });
+   
+            chart.startDuration = 0;
+            var jsondata = '@Html.Raw(ViewBag.json)';
+            var data = JSON.parse(jsondata);
+            chart.dataProvider = data;
+
+
+            $("#btn_download").click(function () {
+                chart["export"].capture({}, function () {
+                    this.toPNG({}, function (base64) {
+                        var tempopj = {};
+                        tempopj.save = base64;
+                        this.download(base64, this.defaults.formats.PNG.mimeType, "本年度各月會員數.png");
+                    });
+                });
+            });
+            $("#btn_print").click(function () {
+                chart.export.capture({}, function () {
+                    this.toPRINT();
+                });
+            });
+
+            $("#btn_save").click(function () {
+                chart.export.toXLSX({}, function (data) {
+                    this.download(data, this.defaults.formats.XLSX.mimeType, "本年度各月會員數.xlsx");
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,440 @@
+﻿<!--banner start-->
+@model HomeViewModel
+<div class="index_banner">
+    <!--設定檔在theme.js 1190行；電腦版和手機版分開-->
+    <!--pc start--><!--圖片建議尺寸2600*1000px-->
+    <div class="hidden-xs">
+        <div class="slider-container rev_slider_wrapper">
+            <div id="revolutionSlider" class="slider rev_slider" data-version="5.4.8" data-plugin-revolution-slider data-plugin-options="{'delay': 9000, 'gridwidth': 1170, 'gridheight': 670, 'disableProgressBar': 'on', 'responsiveLevels': [4096,1200,992,500], 'parallax': { 'type': 'scroll', 'origo': 'enterpoint', 'speed': 1000, 'levels': [2,3,4,5,6,7,8,9,12,50], 'disable_onmobile': 'on' }, 'navigation' : {'arrows': { 'enable': true }, 'bullets': {'enable': true, 'style': 'bullets-style-1', 'h_align': 'center', 'v_align': 'bottom', 'space': 7, 'v_offset': 70, 'h_offset': 0}}}">
+                <ul>
+                    @{
+                        var uploadfilepath = System.Configuration.ConfigurationManager.AppSettings["UploadFile"];
+                    }
+                    @foreach (var ad in Model.ADMain)
+                    {
+                        string target = ad.Link_Mode == "1" ? "_self" : "_blank";
+                        if (string.IsNullOrEmpty(ad.Img_Name_Ori) == false)
+                        {
+                            <li data-transition="fade">
+                                <div class="tp-caption tp-resizeme"
+                                     data-frames='[{"delay":1000,"speed":2000,"frame":"0","from":"opacity:0;x:100%;y:-100%;","to":"o:1;x:0;y:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;fb:0;","ease":"Power3.easeInOut"}]'
+                                     data-type="image"
+                                     data-x="center"
+                                     data-y="top"
+                                     data-width="['auto']"
+                                     data-height="['auto']"
+                                     data-basealign="slide">
+                                    <img src="@Url.Content("~/UploadImage/ADMain/"+ad.Img_Name_Ori)" alt="">
+                                </div>
+
+                                <div class="tp-caption item_box" data-x="30" data-y="220" data-start="0" data-transform_in="y:[0%];opacity:0;s:0;">
+                                    <div class="title">@ad.AD_Name</div>
+                                    <div class="con_font">@Html.Raw(ad.ADDesc)</div><br />
+                                    <div class="btn_box"><a href="@ad.Link_Href" title="@ad.AD_Name"><span class="btn_01">@Common.GetLangText("了解更多")<i class="fas fa-arrow-alt-circle-right"></i></span></a></div>
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="slide-overlay" data-transition="fade">
+                                <div class="rs-background-video-layer"
+                                     data-forcerewind="on"
+                                     data-volume="mute"
+                                     data-videowidth="100%"
+                                     data-videoheight="100%"
+                                     data-videomp4="@Url.Content(ad.UploadVideoFilePath)"
+                                     data-videopreload="preload"
+                                     data-videoloop="loop"
+                                     data-forceCover="1"
+                                     data-aspectratio="16:9"
+                                     data-autoplay="true"
+                                     data-autoplayonlyfirsttime="false"
+                                     data-nextslideatend="true">
+                                </div>
+
+                                <div class="tp-caption item_box" data-x="30" data-y="220" data-start="0" data-transform_in="y:[0%];opacity:0;s:0;">
+                                    <div class="title">@ad.AD_Name</div>
+                                    <div class="con_font">@Html.Raw(ad.ADDesc)</div><br />
+                                    <div class="btn_box"><a href="@ad.Link_Href" title="@ad.AD_Name"><span class="btn_01">@Common.GetLangText("了解更多")<i class="fas fa-arrow-alt-circle-right"></i></span></a></div>
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--pc end-->
+    <!--mobile start--><!--圖片建議尺寸1200*2000px-->
+    <div class="visible-xs">
+        <div class="slider-container rev_slider_wrapper">
+            <div id="revolutionSlider" class="slider rev_slider" data-version="5.4.8" data-plugin-revolution-slider data-plugin-options="{'delay': 9000, 'gridwidth': 1170, 'gridheight': 670, 'disableProgressBar': 'on', 'responsiveLevels': [4096,1200,992,500], 'parallax': { 'type': 'scroll', 'origo': 'enterpoint', 'speed': 1000, 'levels': [2,3,4,5,6,7,8,9,12,50], 'disable_onmobile': 'on' }, 'navigation' : {'arrows': { 'enable': true }, 'bullets': {'enable': true, 'style': 'bullets-style-1', 'h_align': 'center', 'v_align': 'bottom', 'space': 7, 'v_offset': 70, 'h_offset': 0}}}">
+                <ul>
+                    @foreach (var ad in Model.ADMobile)
+                    {
+                        string target = ad.Link_Mode == "1" ? "_self" : "_blank";
+                        if (string.IsNullOrEmpty(ad.Img_Name_Ori) == false)
+                        {
+                            <li data-transition="fade">
+                                <div class="tp-caption tp-resizeme"
+                                     data-frames='[{"delay":1000,"speed":2000,"frame":"0","from":"opacity:0;x:100%;y:-100%;","to":"o:1;x:0;y:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;fb:0;","ease":"Power3.easeInOut"}]'
+                                     data-type="image"
+                                     data-x="center"
+                                     data-y="top"
+                                     data-width="['auto']"
+                                     data-height="['auto']"
+                                     data-basealign="slide">
+                                    <img src="@Url.Content("~/UploadImage/ADMain/"+ad.Img_Name_Ori)" alt="">
+                                </div>
+                                <div class="tp-caption item_box" data-x="30" data-y="220" data-start="0" data-transform_in="y:[0%];opacity:0;s:0;">
+                                    <div class="title">@ad.AD_Name</div>
+                                    <div class="con_font">@Html.Raw(ad.ADDesc)</div><br />
+                                    <div class="btn_box"><a href="@ad.Link_Href" title="@ad.AD_Name"><span class="btn_01">@Common.GetLangText("了解更多")<i class="fas fa-arrow-alt-circle-right"></i></span></a></div>
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="slide-overlay" data-transition="fade">
+                                <div class="rs-background-video-layer"
+                                     data-forcerewind="on"
+                                     data-volume="mute"
+                                     data-videowidth="100%"
+                                     data-videoheight="100%"
+                                     data-videomp4="@Url.Content(ad.UploadVideoFilePath)"
+                                     data-videopreload="preload"
+                                     data-videoloop="loop"
+                                     data-forceCover="1"
+                                     data-aspectratio="16:9"
+                                     data-autoplay="true"
+                                     data-autoplayonlyfirsttime="false"
+                                     data-nextslideatend="true">
+                                </div>
+
+                                <div class="tp-caption item_box" data-x="30" data-y="220" data-start="0" data-transform_in="y:[0%];opacity:0;s:0;">
+                                    <div class="title">@ad.AD_Name</div>
+                                    <div class="con_font">@Html.Raw(ad.ADDesc)</div><br />
+                                    <div class="btn_box"><a href="@ad.Link_Href" title="@ad.AD_Name"><span class="btn_01">@Common.GetLangText("了解更多")<i class="fas fa-arrow-alt-circle-right"></i></span></a></div>
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--mobile end-->
+    <noscript>
+        <!--僅顯示圖片，影片不置入-->
+        <div class="noscrip_banner defaultimg" style="width:100%">
+            <img src="@Url.Content("~/img/index_banner_fake.jpg")" alt="" />
+            <div><img src="@Url.Content("~/img/banner_pig_2600.jpg")" alt="" /></div>
+            <div><img src="@Url.Content("~/img/banner_global_2600.jpg")" alt="" /></div>
+            <div><img src="@Url.Content("~/img/TWCCcon_2600.jpg")" alt="" /></div>
+        </div>
+    </noscript>
+
+</div>
+<!--banner end-->
+
+<div class="news_box">
+
+    <!--index_news start--><!--動態資訊/焦點新聞；後台選取2個，留意載入效能，有問題詢問andy-->
+    <div class="index_news">
+        <div class="container">
+
+            <div class="accesskey">
+                <a href="#;return false;" title="@Common.GetLangText("主要內容區")" accesskey="C" id="main-content">:::</a>
+            </div>
+            @for (var idx = 0; idx < Model.PageLayoutModel1.Title.Count(); idx++)
+            {
+                <div class="item" data-sr="enter bottom over 1.5s">
+                    <a href="@Model.PageLayoutModel1.LinkUrl[idx]" title="@Model.PageLayoutModel1.Title[idx]">
+                        <img src="@Model.PageLayoutModel1.LinkImageSrc[idx]" alt="@Model.PageLayoutModel1.Title[idx]" align="left" /><!--建議尺寸800*600px-->
+                        <div class="date">@Model.PageLayoutModel1.PublicshDate[idx]</div>
+                        <div class="title">@Model.PageLayoutModel1.Title[idx]<i class="fas fa-arrow-right"></i></div><!--字數限制30字設定，最後面加鍵頭icon-->
+                    </a>
+                </div>
+            }
+            <div class="btn_box" data-sr="enter right over 1.5s">
+                <a href="@Model.PageLayoutModel1.MoreLink" title="@Common.GetLangText("更多焦點新聞")">
+                    <span>@Common.GetLangText("更多訊息")</span><i class="fas fa-plus-circle fa-2x" "></i>
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <!--index_news end-->
+    <!--index_activity start-->
+    <div class="index_activity">
+        <div class="container">
+            <!--動態資訊/活動專區top5-->
+            <div class="owl-carousel show-nav-title owl-theme banner_01">
+                @for (var idx = 0; idx < Model.PageLayoutModel2.Title.Count(); idx++)
+                {
+                    <div class="item">
+                        <a href="@Model.PageLayoutModel2.LinkUrl[idx]" title="@Model.PageLayoutModel2.Title[idx]">
+                            <div class="date">@Model.PageLayoutModel2.PublicshDate[idx]</div>
+                            <div class="title">@Model.PageLayoutModel2.Title[idx]</div>
+                        </a>
+                    </div>
+                }
+            </div>
+            <noscript>
+                <!--動態資訊/活動專區top1-->
+                <div class="noscript_activity">
+                    @if (Model.PageLayoutModel2.Title.Count() > 0)
+                    {
+                        <div class="item">
+                            <a href="@Model.PageLayoutModel2.LinkUrl[0]" title="@Model.PageLayoutModel2.Title[0]">
+                                <div class="date">@Model.PageLayoutModel2.PublicshDate[0]</div>
+                                <div class="title">@Model.PageLayoutModel2.Title[0]</div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </noscript>
+            <div class="btn_box" data-sr="enter right over 1.5s"><a href="@Model.PageLayoutModel2.MoreLink" title="@Common.GetLangText("更多活動專區")"><span>@Common.GetLangText("更多訊息")</span><i class="fas fa-plus-circle fa-2x"></i></a></div><!--連結至 動態資訊/活動專區 列表頁-->
+        </div>
+    </div>
+
+
+    <!--index_news end-->
+</div>
+<!--open_01 start-->
+@if (Model.PageLayoutOP1.IsShow)
+{
+    <div class="open_01">
+        <div class="title_01">
+            <div class="container">
+                <h2>@Model.PageLayoutOP1.LeftTitle</h2>
+            </div>
+        </div>
+        <div class="container">
+            <div class="left">
+                <div class="con_font" data-sr="enter bottom over 1.5s">@Html.Raw(Common.ReplaceBr(Model.PageLayoutOP1.Introduction))</div>
+                <ul class="list">
+                    @foreach (var item in Model.PageLayoutOP1.LeftItem)
+                    {
+                        if (string.IsNullOrEmpty(item.Desc)) { continue; }
+                        <li data-sr="enter bottom over 1.5s">
+                            <a href="@item.Link" target="_blank" title="@(item.Title)@Common.GetLangText("另開新視窗")">
+                                @if (string.IsNullOrEmpty(item.FileName))
+                                {
+                                    <div class="img"><i class="fas fa-play-circle"></i><div class="item_title">@(item.Title)</div></div>
+                                }
+                                else
+                                {
+                                    <div class="img"><img src="@Url.Content(item.FilePath) " alt=""></div>
+                                }
+                                <div class="con_font">  @Html.Raw(Common.ReplaceBr(item.Desc))</div>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="right">
+                <div class="title_01">
+                    <h2>@Model.PageLayoutOP1.RightTitle</h2>
+                    <a href="@Model.PageLayoutOP1.RightLink" target="_blank" title="@Common.GetLangText("前往申請")@(Common.GetLangText("另開新視窗"))" data-sr="enter right over 1.5s">
+                        <span>@Common.GetLangText("前往申請")</span><i class="fas fa-arrow-alt-circle-right fa-3x"></i>
+                    </a><!--固定連結如sample-->
+                </div>
+
+                <ul class="list">
+                    @foreach (var item in Model.PageLayoutOP1.RightItem)
+                    {
+                        if (string.IsNullOrEmpty(item.Desc)) { continue; }
+                    <li data-sr="enter bottom over 1.5s">
+                        @if (string.IsNullOrEmpty(item.FileName) == false)
+                        {<div class="img"><img src="@Url.Content(item.FilePath)" alt="" /></div>}
+                        <div class="con">
+                            <div class="title">@(item.Title)</div>
+                            <div class="con_font">
+                                @Html.Raw(Common.ReplaceBr(item.Desc))
+                            </div>
+                        </div>
+                    </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+<!--open_01 end-->
+<!--open_02 start-->
+@if (Model.PageLayoutOP2.IsShow)
+{
+    <div class="open_02">
+        <div class="container">
+            <div class="left">
+                <div class="title" data-sr="enter bottom over 1.5s">@Model.PageLayoutOP2.Title</div>
+                <div class="con_font" data-sr="enter bottom over 2.5s">@Html.Raw(Common.ReplaceBr(Model.PageLayoutOP2.Introduction))</div>
+                <div class="btn_box" data-sr="enter bottom over 3.5s">
+                    <a href="@Model.PageLayoutOP2.Link" title="@Model.PageLayoutOP2.Title">
+                        <span class="btn_01">
+                            @Common.GetLangText("了解更多")
+                            <i class="fas fa-arrow-alt-circle-right"></i>
+                        </span>
+                    </a>
+                </div><!--連結title + 了解更多，帶入該區塊標題；按鈕文字"了解更多"為固定，不用後台修改(英文版more)-->
+            </div>
+            <div class="right" style="background:url(@Url.Content("~"+Model.PageLayoutOP2.FilePath));background-position:top center;background-size:cover;" data-sr="enter right over 1.5s"></div><!--建議尺寸400*850px-->
+        </div>
+    </div>
+}
+<!--open_02 end-->
+<!--open_03 start-->
+@if (Model.PageLayoutOP3.IsShow)
+{
+    <div class="open_03">
+        <div class="box_01">
+            <div class="container">
+                <div class="title" data-sr="enter bottom over 1.5s">@Model.PageLayoutOP3.Title</div>
+                <div class="con_font" data-sr="enter bottom over 1.5s">@Html.Raw(Common.ReplaceBr(Model.PageLayoutOP3.Introduction))</div>
+                <!--PC btn-->
+                <div class="btn_box hidden-xs" data-sr="enter right over 1.5s"><a href="@(string.IsNullOrEmpty(Model.PageLayoutOP3.Link)?"#":Url.Content(Model.PageLayoutOP3.Link))" title="@Model.PageLayoutOP3.Title"><span class="btn_01">@Common.GetLangText("了解更多")<i class="fas fa-arrow-alt-circle-right"></i></span></a></div>
+            </div>
+        </div>
+        <div class="box_02">
+            <div class="container">
+                <div class="embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/@Model.PageLayoutOP3.VideoLink" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <!--mobile btn-->
+                <div class="btn_box visible-xs" data-sr="enter right over 1.5s"><a href="@(string.IsNullOrEmpty(Model.PageLayoutOP3.Link)?"#":Url.Content(Model.PageLayoutOP3.Link))" title="@Model.PageLayoutOP3.Title"><span class="btn_01">@Common.GetLangText("了解更多")<i class="fas fa-arrow-alt-circle-right"></i></span></a></div>
+            </div>
+        </div>
+    </div>
+}
+<!--open_03 end-->
+<!--index_album start--><!--此區塊固定7個區塊(圖+標題+連結)，後台上傳圖片需可裁切圖片，各區塊圖片尺寸備註於圖片後方-->
+<div class="index_album">
+    <div class="container">
+        <div class="title_01"><h2>@Common.GetLangText("相關活動")</h2></div>
+        <a href="@Url.Content("~/Active?itemid=4&mid=48")" title="@Common.GetLangText("更多相關活動")" data-sr="enter right over 1.5s"><span>@Common.GetLangText("更多訊息")</span> <i class="fas fa-plus-circle fa-3x"></i></a><!--連結至 動態資訊/活動集錦 列表頁；英文more-->
+        <div class="album_list">
+
+            <div class="list_01">
+                <div class="item" data-sr="enter bottom over 1.5s">
+                    <a href="@Url.Content("~/Message/MessageView/206?mid=46&page=1")" title="28國地理資訊專家齊聚國網 用科技力搭建外交之橋">
+                        <img src="@Url.Content("~/img/index_album_01.jpg")" alt="28國地理資訊專家齊聚國網 用科技力搭建外交之橋" /><!--建議尺寸800*383px-->
+                        <div class="title">
+                            28國地理資訊專家齊聚國網 用科技力搭建外交之橋
+                        </div>
+                    </a>
+                </div>
+                <div class="item" data-sr="enter bottom over 1.5s">
+                    <a href="@Url.Content("~/Message/MessageView/203?mid=46&page=1")" title="無人機空拍與人工智慧結合 為台灣智慧城市立下全新里程碑">
+                        <img src="@Url.Content("~/img/index_album_02.jpg")" alt="無人機空拍與人工智慧結合 為台灣智慧城市立下全新里程碑" /><!--建議尺寸800*383px-->
+                        <div class="title">
+                            無人機空拍與人工智慧結合 為台灣智慧城市立下全新里程碑
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="list_02">
+                <div class="item" data-sr="enter bottom over 1.5s">
+                    <a href="@Url.Content("~/Message/MessageView/207?mid=46&page=1")" title="眾智凌雲 開創台灣雲端智慧大未來 台灣AI計算雲TWCC開始試營運">
+                        <img src="@Url.Content("~/img/index_album_03.jpg") " alt="眾智凌雲 開創台灣雲端智慧大未來 台灣AI計算雲TWCC開始試營運" /><!--建議尺寸400*833px-->
+                        <div class="title">
+                            眾智凌雲 開創台灣雲端智慧大未來 台灣AI計算雲TWCC開始試營運
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="list_03">
+                <div class="item" data-sr="enter bottom over 1.5s">
+                    <a href="@Url.Content("~/Message/MessageView/201?mid=46&page=1")" title="加速醫療影像AI發展 再創台灣優勢 科技部啟動台灣首座跨醫療院所之醫療影像標註資料庫">
+                        <img src="@Url.Content("~/img/index_album_04.jpg")" alt="加速醫療影像AI發展 再創台灣優勢 科技部啟動台灣首座跨醫療院所之醫療影像標註資料庫" /><!--建議尺寸800*800px-->
+                        <div class="title">
+                            加速醫療影像AI發展 再創台灣優勢 科技部啟動台灣首座跨醫療院所之醫療影像標註資料庫
+                        </div>
+                    </a>
+                </div>
+                <div class="item" data-sr="enter bottom over 1.5s">
+                    <a href="@Url.Content("~/Message/MessageView/204?mid=46&page=1")" title="2019智慧城市專業論壇 -「智慧城市的技術發展與應用創新」報導">
+                        <img src="@Url.Content("~/img/index_album_05.jpg")" alt="2019智慧城市專業論壇 -「智慧城市的技術發展與應用創新」報導" /><!--建議尺寸800*800px-->
+                        <div class="title">
+                            2019智慧城市專業論壇 -「智慧城市的技術發展與應用創新」報導
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="list_04">
+                <div class="item" data-sr="enter bottom over 1.5s">
+                    <a href="@Url.Content("~/Message/MessageView/180?mid=46&page=3")" title="資安人才的鑄練場 雲端資安攻防平台正式啟用">
+                        <img src="@Url.Content("~/img/index_album_06.jpg")" alt="資安人才的鑄練場 雲端資安攻防平台正式啟用" /><!--建議尺寸800*800px-->
+                        <div class="title">
+                            資安人才的鑄練場 雲端資安攻防平台正式啟用
+                        </div>
+                    </a>
+                </div>
+                <div class="item" data-sr="enter bottom over 1.5s">
+                    <a href="@Url.Content("~/Message/MessageView/202?mid=46&page=1")" title="發展世界級人工智慧及大數據平台 國研院國網中心主任交接">
+                        <img src="@Url.Content("~/img/index_album_07.jpg")" alt="發展世界級人工智慧及大數據平台 國研院國網中心主任交接" /><!--建議尺寸800*800px-->
+                        <div class="title">
+                            發展世界級人工智慧及大數據平台 國研院國網中心主任交接
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--index_album end-->
+<!--index_training start--><!--api串接-->
+<div class="index_training @(Model.LangId == "1" ? "" : "hidden")">
+
+    <div class="left">
+        <img src="@Url.Content("~/img/training_title.png")" alt="@Common.GetLangText("教育訓練")" title="@Common.GetLangText("教育訓練")" /><!--英文<img src="img/training_title_en.png" alt="Training" title="Training" />-->
+    </div>
+
+    <div class="right">
+        <div class="btn_box" data-sr="enter right over 1.5s"><a href="https://edu.nchc.org.tw/" title="NCHC@(Common.GetLangText("教育訓練網"))(@Common.GetLangText("另開新視窗"))" target="_blank"><span>NCHC教育訓練網</span> <i class="fas fa-plus-circle fa-2x"></i></a></div><!--固定連結如sample-->
+        <ul class="training_list">
+            @Html.Raw(ViewBag.TrainingSiteData)
+        </ul>
+    </div>
+
+</div>
+<!--index_training end-->
+<!--index_link start--><!--後台首頁相關連結，全部顯示，無對應模組，標題+圖片+連結-->
+<div class="index_link">
+    <div class="container">
+        <div class="owl-carousel owl-theme link_01" id="owl-single">
+            @foreach (var link in Model.LinkItems)
+            {
+                <div class="item">
+                    <a href="@(string.IsNullOrEmpty(link.LinkUrl)?"#":Url.Content(link.LinkUrl))" title="@link.Title"  target="@(link.Link_Mode==1?"_self":"_blank")">
+                        @if (link.ImageFileName != "")
+                        {
+                            <img src="@Url.Content("~/UploadImage/LinkItem/"+link.ImageFileName)" alt="" /><!--建議尺寸400*200px-->
+                        }
+                    </a>
+                </div>
+            }
+        </div>
+
+        <noscript>
+            <!--顯示前5筆-->
+            <div class="noscript_link">
+                @foreach (var link in Model.LinkItems.Take(5))
+                {
+                    <div class="item">
+                        <a href="@(string.IsNullOrEmpty(link.LinkUrl)?"#":Url.Content(link.LinkUrl))" title="@link.Title"  target="@(link.Link_Mode==1?"_self":"_blank")">
+                            @if (link.ImageFileName != "")
+                            {
+                                <img src="@Url.Content("~/UploadImage/LinkItem/"+link.ImageFileName)" alt="" /><!--建議尺寸400*200px-->
+                            }
+                        </a>
+                    </div>
+                }
+            </div>
+        </noscript>
+    </div>
+</div>
+<!--index_link end-->

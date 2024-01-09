@@ -1,0 +1,139 @@
+﻿<div class="container">
+    <div class="col-md-4 col-sm-12 col-xs-12">
+        <ul class="footer_menu">
+            <a href="#;return false;" title="Footer area" accesskey="G">:::</a>
+            @Html.Raw(Model.FooterMenu)
+        </ul>
+
+        <div class="search" data-sr="enter botom over 1.5s">
+            <label for="footer_search">
+                <input type="text" id="footer_search" name="footer_search">
+            </label>
+            <button type="button" class="search_icon" title="search" alt="search"  id="btn_mainsearch"><i class="fa fa-search"></i></button>
+            <div class="hotword"  id="hot_keyword">Popular search：@Html.Raw(Model.SearchKey)</div>
+        </div>
+
+        <ul class="link">
+            <li data-sr="enter botom over 1.5s">
+                <a href="https://www.facebook.com/%E5%9C%8B%E7%A0%94%E9%99%A2%E5%9C%8B%E7%B6%B2%E4%B8%AD%E5%BF%83-292580541692362/?notify_field=blurb&modal=profile_completion&notif_id=1558930416338465&notif_t=page_profile_blurb" target="_blank" title="facbook(new window)">
+                    <!--英文 facebook(new window)-->
+                    <span class="fa-stack fa-1g">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
+            </li>
+            <li data-sr="enter botom over 1.5s">
+                <a href="https://www.instagram.com/nchc.tw/?hl=zh-tw" target="_blank" title="instagram(new window)">
+                    <!--英文 instagram(new window)-->
+                    <span class="fa-stack fa-1g">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
+            </li>
+            <li data-sr="enter botom over 1.5s">
+                <a href="https://www.youtube.com/channel/UCWrzkYUM5cwpZExQ4Et5vSw?view_as=subscriber" target="_blank" title="youtube(new window)">
+                    <!--英文 youtube(new window)-->
+                    <span class="fa-stack fa-1g">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fab fa-youtube fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="line visible-sm visible-xs"></div>
+
+    <div class="col-md-4 col-sm-6 col-xs-6">
+        <div class="position table">
+            <div class="table-row" data-sr="enter botom over 1.5s">
+                <div class="table-cell img">
+                    <img src="@Url.Content("~/img/footer_pic_01.jpg")" alt="Hsinchu Headquarters"><!--建議尺寸103*77px-->
+                </div>
+                <div class="table-cell con">
+                    <div class="title">Hsinchu Headquarters</div>
+                    <div class="con_font">
+                        Address:  No. 7, R&D 6th Rd., Hsinchu Science Park, Hsinchu City, Taiwan, R.O.C. 30076<br>
+                        TEL：886-3-5776085<br>
+                        FAX：886-3-5776082
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-row" data-sr="enter botom over 1.5s">
+                <div class="table-cell img">
+                    <img src="@Url.Content("~/img/footer_pic_02.jpg")" alt="Taichung Branch">
+                </div>
+                <div class="table-cell con">
+                    <div class="title">Taichung Branch</div>
+                    <div class="con_font">
+                        Address:  No. 22, Keyuan Rd., Central Taiwan Science Park, Taichung City, Taiwan, R.O.C. 40763<br>
+                        TEL：886-4-2462-0202、886-4-2465-0818<br>
+                        FAX：886-4-2462-7373
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-row" data-sr="enter botom over 1.5s">
+                <div class="table-cell img">
+                    <img src="@Url.Content("~/img/footer_pic_03.jpg")" alt="Tainan Branch">
+                </div>
+                <div class="table-cell con">
+                    <div class="title">Tainan Branch</div>
+                    <div class="con_font">
+                        Address: No. 28, Nan-Ke 3rd Rd., Hsin-Shi Dist., Tainan City, Taiwan, R.O.C. 74147<br>
+                        TEL：886-6-5050940<br>
+                        FAX：886-6-5050945
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-xs-6">
+        <div class="contact table">
+
+            <div class="table-row">
+                <div class="table-cell" data-sr="enter botom over 1.5s">
+                    <i class="fas fa-phone-volume"></i>
+                </div>
+                <div class="table-cell con" data-sr="enter botom over 1.5s">
+                    Office Time: Mon.-Fri. 9:00~17:00
+                    <div class="tel">+886-3-5776085</div>
+                    Service call
+                    <div class="tel">0809-091-365</div>
+                    The Off Time Number
+                    <div class="tel">0800-351-510</div>
+                </div>
+            </div>
+
+            <div class="table-row web_mail">
+                <div class="table-cell" data-sr="enter botom over 1.5s">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="table-cell con" data-sr="enter botom over 1.5s">
+                    <div class="title">
+                        Website Support：<br>
+                        <a href="mailto:webmaster@narlabs.org.tw" title="webmaster@narlabs.org.tw">webmaster@narlabs.org.tw</a>
+                    </div>
+                    <div class="title">
+                        Technical support：<br>
+                        <a href="mailto:isupport@narlabs.org.tw" title="isupport@narlabs.org.tw">isupport@narlabs.org.tw</a>
+                    </div>
+                    <div class="title">
+                        Account support：<br>
+                        <a href="mailto:iservice@narlabs.org.tw" title="iservice@narlabs.org.tw">iservice@narlabs.org.tw　</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="copyright">
+    <div class="container">
+        &copy; National Center for High-performance Computing (NCHC) <span class="hidden-xs">｜</span><span class="visible-xs"></span> The best browsing resolution is 1366*768 or higher
+        <a href="#" target="_blank" title="Passes the AA-level accessibility page detection(new window)">@*<img src="@Url.Content("~/img/accessibility_AA.png")" alt="Passes the AA-level accessibility page detection(new window)"></a>*@
+    </div>
+</div>

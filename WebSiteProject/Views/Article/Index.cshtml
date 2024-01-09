@@ -1,0 +1,168 @@
+﻿<!--page banner start-->
+@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel, Model.LangId);
+}
+@model ArticleFrontIndexModel
+<div id="content" class="page_content">
+    <div class="container">
+
+        <div class="content_con">
+
+            <div class="right">
+                @Html.Raw(Model.LeftMenu)
+            </div>
+            <div class="left">
+                <div class="page_top" data-sr="enter top over 1.5s">
+                    <a href="#;return false;" title="主要內容區" accesskey="C" id="main-content">:::</a> <!--英文<a href="#;return false;" title="Main content area" accesskey="C">:::</a>-->
+                    @Html.Raw(Model.LinkStr)
+                </div>
+                <h2 >@Model.Title</h2>
+
+                <!--page_search start-->
+                <div class="page_search">
+                    <ul>
+                        @if (Model.Hasgroup)
+                        {
+                            <li >
+                                <label for='GroupId'>
+                                    <div class='item_title'>@Common.GetLangText("類別")</div>
+                                    @Html.DropDownList("GroupId", (IEnumerable<SelectListItem>)Model.GroupList, new { @class = "form-control w-auto" ,@title="群組清單" })
+                                </label>
+                                <button class="btn" title="送出" id="btn_search">送出</button><!--英文GO-->
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <!--page_search end-->
+                <!--list start-->
+                <div class="table-scrollable list_table">
+                    <table class="table table-hover" summary="@Model.tablesummary" id="table_list">
+                        <thead>
+                            <tr>
+                                @{
+                                    var list = Model.ColumnSetting;
+                                    foreach (var c in list)
+                                    {
+                                        if (c.Sellected == 0) { continue; }
+                                        if (c.Name == "序號")
+                                        {
+                                            <th scope="col" width="60">序號</th> }
+                                        else if (c.Name == "發佈日期")
+                                        {
+                                            <th scope="col" width="100">發佈日期</th> }
+                                        else if (c.Name == "標題")
+                                        {
+                                            <th scope="col">標題</th> }
+                                        else if (c.Name == "類別")
+                                        {
+                                            <th scope="col" width="10%">@Model.ColumnNameMapping["類別"]</th> }
+                                        else if (c.Name == "相關連結")
+                                        {
+                                            <th scope="col" width="80">@Model.ColumnNameMapping["相關連結"]</th> }
+                                        else if (c.Name == "檔案下載")
+                                        {
+                                            <th scope="col" width="80">@Model.ColumnNameMapping["檔案下載"]</th> }
+                                    }
+                                }
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <!--list end-->
+                <!--頁碼 start-->
+                <div id="page_number" class="table-toolbar">
+                    <div class="col-md-4 col-sm-12 col-xs-12 page_total" >
+                        @Common.GetLangText("總筆數")：<span id="totalcnt"></span>
+                    </div>
+                    <div class="col-md-8 col-sm-12 col-xs-12 page_icon" data-sr="enter right over 1.5s">
+                        <div class="btn-group"   id="pageinfo">
+                            <button type="button" class="btn_page accesskey btn_index" title="@Common.GetLangText("第一頁")" pageindex="1"><i class="fa fa-angle-double-left"></i></button>
+                            <button type="button" class="btn_page accesskey btn_index" title="@Common.GetLangText("上一頁")" pageindex="-1"><i class="fa fa-angle-left"></i></button>
+                            <select class="form-control page_list accesskey" id="page_list" title="頁面清單"></select>
+                            <button type="button" class="btn_page accesskey" title="@Common.GetLangText("跳頁")" id="btn_goto">
+                                @Common.GetLangText("跳頁")
+                            </button>
+                            <button type="button" class="btn_page accesskey btn_index" title="@Common.GetLangText("下一頁")}" pageindex="+1"><i class="fa fa-angle-right"></i></button>
+                            <button type="button" class="btn_page accesskey btn_index" title="@Common.GetLangText("最末頁")}" pageindex="" id="btn_pagemax"><i class="fa fa-angle-double-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <!--頁碼 end-->
+            </div>
+        </div>
+
+    </div>
+</div>
+@section scripts {
+    <script>
+            var searchbase = {};
+            searchbase.Search = "Y";
+            searchbase.Offset = "1";
+            searchbase.ModelID = "@Model.MainID";
+            searchbase.MenuId = "@Model.MenuID";
+            searchbase.Limit = "@Model.MaxTableCount";
+            var usesearch = false;
+            var maxpage = 1;
+            $(document).ready(function () {
+                $('#GroupId').val('@ViewBag.groupid');
+                GetData(@ViewBag.nowpage , true);
+            });
+
+            $("#btn_search").click(function () {usesearch = true;GetData(1, true);});
+            $("#btn_goto").click(function () { GetData($("#page_list").val(), true);});
+            $(".btn_index").click(function () {
+                if (searchbase.Limit != "-1") {
+                    var index = $(this).attr('pageindex');
+                    if (index == "-1") {
+                        var nowpage = parseInt($("#page_list").val());
+                        if (nowpage != 1) { nowpage -= 1; $("#page_list").val(nowpage); GetData(nowpage); }
+                    } else if (index == "+1") {
+                        var nowpage = parseInt($("#page_list").val());
+                        var max = parseInt($("#btn_pagemax").attr('pageindex'));
+                        if (nowpage != max) { nowpage += 1; $("#page_list").val(nowpage); GetData(nowpage); }
+                    } else { GetData(index); $("#page_list").val(index) }
+                }
+            });
+
+        function GetData(page, setpage) {
+
+                searchbase.GroupId = $('#GroupId').val();
+                var pagesize = searchbase.Limit;
+                searchbase.Offset = ((page - 1) * pagesize);
+            searchbase.NowPage = page;
+            var token = $("input[name='__RequestVerificationToken']").val();
+            searchbase.__RequestVerificationToken = token;
+                if (usesearch) {
+                    searchbase.GroupId = $('#GroupId').val();
+                    searchbase.Title = $('#keyword').val();
+                    searchbase.DisplayFrom = $('#DisplayFrom').val();
+                    searchbase.DisplayTo = $('#DisplayTo').val();
+                    searchbase.Search = "Y";
+                }
+                $.post('@Url.Action("PagingItem")', searchbase, function (data) {
+                    $("#table_list tbody").empty().append(data[0]);
+                    var endcnt = (searchbase.Offset + parseInt(pagesize)) > parseInt(data[1]) ? parseInt(data[1]) : (searchbase.Offset + parseInt(pagesize));
+                    $("#totalcnt").html(data[1] + "，@Common.GetLangText("顯示") : " + (searchbase.Offset + 1) + "~" + endcnt);
+                    $(window).scrollTop(0);
+                    $("#page_list").blur();
+                    if (setpage) {
+                        if (data[1] == "0" || searchbase.Limit == "-1" ) { $("#page_number").hide(); } else {
+                            $("#page_number").show();
+                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                            maxpage = data[2];
+                            var pagecnt = parseInt(data[2]);
+                            $("#page_list").empty();
+                            var strarr = [];$("#btn_pagemax").attr('pageindex', data[2]);
+                            for (var idx = 1; idx <= pagecnt; idx++) {
+                                strarr.push("<option>" + idx + "</option>");
+                            }
+                            $(strarr.join('')).appendTo($("#page_list")); $("#page_list").val(page);
+                            if (data[2] <= 1) { $("#pageinfo").hide(); } else { $("#pageinfo").show(); }
+                        }
+                    }
+                });
+            }
+    </script>
+}
+<!--main content end-->

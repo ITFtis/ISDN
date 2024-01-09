@@ -1,0 +1,294 @@
+﻿@model  MenuEditModel
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            網站選單
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>@ViewBag.Title</li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">@ViewBag.Title</div>
+<div class="portlet light bordered">
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveMenu")'>
+        @Html.HiddenFor(Model => Model.ID)
+        @Html.HiddenFor(Model => Model.MenuType)
+        @Html.HiddenFor(Model => Model.ImgNameOri)
+        @Html.HiddenFor(Model => Model.MenuLevel)
+        @Html.HiddenFor(Model => Model.ParentID)
+        @Html.HiddenFor(Model => Model.DeleteUploadFile)
+        @Html.HiddenFor(Model => Model.LinkUploadFileName)
+        @Html.AntiForgeryToken()
+        <div class="portlet light form-fit bordered" id="div_seo">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body">
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item"><span class="red">*</span>選單名稱</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <input id="MenuName" name="MenuName" type="text" class="form-control checkitem" value="@Model.MenuName" />
+                                <span class="required" id="MenuName-error" style="display:none;">選單內容 必須填寫！</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item">ICON</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <input id="ICon" type="text" class="form-control" value="@Model.ICon" />
+                            </div>
+                        </div>
+                        <div class="form-group" style="display:none;">
+                            <div class="col-md-2 col-sm-12 search_item">內頁風格上傳</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <div class="col-md-12">
+                                    <div id="div_oldfile" style="display:none"><a href="@Model.ImageUrl" target="preview">@Html.Raw(Model.ImgShowName)</a><label style="color:blue;margin-left:10px;cursor:pointer" id="delimage">刪除</label></div>
+                                    <div style="display:inline">
+                                        <input id="file_image" type="file" class="display_inline" name="ImageFile" accept="image/*" />
+                                    </div>
+                                    <div>
+                                        <span style="color:red;padding-left; font-size:12px">建議尺寸 1920X470 px，限jpg、gif、png格式</span>
+                                    </div>
+                                </div>
+                                @*<div class="col-md-12">
+                                    <label class="control-label display_inline" style="float:left">內頁風格高度</label>
+                                    @Html.EditorFor(model => model.ImageHeight, new { htmlAttributes = new { @class = "form-control input-small", style = "float:left" } })
+                                </div>*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">連結方式</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <div class="col-md-12">
+
+                                    <label for="ImageFile" class="col-md-2">連結方式</label>
+                                    <div class="col-md-10">
+                                        @Html.RadioButtonFor(model => model.LinkMode, 1, new { style = "margin-left :15px", @checked = "checked", @class = "LinkMode" }) 無
+                                        @Html.RadioButtonFor(model => model.LinkMode, 2, new { style = "margin-left :40px", @class = "LinkMode" }) 程式模組
+                                        @Html.RadioButtonFor(model => model.LinkMode, 3, new { style = "margin-left :40px", @class = "LinkMode" }) 路徑
+                                        @Html.RadioButtonFor(model => model.LinkMode, 4, new { style = "margin-left :40px", @class = "LinkMode" }) 檔案
+                                    </div>
+                                </div>
+                                <div class="col-md-12" id="div_model">
+                                    <label for="ImageFile" class="col-md-2">程式模組</label>
+                                    <div class="col-md-10">
+                                        <select style="" id="sel_model" name='@Html.IdFor(m=>m.ModelID)' class="form-control_1">
+                                            <option value="" selected="selected">請選擇程式模組</option>
+                                            <option value="1">圖文編輯</option>
+                                            <option value="2">訊息管理</option>
+                                            <option value="3">活動管理</option>
+                                            <option value="4">文件下載</option>
+                                            <option value="7">文章管理</option>
+                                            <option value="11">表單管理</option>
+                                            <option value="5">網站導覽</option>
+                                        </select>
+                                        <select style="margin-left :10px" id="sel_modelitem" name='@Html.IdFor(m=>m.ModelItemID)' class="form-control_1"></select>
+                                    </div>
+
+
+                                </div>
+                                <div class="col-md-12" id="div_link" style="display:none">
+                                    <label for="ImageFile" class="col-md-2">連結路徑</label>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.LinkUrl, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-12" id="div_file" style="display:none">
+                                    <div id="div_hasfile" style="display:none">
+
+                                        <a href="#" class="btn blue-hoki alert_box_checkbox" role="button" id='btn_DelFile'>刪除</a>
+                                        <label class="col-md-2">檔案名稱</label>
+                                        <div class="col-md-10">
+                                            <a href='@Url.Action("FileDownLoad",new {id=Model.ID})'>@Model.LinkUploadFileName</a>
+                                        </div>
+                                    </div>
+                                    <div id="div_nofile" style="display:inline">
+                                        <label class="col-md-2">檔案上傳</label>
+                                        <div class="col-md-10">
+                                            <input type="file" id="uploadfile" class="display_inline" name="uploadfile">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item">顯示模式</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white form-horizontal table_font">
+                                @Html.RadioButtonFor(model => model.ShowMode, 1, new { style = "margin-left :0px", @checked = "checked" }) 顯示框架
+                                @Html.RadioButtonFor(model => model.ShowMode, 2, new { style = "margin-left :40px" }) 不顯示框架
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item">開啟方式</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white form-horizontal">
+                                @Html.RadioButtonFor(model => model.OpenMode, 1, new { style = "margin-left :0px", @checked = "checked" }) 原視窗<br />
+                                @Html.RadioButtonFor(model => model.OpenMode, 2, new { style = "" }) 新視窗<br />
+                                @Html.RadioButtonFor(model => model.OpenMode, 3, new { style = "float:left" }) <div style="float:left">跳出視窗</div>
+                                <div>
+                                    <div style="float:left; margin-left:40px">視窗寬度</div>@Html.EditorFor(model => model.WindowWidth, new { htmlAttributes = new { @class = "form-control input-small", style = "float:left; margin-left:2px" } })
+                                    <div style="float:left;margin-left:20px">視窗高度</div>@Html.EditorFor(model => model.WindowHeight, new { htmlAttributes = new { @class = "form-control input-small", style = "float:left;margin-left:2px" } })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+            <button type="button" class="btn grey-mint" id="btn_return" onclick="document.location.href='@Url.Action("MainMenu")?menutype=@Model.MenuType'">返回</button>
+        </div>
+    </form>
+    @section scripts {
+        <script>
+        $(function () {
+            var fileupload = '@Model.ImageFile';
+          if ('@Model.ID'>0 && '@Model.ImgNameOri'!='') {
+                $('#div_oldfile').show();
+            }
+
+            @if (string.IsNullOrEmpty(Model.LinkUploadFileName) == false && Model.DeleteUploadFile == "N")
+              {<text>$("#div_hasfile").show(); $("#div_nofile").hide(); </text>}
+
+            $('#delimage').click(function () {
+                $('#div_oldfile').hide();
+                $('#ImgNameOri').val('');
+            });
+            $("#btn_DelFile").click(function () {
+                $("#DeleteUploadFile").val('Y');
+                $("#LinkUploadFileName").val('');
+                $("#div_hasfile").hide(); $("#div_nofile").show();
+            });
+
+            if ('@Model.LinkMode' == 2) {
+                if ('@Model.ModelID' != '0') {
+                    $('#sel_model').val('@Model.ModelID');
+                    $.post('@Url.Action("GetModelItem")', { "modelid": $('#sel_model').val() }, function (data) {
+                        $(data).appendTo('#sel_modelitem');
+                        $('#sel_modelitem').val('@Model.ModelItemID');
+                    });
+                }
+            } else  if('@Model.LinkMode' == 3){
+                $('#div_model').hide();
+                $('#div_link').show();
+            } else if ('@Model.LinkMode' == 4) {
+                    $('#div_model').hide();
+                    $('#div_link').hide();
+                    $('#div_file').show();
+            }else {
+                $('#div_model').hide();
+            }
+
+           $('#sel_model').change(function () {
+               $('#sel_modelitem').empty();
+               $.post('@Url.Action("GetModelItem")', { "modelid": $('#sel_model').val() }, function (data) {
+                     $(data).appendTo('#sel_modelitem');
+                });
+            });
+           $('.LinkMode').change(function () {
+               $('#sel_model').val('');
+               $('#sel_modelitem').empty('');
+               var value = $('input[name=LinkMode]:checked').val();
+               if (value != "2") {
+                   $('#div_model').hide();
+                   $('#div_link').hide();
+                   $('#div_file').hide();
+                   if (value == "3") {
+                       $('#div_link').show();
+                   }
+                   if (value == "4") {
+                       $('#div_file').show();
+                   }
+               } else {
+                   $('#div_model').show();
+                   $('#div_link').hide();
+                   $('#div_file').hide();
+               }
+            });
+
+            $('#editform').submit(function (event) {
+               $(".required").hide();
+               var inputval = $("#editform :input").filter(function () { return $(this).val() == "" && $(this).hasClass('checkitem'); });
+                for (var idx = 0; idx < inputval.length; idx++) {
+                    $("#" + inputval[idx].name + "-error").show();
+                }
+                if (inputval.length > 0) { return false; }
+                if ($('#sel_model').val() != "" && $('#sel_modelitem').val() == "") {
+                    alert("請選擇程式模組");
+                    return false;
+                }
+
+                var file = $("#file_image");
+                var _validFileExtensions = [".jpg", ".png", ".gif", ".jpeg"];
+                var sFileName = file.val();
+                if (sFileName.length > 0) {
+                    var blnValid = false;
+                    for (var j = 0; j < _validFileExtensions.length; j++) {
+                        var sCurExtension = _validFileExtensions[j];
+                        if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                            blnValid = true;
+                            break;
+                        }
+                    }
+                    if (!blnValid) {
+                        alert("只能上傳Image檔案");
+                        file.outerHTML = file.outerHTML;
+                        return false;
+                    }
+                }
+                var formData = new FormData();
+                var array = $('#editform').serializeArray();
+                $.each(array, function () {
+                    formData.append(this.name, this.value);
+                });
+                var images = $('#file_image').get(0).files;
+                if (images.length > 0) {
+                    formData.append("ImageFile", images[0]);
+                } else {
+                    formData.append("ImageFile", null);
+                }
+                var uploadfile = $('#uploadfile').get(0).files;
+                if (uploadfile.length > 0) {
+                    formData.append("LinkUploadFile", uploadfile[0]);
+                } else {
+                    formData.append("LinkUploadFile", null);
+                    var value = $('input[name=LinkMode]:checked').val();
+                    if (value == "4" && $("#LinkUploadFileName").val()=="") {
+                        alert("請確實上傳檔案");
+                        return false;
+                    }
+                }
+                formData.append("MenuName", encodeURIComponent($('#MenuName').val()));
+                formData.append("ICon", encodeURIComponent($('#ICon').val()));
+                formData.append("DeleteUploadFile", $("#DeleteUploadFile").val());
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                        if (data.indexOf("成功")>=0) { CreatePost('@Url.Action("MainMenu")', { menutype: '@Model.MenuType'});}
+
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+            });
+        });
+        </script>
+
+    }
+
+</div>

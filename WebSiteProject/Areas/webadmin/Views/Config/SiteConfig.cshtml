@@ -1,0 +1,187 @@
+﻿@model SiteConfigModel
+<script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>系統管理<i class="fa fa-circle"></i></li>
+        <li>管理介面設定</li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">管理介面設定</div>
+
+<div class="portlet light bordered">
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveSiteConfig")' enctype="multipart/form-data">
+        @Html.HiddenFor(Model => Model.ID)
+        @Html.HiddenFor(Model => Model.LogoUploadFileName)
+        @Html.HiddenFor(Model => Model.LogoUploadFilePath)
+        @Html.AntiForgeryToken()
+        <h3>登入頁</h3>
+
+        <!--list start-->
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">視窗標題文字</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Login_Title, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">公司Logo</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <div id="div_oldimgfile" style="display:none">
+                                    <a href="@Model.LogoFileUrl" target="preview">@Model.LogoUploadFileName</a>
+                                    <label style="color:blue;margin-left:10px;cursor:pointer" id="delimage">刪除</label>
+                                </div>
+                                <div id="div_nofile" style="display:inline">
+                                    <div class="col-md-10">
+                                        <input type="file" id="uploadfile" class="display_inline" name="UploadFile">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">管理系統使用說明</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <textarea cols="80" id="LoginDescContent" rows="20">@Model.LoginDescContent</textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--list  end-->
+        <br />
+        <h3>後台管理內頁</h3>
+
+        <!--list start-->
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">
+                                視窗標題文字
+                            </div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Page_Title, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--list  end-->
+
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+        </div>
+    </form>
+
+</div>
+@section scripts {
+    <script>
+        $(function () {
+            var message = '@TempData["Message"]';
+            if (message != "") { alert(message); }
+            var fileupload = '@Model.LogoUploadFileName';
+            if (fileupload !== "") { $("#div_oldimgfile").show(); }
+            $('#delimage').click(function () {
+                $('#div_oldimgfile').hide();
+                $('#LogoUploadFileName').val('');
+            });
+            var ckedit = CKEDITOR.replace('LoginDescContent', {
+                height: 300,
+               filebrowserImageUploadUrl: '@Url.Action("Upload")?command=QuickUpload&type=Images',
+               filebrowserUploadUrl: '@Url.Action("UploadFile")?command=QuickUpload&type=Files',
+            });
+            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+            CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_P;
+            CKEDITOR.on('instanceReady', function (ev) {
+                ev.editor.dataProcessor.writer.setRules('p',
+                    {
+                        indent: false,
+                        breakBeforeOpen: false,
+                        breakAfterOpen: false,
+                        breakBeforeClose: false,
+                        breakAfterClose: false
+                    });
+            });
+            CKEDITOR.on('instanceReady', function (ev) {
+                ev.editor.dataProcessor.writer.setRules('div',
+                    {
+                        indent: true,
+                        breakBeforeOpen: true,
+                        breakAfterOpen: true,
+                        breakBeforeClose: false,
+                        breakAfterClose: false
+                    });
+            });
+            $('#editform').submit(function (event) {
+                var formData = new FormData();
+                var array = $('#editform').serializeArray();
+                $.each(array, function () {
+                    formData.append(this.name, this.value);
+                });
+                var file = $("#uploadfile");
+                var _validFileExtensions = [".jpg", ".png", ".gif", ".jpeg"];
+                var sFileName = file.val();
+                if (sFileName.length > 0) {
+                    var blnValid = false;
+                    for (var j = 0; j < _validFileExtensions.length; j++) {
+                        var sCurExtension = _validFileExtensions[j];
+                        if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                            blnValid = true;
+                            break;
+                        }
+                    }
+                    if (!blnValid) {
+                        alert("只能上傳Image檔案");
+                        file.outerHTML = file.outerHTML;
+                        return false;
+                    }
+                }
+                var images = $('#uploadfile').get(0).files;
+                if (images.length > 0) {
+                    formData.append("LogoUploadFile", images[0]);
+                } else {
+                    formData.append("LogoUploadFile", null);
+                }
+
+                formData.append("LoginDescContent", encodeURIComponent(CKEDITOR.instances.LoginDescContent.getData()));
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                        document.location.href = '@Url.Action("SiteConfig")';
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+            });
+
+        });
+    </script>
+
+}
+

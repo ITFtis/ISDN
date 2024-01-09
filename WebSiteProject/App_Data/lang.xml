@@ -1,0 +1,472 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<defaulg_lang>
+  <lang id="slide" no="03">標題</lang>
+  <lang id="slide" no="04">類別</lang>
+  <lang id="slide" no="05">相關連結</lang>
+  <lang id="slide" no="06">幻燈秀類別</lang>
+  <lang id="slide" no="07">幻燈秀入口首頁標題</lang>
+
+  <lang id="inq" no="01">Email 格式有誤</lang>
+  <lang id="inq" no="02">請先加入要詢價的產品!</lang>
+  <lang id="inq" no="03">刪除</lang>
+  <lang id="inq" no="04">產品型號</lang>
+  <lang id="inq" no="05">產品名稱</lang>
+  <lang id="inq" no="06">數量</lang>
+
+  <lang id="prod" no="01">序號</lang>
+  <lang id="prod" no="02">發布日期</lang>
+  <lang id="prod" no="03">標題</lang>
+  <lang id="prod" no="04">類別</lang>
+  <lang id="prod" no="05">相關連結</lang>
+  <lang id="prod" no="06">檔案下載</lang>
+
+  <lang id="prod" no="07">產品型號</lang>
+  <lang id="prod" no="08">加入詢價</lang>
+  <lang id="prod" no="09">詢價清單</lang>
+  <lang id="prod" no="10">產品已成功加入詢價清單!</lang>
+  <lang id="prod" no="11">您選擇的產品已在詢價清單囉!</lang>
+  <lang id="prod" no="12">產品類別</lang>
+
+  <lang id="job" no="01" group="1">發布日期</lang>
+  <lang id="job" no="02" group="1">職缺名稱</lang>
+  <lang id="job" no="03" group="1">職務說明</lang>
+  <lang id="job" no="04" group="1">工作經驗</lang>
+  <lang id="job" no="05" group="1">工作待遇</lang>
+  <lang id="job" no="06" group="1">公司</lang>
+  <lang id="job" no="07" group="1">上班地址</lang>
+  <lang id="job" no="08" group="1">需求人數</lang>
+  <lang id="job" no="09" group="1">人</lang>
+  <lang id="job" no="10" group="1">職缺有效期限</lang>
+  <lang id="job" no="31" group="1">無公司</lang>
+  <lang id="job" no="32" group="1">履歷表下載</lang>
+
+  <lang id="job" no="11" group="2">求才內容說明</lang>
+  <lang id="job" no="12" group="2">職務說明</lang>
+  <lang id="job" no="13" group="2">工作性質</lang>
+  <lang id="job" no="14" group="2">上班地址</lang>
+  <lang id="job" no="15" group="2">工作待遇</lang>
+  <lang id="job" no="16" group="2">可開始上班日期</lang>
+  <lang id="job" no="17" group="2">上班時段</lang>
+  <lang id="job" no="18" group="2">休假制度</lang>
+
+  <lang id="job" no="19" group="3">工作條件限制</lang>
+  <lang id="job" no="20" group="3">年齡限制</lang>
+  <lang id="job" no="21" group="3">學歷要求</lang>
+  <lang id="job" no="22" group="3">科系限制</lang>
+  <lang id="job" no="23" group="3">工作經驗</lang>
+  <lang id="job" no="24" group="3">語文條件</lang>
+  <lang id="job" no="25" group="3">電腦專長</lang>
+
+  <lang id="job" no="26" group="4">應徵方式</lang>
+  <lang id="job" no="27" group="4">職務聯絡人</lang>
+  <lang id="job" no="28" group="4">聯絡電話</lang>
+  <lang id="job" no="29" group="4">聯絡 Email</lang>
+  <lang id="job" no="30" group="4">應徵方式說明</lang>
+
+
+  <lang id="site" no="01">序號</lang>
+  <lang id="site" no="03">學校名稱</lang>
+  <lang id="site" no="04">類別</lang>
+
+  <lang id="dept" no="01">序號</lang>
+  <lang id="dept" no="03">科室名稱</lang>
+  <lang id="dept" no="04">類別</lang>
+
+  <lang id="ad" no="01">輪播廣告</lang>
+  <lang id="ad" no="02">更多</lang>
+
+  <lang id="im" no="01">線上客服</lang>
+
+
+  <lang id="sitemap" no="01">上方導覽連結區</lang>
+  <lang id="sitemap" no="02">左選單區</lang>
+  <lang id="sitemap" no="03">內容區</lang>
+
+  <lang id="sitemap" no="08">無障礙說明</lang>
+  <lang id="sitemap" no="09">區塊名稱</lang>
+  <lang id="sitemap" no="10">快速鍵</lang>
+  <lang id="sitemap" no="11">介紹</lang>
+  <lang id="sitemap" no="12">網站地圖</lang>
+  <lang id="sitemap" no="13">上方選單</lang>
+  <lang id="sitemap" no="14">主要選單</lang>
+  <lang id="sitemap" no="15">下方選單</lang>
+  <lang id="sitemap" no="16">分眾導覽</lang>
+
+
+  <lang id="rss" no="05">連結路徑</lang>
+  <lang id="rss" no="06">檔案下載</lang>
+
+  <lang id="rss" no="08">訂閱頻道</lang>
+
+  <lang id="cal" no="02">訊息日期</lang>
+  <lang id="cal" no="03">標題</lang>
+  <lang id="cal" no="04">類別</lang>
+  <lang id="cal" no="05">連結路徑</lang>
+  <lang id="cal" no="06">檔案下載</lang>
+
+  <lang id="cal" no="08">年</lang>
+  <lang id="cal" no="09">月</lang>
+  <lang id="cal" no="10">週</lang>
+  <lang id="cal" no="11">日</lang>
+  <lang id="cal" no="12">上一月</lang>
+  <lang id="cal" no="13">下一月</lang>
+  <lang id="cal" no="14">上一週</lang>
+  <lang id="cal" no="15">下一週</lang>
+  <lang id="cal" no="16">上一天</lang>
+  <lang id="cal" no="17">下一天</lang>
+  <lang id="cal" no="18">匯出</lang>
+  <lang id="cal" no="19">列印</lang>
+  <lang id="cal" no="20">日</lang>
+  <lang id="cal" no="21">一</lang>
+  <lang id="cal" no="22">二</lang>
+  <lang id="cal" no="23">三</lang>
+  <lang id="cal" no="24">四</lang>
+  <lang id="cal" no="25">五</lang>
+  <lang id="cal" no="26">六</lang>
+
+
+  <lang id="tidbit" no="01">序號</lang>
+  <lang id="tidbit" no="02">發布日期</lang>
+  <lang id="tidbit" no="03">標題</lang>
+  <lang id="tidbit" no="04">類別</lang>
+  <lang id="tidbit" no="05">相關連結</lang>
+  <lang id="tidbit" no="06">檔案下載</lang>
+
+
+  <lang id="tidbit" no="08">電子相簿</lang>
+  <lang id="tidbit" no="09">播放中</lang>
+  <lang id="tidbit" no="10">已暫停</lang>
+  <lang id="tidbit" no="11">延遲</lang>
+  <lang id="tidbit" no="12">秒</lang>
+  <lang id="tidbit" no="13">其他相簿</lang>
+  <lang id="tidbit" no="14">上一張</lang>
+  <lang id="tidbit" no="15">下一張</lang>
+  <lang id="tidbit" no="16">播放</lang>
+  <lang id="tidbit" no="17">暫停</lang>
+  <lang id="tidbit" no="18">延遲時間</lang>
+
+
+
+  <lang id="video" no="01">影片播放</lang>
+  <lang id="video" no="04">類別</lang>
+  <lang id="video" no="05">相關連結</lang>
+  <lang id="video" no="06">檔案下載</lang>
+
+
+  <lang id="news" no="01">序號</lang>
+  <lang id="news" no="02">發布日期</lang>
+  <lang id="news" no="03">標題</lang>
+  <lang id="news" no="04">類別</lang>
+  <lang id="news" no="05">相關連結</lang>
+  <lang id="news" no="06">檔案下載</lang>
+
+  <lang id="map" no="05">相關連結</lang>
+  <lang id="map" no="06">檔案下載</lang>
+
+
+  <lang id="ebook" no="01">序號</lang>
+  <lang id="ebook" no="02">發布日期</lang>
+  <lang id="ebook" no="03">電子書名稱</lang>
+  <lang id="ebook" no="04">類別</lang>
+  <lang id="ebook" no="05">相關連結</lang>
+  <lang id="ebook" no="06">檔案下載</lang>
+
+  <lang id="website" no="01">序號</lang>
+  <lang id="website" no="02">發布日期</lang>
+  <lang id="website" no="03">標題</lang>
+  <lang id="website" no="04">類別</lang>
+  <lang id="website" no="05">連結路徑</lang>
+
+  <lang id="vocab" no="01">序號</lang>
+  <lang id="vocab" no="02">詞彙</lang>
+  <lang id="vocab" no="03">翻譯</lang>
+
+  <lang id="vocab" no="11">詞彙查詢</lang>
+  <lang id="vocab" no="12">請輸入查詢詞彙</lang>
+  <lang id="vocab" no="13">搜尋</lang>
+
+  <lang id="page" no="01">頁面</lang>
+  <lang id="page" no="05">相關連結</lang>
+  <lang id="page" no="06">檔案下載</lang>
+
+
+  <lang id="down" no="01">序號</lang>
+  <lang id="down" no="02">發布日期</lang>
+  <lang id="down" no="03">標題</lang>
+  <lang id="down" no="04">類別</lang>
+  <lang id="down" no="06">檔案下載</lang>
+
+
+  <lang id="downimg" no="04">類別</lang>
+
+
+  <lang id="forum" no="01" group="1">序號</lang>
+  <lang id="forum" no="02" group="1">主題</lang>
+  <lang id="forum" no="03" group="1">發表(回應)者</lang>
+  <lang id="forum" no="04" group="1">發表(回應)時間</lang>
+  <lang id="forum" no="05" group="1">回應數</lang>
+  <lang id="forum" no="06" group="1">點閱數</lang>
+
+  <lang id="forum" no="07" group="2">論壇</lang>
+  <lang id="forum" no="08" group="2">主題數</lang>
+  <lang id="forum" no="09" group="2">發表數</lang>
+  <lang id="forum" no="10" group="2">發表新主題</lang>
+  <lang id="forum" no="11" group="2">我要回應</lang>
+
+  <lang id="forum" no="12" group="3">發表者</lang>
+  <lang id="forum" no="13" group="3">討論區</lang>
+  <lang id="forum" no="14" group="3">發表主題</lang>
+  <lang id="forum" no="15" group="3">發表內容</lang>
+
+  <lang id="forum" no="20" group="3">確定發表</lang>
+
+  <lang id="forum" no="21" group="4">回應者</lang>
+  <lang id="forum" no="22" group="4">我要引述</lang>
+  <lang id="forum" no="23" group="4">回應內容</lang>
+  <lang id="forum" no="24" group="4">確定回應</lang>
+  <lang id="forum" no="25" group="4">引述</lang>
+  <lang id="forum" no="26" group="4">於</lang>
+  <lang id="forum" no="27" group="4">發表</lang>
+
+
+  <lang id="link" no="01">序號</lang>
+  <lang id="link" no="02">發布日期</lang>
+  <lang id="link" no="03">標題</lang>
+  <lang id="link" no="04">類別</lang>
+  <lang id="link" no="05">相關連結</lang>
+
+  <lang id="form" no="01">Email 格式有誤</lang>
+  <lang id="form" no="02">欄位內容超出字數限制</lang>
+  <lang id="form" no="03">驗證碼圖示</lang>
+  <lang id="form" no="04">驗證碼</lang>
+
+  <lang id="faq" no="01">序號</lang>
+  <lang id="faq" no="02">發布日期</lang>
+  <lang id="faq" no="03">標題</lang>
+  <lang id="faq" no="04">類別</lang>
+  <lang id="faq" no="05">連結路徑</lang>
+  <lang id="faq" no="06">檔案下載</lang>
+
+
+  <lang id="site_search" no="01" group="1">全文檢索</lang>
+  <lang id="site_search" no="02" group="1">請輸入關鍵字</lang>
+  <lang id="site_search" no="03" group="1">搜尋</lang>
+  <lang id="site_search" no="04" group="1">進階搜尋</lang>
+  <lang id="site_search" no="05" group="1">說明</lang>
+  <lang id="site_search" no="06" group="1">搜尋結果</lang>
+  <lang id="site_search" no="07" group="1">標題</lang>
+  <lang id="site_search" no="16" group="1">檢索說明</lang>
+
+  <lang id="site_search" no="08" group="1">查詢詞彙</lang>
+  <lang id="site_search" no="09" group="1">請輸入查詢詞</lang>
+  <lang id="site_search" no="10" group="1">每頁顯示</lang>
+  <lang id="site_search" no="11" group="1">筆</lang>
+  <lang id="site_search" no="12" group="1">搜尋範圍</lang>
+  <lang id="site_search" no="13" group="1">標題及內文</lang>
+  <lang id="site_search" no="14" group="1">標題</lang>
+  <lang id="site_search" no="20" group="1">內文</lang>
+  <lang id="site_search" no="15" group="1">網站選項</lang>
+
+  <lang id="site_search" no="17">上方選單</lang>
+  <lang id="site_search" no="18">主要選單</lang>
+  <lang id="site_search" no="19">下方選單</lang>
+
+  <lang id="epaper" no="01" group="1">序號</lang>
+  <lang id="epaper" no="02" group="1">發布日期</lang>
+  <lang id="epaper" no="03" group="1">電子報名稱</lang>
+  <lang id="epaper" no="04" group="1">簡介</lang>
+
+  <lang id="epaper" no="05" group="1">電子報訂閱</lang>
+  <lang id="epaper" no="07" group="1">訂閱</lang>
+  <lang id="epaper" no="08" group="1">取消訂閱</lang>
+  <lang id="epaper" no="09" group="1">查閱電子報</lang>
+  <lang id="epaper" no="10" group="1">Email</lang>
+  <lang id="epaper" no="11" group="1">Email 格式有誤</lang>
+  <lang id="epaper" no="12" group="1">此 Email 已有訂閱電子報!</lang>
+  <lang id="epaper" no="13" group="1">電子報訂閱成功!</lang>
+  <lang id="epaper" no="14" group="1">此 Email 無訂閱電子報!</lang>
+  <lang id="epaper" no="15" group="1">電子報取消訂閱成功!</lang>
+
+  <lang id="homelayout" no="01" group="1" >無分類</lang>
+
+  <lang id="motto" no="01" group="1" >格言小品</lang>
+
+  <lang id="site_text" no="01" group="1">全部</lang>
+  <lang id="site_text" no="24" group="1">不拘</lang>
+  <lang id="site_text" no="25" group="1">請輸入</lang>
+  <lang id="site_text" no="02" group="1">請選擇</lang>
+  <lang id="site_text" no="03" group="1">無分類</lang>
+  <lang id="site_text" no="04" group="1">無</lang>
+  <lang id="site_text" no="05" group="1">確定送出</lang>
+  <lang id="site_text" no="06" group="1">取消重填</lang>
+
+  <lang id="site_text" no="09" group="1">驗證碼</lang>
+  <lang id="site_text" no="10" group="1">重新整理</lang>
+  <lang id="site_text" no="11" group="1">驗證碼輸入錯誤!</lang>
+
+  <lang id="site_text" no="37" group="1" enabled="false">本日瀏覽人數</lang>
+  <lang id="site_text" no="38" group="1" enabled="false">全部瀏覽人數</lang>
+  <lang id="site_text" no="39" group="1" enabled="false">網站最後更新時間</lang>
+  <lang id="site_text" no="40" group="1" enabled="false">最近檢閱日期</lang>
+
+  <lang id="site_text" no="41" group="1">另開新視窗</lang>
+  <lang id="site_text" no="42" group="1">確定</lang>
+  <lang id="site_text" no="43" group="1">回上一頁</lang>
+  <lang id="site_text" no="44" group="5">相簿連結</lang>
+
+  <lang id="site_text" no="12" group="2">轉寄好友</lang>
+  <lang id="site_text" no="13" group="2">友善列印</lang>
+
+  <lang id="site_text" no="17" group="3">寄件者</lang>
+  <lang id="site_text" no="18" group="3">寄件者Email</lang>
+  <lang id="site_text" no="22" group="3">Email 格式有誤</lang>
+  <lang id="site_text" no="19" group="3">朋友Email</lang>
+  <lang id="site_text" no="20" group="3">多組 Email 間請以 ; 分隔</lang>
+  <lang id="site_text" no="21" group="3">給朋友的訊息</lang>
+  <lang id="site_text" no="23" group="3">信件寄發成功</lang>
+  <lang id="site_text" no="27" group="3">寄了一則訊息給你喔!!</lang>
+  <lang id="site_text" no="28" group="3">給您的訊息</lang>
+
+  <lang id="site_text" no="30" group="4">總筆數</lang>
+  <lang id="site_text" no="31" group="4">第一頁</lang>
+  <lang id="site_text" no="32" group="4">上一頁</lang>
+  <lang id="site_text" no="33" group="4">下一頁</lang>
+  <lang id="site_text" no="34" group="4">最末頁</lang>
+  <lang id="site_text" no="35" group="4">頁面</lang>
+  <lang id="site_text" no="36" group="4">目前沒有資料!</lang>
+
+  <lang id="member" no="01" group="1">帳號</lang>
+  <lang id="member" no="02" group="1">密碼</lang>
+  <lang id="member" no="39" group="1">密碼長度需在 4~20 字元</lang>
+  <lang id="member" no="03" group="3">登入</lang>
+  <lang id="member" no="40" group="3">會員登入</lang>
+  <lang id="member" no="41" group="3">取消</lang>
+  <lang id="member" no="04" group="4">忘記密碼</lang>
+  <lang id="member" no="05" group="1">加入本站</lang>
+  <lang id="member" no="06" group="1">資料維護</lang>
+  <lang id="member" no="07" group="1">登出會員</lang>
+  <lang id="member" no="42" group="1">資料錯誤</lang>
+  <lang id="member" no="43" group="1">您的帳戶已被管理者停用!</lang>
+  <lang id="member" no="44" group="1">很抱歉，此帳號已被他人註冊，請更正後重試!</lang>
+  <lang id="member" no="45" group="1">很抱歉，此 Email 已被他人註冊，請更正後重試!</lang>
+
+  <lang id="member" no="08" group="2">電子郵件信箱</lang>
+  <lang id="member" no="09" group="2">Email 格式有誤</lang>
+  <lang id="member" no="10" group="2">查無此 Email!</lang>
+  <lang id="member" no="11" group="2">忘記密碼通知信寄送成功!</lang>
+
+  <lang id="member" no="12" group="1">第一步</lang>
+  <lang id="member" no="13" group="1">第二步</lang>
+  <lang id="member" no="14" group="1">完成加入</lang>
+  <lang id="member" no="15" group="1">同意</lang>
+  <lang id="member" no="16" group="1">不同意</lang>
+  <lang id="member" no="18" group="3">會員姓名</lang>
+  <lang id="member" no="19" group="3">性別</lang>
+  <lang id="member" no="20" group="3">男</lang>
+  <lang id="member" no="21" group="3">女</lang>
+  <lang id="member" no="22" group="3">聯絡電話</lang>
+
+  <lang id="member" no="50" group="3">身份證字號</lang>
+  <lang id="member" no="60" group="3">請輸入正確的身份證字號</lang>
+  <lang id="member" no="61" group="3">本國</lang>
+  <lang id="member" no="62" group="3">外籍</lang>
+  <lang id="member" no="63" group="3">持外國護照的客戶請輸入護照號碼。</lang>
+  <lang id="member" no="51" group="3">行動電話</lang>
+  <lang id="member" no="52" group="3">聯絡地址</lang>
+  <lang id="member" no="53" group="3">郵遞區號</lang>
+  <lang id="member" no="54" group="3">地址</lang>
+  <lang id="member" no="55" group="3">是否已於本公司開戶</lang>
+  <lang id="member" no="56" group="3">已開戶</lang>
+  <lang id="member" no="57" group="3">分公司別</lang>
+  <lang id="member" no="58" group="3">證券或期貨帳號</lang>
+  <lang id="member" no="59" group="3">未開戶</lang>
+  <lang id="member" no="64" group="3">是否願意Email接收協會不定期資訊</lang>
+  <lang id="member" no="65" group="3">是</lang>
+  <lang id="member" no="66" group="3">否</lang>
+  <lang id="member" no="67" group="3">請先登入會員!</lang>
+
+  <lang id="member" no="70" group="1">網站會員專區</lang>
+  <lang id="member" no="71" group="1">會員等級</lang>
+  <lang id="member" no="72" group="3">會員編號</lang>
+  <lang id="member" no="73" group="3">產業類別</lang>
+  <lang id="member" no="74" group="3">公司名稱(中文)</lang>
+  <lang id="member" no="75" group="3">Company Name(EN)</lang>
+  <lang id="member" no="76" group="3">公司統編 VAT No</lang>
+  <lang id="member" no="77" group="3">負責人 Company Owner</lang>
+  <lang id="member" no="78" group="3">成立日期 Date Of Establishment</lang>
+  <lang id="member" no="79" group="3">聯絡人姓名 Contact Person</lang>
+  <lang id="member" no="80" group="3">電話 Tel</lang>
+  <lang id="member" no="81" group="3">傳真 Fax</lang>
+  <lang id="member" no="82" group="3">Email</lang>
+  <lang id="member" no="83" group="3">地址(中文)</lang>
+  <lang id="member" no="84" group="3">Address(EN)</lang>
+  <lang id="member" no="85" group="3">產品簡介(中文)</lang>
+  <lang id="member" no="86" group="3">Product Introduction(EN)</lang>
+  <lang id="member" no="87" group="3">業務窗口 Email</lang>
+  <lang id="member" no="88" group="3">會務窗口</lang>
+  <lang id="member" no="89" group="3">會務窗口電話</lang>
+  <lang id="member" no="90" group="3">會務窗口分機</lang>
+  <lang id="member" no="91" group="3">會務窗口Email</lang>
+  <lang id="member" no="92" group="3">會員代表_1</lang>
+  <lang id="member" no="93" group="3">會員代表_1 電話</lang>
+  <lang id="member" no="94" group="3">會員代表_1 分機</lang>
+  <lang id="member" no="95" group="3">會員代表_1 Email</lang>
+  <lang id="member" no="96" group="3">會員代表_2</lang>
+  <lang id="member" no="97" group="3">會員代表_2 電話</lang>
+  <lang id="member" no="98" group="3">會員代表_2 分機</lang>
+  <lang id="member" no="99" group="3">會員代表_2 Email</lang>
+  <lang id="member" no="101" group="3">自訂欄位1</lang>
+  <lang id="member" no="102" group="3">自訂欄位2</lang>
+  <lang id="member" no="103" group="3">自訂欄位3</lang>
+  <lang id="member" no="104" group="3">自訂欄位4</lang>
+  <lang id="member" no="105" group="3">自訂欄位5</lang>
+  <lang id="member" no="106" group="3">自訂欄位6</lang>
+  <lang id="member" no="107" group="3">自訂欄位7</lang>
+  <lang id="member" no="108" group="3">自訂欄位8</lang>
+  <lang id="member" no="109" group="3">自訂欄位9</lang>
+  <lang id="member" no="110" group="3">自訂欄位10</lang>
+  <lang id="member" no="111" group="3">輸入上方文字</lang>
+  <lang id="member" no="112" group="1">請先登入會員或您的會員瀏覽權限不足!</lang>
+
+  <lang id="member" no="25" group="1">確定送出</lang>
+  <lang id="member" no="26" group="4">密碼變更</lang>
+  <lang id="member" no="27" group="4">密碼修改</lang>
+  <lang id="member" no="46" group="3">會員資料修改完成!</lang>
+
+  <lang id="member" no="28" group="4">舊密碼</lang>
+  <lang id="member" no="29" group="4">新密碼</lang>
+  <lang id="member" no="30" group="4">密碼確認</lang>
+  <lang id="member" no="31" group="4">確定變更</lang>
+  <lang id="member" no="32" group="4">回資料維護</lang>
+  <lang id="member" no="33" group="4">新密碼輸入有誤，請再次確認</lang>
+  <lang id="member" no="34" group="4">密碼修改成功!</lang>
+  <lang id="member" no="35" group="4">舊密碼錯誤!</lang>
+
+  <lang id="member" no="113" group="1">親愛的</lang>
+  <lang id="member" no="114" group="1">您好</lang>
+  <lang id="member" no="115" group="1">回首頁</lang>
+  <!--<lang id="member" no="115" group="1">加入本站／第一步</lang>
+  <lang id="member" no="116" group="1">同意</lang>
+  <lang id="member" no="117" group="1">不同意</lang>
+  <lang id="member" no="118" group="1">加入本站／第二步</lang>
+  <lang id="member" no="119" group="1">確定送出</lang>
+  <lang id="member" no="120" group="1">取消重填</lang>
+  <lang id="member" no="121" group="1">加入本站／完成加入</lang>
+  <lang id="member" no="122" group="1">密碼變更</lang>
+  <lang id="member" no="123" group="1">密碼修改</lang>-->
+
+
+  <lang id="industry" no="01" group="1">公司名稱(中文)</lang>
+  <lang id="industry" no="02" group="1">產業類別</lang>
+  <lang id="industry" no="03" group="1">關鍵字(公司名稱、產品)</lang>
+  <lang id="industry" no="04" group="1">請輸入關鍵字</lang>
+  <lang id="industry" no="05" group="1">搜尋</lang>
+
+  <lang id="industry_search" no="01" group="1">公司名稱(中文)</lang>
+  <lang id="industry_search" no="02" group="1">產業類別</lang>
+  <lang id="industry_search" no="03" group="1">關鍵字(公司名稱、產品)</lang>
+  <lang id="industry_search" no="04" group="1">請輸入關鍵字</lang>
+  <lang id="industry_search" no="05" group="1">搜尋</lang>
+
+</defaulg_lang>

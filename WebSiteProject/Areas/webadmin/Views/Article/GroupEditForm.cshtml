@@ -1,0 +1,26 @@
+﻿
+<div class="portlet light form-fit bordered" id="div_groupedit">
+    <div class="portlet-body form">
+        <div class="form-horizontal form-bordered">
+            <div class="form-body">
+                <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveGroupEdit")' enctype="multipart/form-data">
+                    <div class="form-group">
+                        <div class="col-md-3 col-sm-12 search_item"><span class="red">*</span> 類別名稱</div>
+                        <div class="col-md-9 col-sm-12 bg-white mobile_white">
+                            <input type="text" class="form-control" id="txt_groupname">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3 col-sm-12 search_item"><span class="red">*</span> 代表圖示</div>
+                        <div class="col-md-9 col-sm-12 bg-white mobile_white">
+                            <div id="div_oldfile" style="display:none"><a href="#" target="preview"></a></div>
+                            <input type="file" class="display_inline" name="ImageFile" accept="image/*" />
+                            <span class="required">建議尺寸 320 x 320 px</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

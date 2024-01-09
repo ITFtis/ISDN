@@ -1,0 +1,86 @@
+﻿<!--page banner start-->
+@model ViewModels.HomeViewModel
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<div class="page_banner" style="background: url(../img/page_top_bg.jpg);background-position: top center;background-size: cover;">
+    <!--建議尺寸1920*470px-->
+    <div class="container">
+        <div class="page_title" data-sr="enter top over 1.5s">系統登入</div>
+    </div>
+</div>
+<!--page banner end-->
+<!--page top start-->
+<div class="page_top">
+    <div class="container">
+        <div class="col-md-12 col-sm-12 col-xs-12" data-sr="enter left over 1.5s">
+            <ul>
+                <li><a href="@Url.Action("Login")">HOME</a></li>
+                <li>系統登入</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--page top end-->
+<!--main content start-->
+<div class="page_content">
+    <div class="container">
+        <!--<div class="page_title" data-sr="enter left over 1.5s">公司介紹</div>-->
+        <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("CheckLoginForm")' enctype="multipart/form-data">
+            <div class="page_con login_con">
+                <div class="left">     
+                    @Html.Raw(ViewBag.logindesc == null ? "" : ViewBag.logindesc.Replace("\n", "<br>").Replace("<<br>", "<\n").Replace("><br>", ">\n"))
+                </div>
+                <div class="right">
+                    <div class="title">登入</div>
+                    <div class="form-group">
+                        <label for="id">帳號</label>
+                        <input type="text" value="" maxlength="100" class="form-control checkitem" name="Account" id="id" required="">
+                        <span class="required" id="Account-error" style="display:none;">帳號 必須填寫！</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">密碼</label>
+                        <input type="password" value="" maxlength="100" class="form-control checkitem" name="Password" id="Password" required="">
+                        <span class="required" id="Password-error" style="display:none;">密碼 必須填寫！</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="verification">驗證碼</label>
+                        <input type="text" value="" maxlength="4" class="form-control input_xsmall checkitem" name="Verification" id="Verification" required="">
+                        <span class="required" id="Verification-error" style="display:none;">驗證碼 必須填寫！</span>
+                        <img src="@ViewBag.image" alt="" id="img_captch" />
+                        <i title="重新整理" class="fa fa-refresh" id="a_captchRefresh" style="cursor:pointer"></i>
+                    </div>
+                    <div class="btn_box">
+                        <a href="#" id="a_login"><span class="btn_01">登入</span></a><br><br>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--main content end-->
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var err = '@ViewBag.Message';
+            if (err != "") {
+                bootbox.alert('登入失敗,請確實輸入');
+            }
+         $("#a_captchRefresh").click(function () {
+            $.post('@Url.Action("CaptchRefresh")', null, function (data) {
+                $("#img_captch").attr('src', data[1]);
+            });
+         });
+         $("#a_login").click(function () {
+             $("#editform").submit();
+         });
+
+         $('#editform').submit(function (event) {
+               $(".required").hide();
+               var inputval = $("#editform :input").filter(function () { return $(this).val() == "" && $(this).hasClass('checkitem'); });
+                for (var idx = 0; idx < inputval.length; idx++) {
+                    $("#" + inputval[idx].name + "-error").show();
+                }
+                 if (inputval.length > 0) { return false; }
+         });
+    });
+    </script>
+}

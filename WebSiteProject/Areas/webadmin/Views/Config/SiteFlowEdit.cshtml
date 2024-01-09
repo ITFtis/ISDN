@@ -1,0 +1,85 @@
+﻿@model AdminMemberModel
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>系統管理<i class="fa fa-circle"></i></li>
+        <li>流量分析</li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">流量分析</div>
+
+<div class="portlet light bordered">
+
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SavePasswordEdit")'>
+        @Html.HiddenFor(Model => Model.EncryptID)
+        @Html.HiddenFor(Model => Model.GroupName)
+        @Html.AntiForgeryToken()
+        <input id="hid_isAdd" type="hidden" name="isAdd" value='@ViewBag.IsAdd' />
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body">
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">申請說明</div>
+                            <div class="col-md-10 col-sm-4 col-xs-12 bg-white mobile_white">
+                                <button type="button" class="btn blue" id="btn_open">開啟</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 search_item">流量程式碼</div>
+                            <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                <textarea id="txtcode" rows="20" cols="20" style="width:100%" name="Siteflow_Code">@ViewBag.Code</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 search_item">流量分析頁面路徑</div>
+                            <div class="col-md-10 col-sm-4 col-xs-12 bg-white mobile_white">
+                                <input id="txt_path" type="text" class="form-control" name="Siteflow_Link" value="@ViewBag.Path" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center search_padding">
+            <button type="button" class="btn blue" id="btn_submit">確認送出</button>
+            <button type="button" class="btn grey-mint" id="btn_return" onclick="document.location.href='@Url.Action("SiteFlow")'">返回列表</button>
+        </div>
+    </form>
+
+</div>
+@section scripts {
+    <script>
+        $(function () {
+            $('#btn_open').click(function () {
+                document.location.href = '@Url.Action("GetSiteFlowFile")';
+            });
+
+            $('#btn_submit').click(function () {
+                var id = '@ViewBag.ID';
+                $.post('@Url.Action("SetSiteFlowCode")', {
+                    code: encodeURIComponent($("#txtcode").val()),
+                    path: $("#txt_path").val(), id:id
+                }, function (data) {
+                      if (data == "") {
+                          alert('修改成功');
+                         document.location.href = '@Url.Action("SiteFlow")';
+                    } else {
+                        alert(data);
+                    }
+                });
+
+            })
+        });
+    </script>
+
+}
+

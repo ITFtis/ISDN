@@ -1,0 +1,172 @@
+﻿<!--page top start-->
+<!--page top start-->
+@model TeacherReportClass
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/core.js")"></script>
+<script src="@Url.Content("~/Scripts/charts.js") "></script>
+<script src="@Url.Content("~/Scripts/animated.js") "></script>
+<div class="page_top page_margin">
+    <div class="container">
+        <div class="col-md-12 col-sm-12 col-xs-12" data-sr="enter left over 1.5s">
+            <ul>
+                <li><a href="@Url.Action("Index", "Home")">HOME</a></li>
+                <li><a href="@Url.Action("LoginForm", "Home")">系統登入</a></li>
+                <li><a href="#">統計報表</a></li>
+            </ul>
+        </div>
+        <!--<div class="col-md-3 col-sm-4 col-xs-12" data-sr="enter right over 1.5s">
+            <script>$.include("blocks/page_top_right.html");</script>
+        </div>-->
+    </div>
+</div>
+<!--page top end-->
+<!--main content start-->
+<div id="particles-js" style="position:absolute; z-index:-1"></div>
+<div class="page_content">
+    <div class="container">
+        <div class="top_back" data-sr="enter right over 2.5s"><a href="@Url.Action("AnalystList")"><button class="btn_01">回上一層</button></a></div>
+        <div class="page_title" data-sr="enter left over 1.5s">@(Model.StudentClassArr.Length > 0 ? Model.StudentClassArr[0].ClassName : "")</div>
+        <div class="page_con">
+            <!--page content start-->
+            <ul class="table_info_top">
+                <li><span class="title">老師</span>@ViewBag.LoginName</li>
+                <li><span class="title">學年度</span>@(Model.StudentClassArr.Length > 0 ? Model.StudentClassArr[0].ClassYear.ToString() : "")</li>
+                <li><span class="title">年級</span>@(Model.StudentClassArr.Length > 0 ? Common.GetGradeName(Model.StudentClassArr[0].GradeID.ToString()) : "")</li>
+                <li>
+                    <span class="title">章節</span>
+                    <select class="form-control" id="sel_chapter">
+                        @{
+                            foreach (var _ch in Model.ChapterList)
+                            {
+                                <option value="@_ch.ChapterID">@_ch.ChapterName</option>
+                            }
+                        }
+                    </select>
+                </li>
+            </ul>
+            <!--table start-->
+            <div class="table-scrollable chart_teacher">
+                <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0" id="table_data">
+                    <thead style="font-size:80%;">
+                        <tr>
+                            <th class="text-center"></th>
+                            <th colspan="3" class="text-center">練習模式</th>
+                            <th colspan="5" class="text-center">各題型答對率</th>
+                        </tr>
+                        <tr>
+                            <th class="text-center"><i class="fa fa-caret-down sortindex active" style=" cursor:pointer" sindex="1"></i> 學生</th><!--排序向上<i class="fa fa-caret-up"></i> -->
+                            <th class="text-center"><i class="fa fa-caret-down sortindex"  style=" cursor:pointer" sindex="2"></i>題數</th>
+                            <th class="text-center"><i class="fa fa-caret-down sortindex"  style=" cursor:pointer" sindex="3"></i>時間</th>
+                            <th class="text-center"><i class="fa fa-caret-down sortindex"  style=" cursor:pointer" sindex="4"></i>答對率</th>
+                            <th class="text-center"><i class="fa fa-caret-down sortindex" style=" cursor:pointer" sindex="5"></i><span  id="th_subject1"></span></th>
+                            <th class="text-center"><i class="fa fa-caret-down sortindex" style=" cursor:pointer" sindex="6"></i><span id="th_subject2"></span></th>
+                            <th class="text-center"><i class="fa fa-caret-down sortindex" style=" cursor:pointer" sindex="7"></i><span id="th_subject3"></span></th>
+                            <th class="text-center"><i class="fa fa-caret-down sortindex" style=" cursor:pointer" sindex="8"></i><span id="th_subject4"></span></th>
+                            <th class="text-center"><i class="fa fa-caret-down sortindex" style=" cursor:pointer" sindex="9"></i><span id="th_subject5"></span></th>
+                            @*<th class="text-center"><i class="fa fa-caret-down sortindex" style=" cursor:pointer" sindex="10"></i><span id="th_subject6"></span></th>
+                            <th class="text-center"><i class="fa fa-caret-down sortindex" style=" cursor:pointer" sindex="11"></i><span id="th_subject7"></span></th>
+                            <th class="text-center"><i class="fa fa-caret-down sortindex" style=" cursor:pointer" sindex="12"></i><span id="th_subject8"></span></th>
+                            <th class="text-center" ><i class="fa fa-caret-down sortindex" style=" cursor:pointer" sindex="13"></i><span id="th_subject9"></span></th>
+                            <th class="text-center"><i class="fa fa-caret-down sortindex" style=" cursor:pointer" sindex="14"></i><span id="th_subject10"></span></th>*@
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <!--table end-->
+
+            <br><br>
+
+            <div class="con_title">
+                <div class="title">建議範例</div>
+            </div>
+            <div class="con_font" id="div_ChapterConcept"></div>
+
+            <br><br>
+            <!--page content end-->
+        </div>
+
+    </div>
+</div>
+<!--main content end-->
+
+@section scripts {
+    <script>
+        var issortdesc = 0;
+        var nowsortindex = 1;
+        $(document).ready(function () {
+               resetpage();
+            $("#sel_chapter").change(function () {
+                resetpage();
+            });
+            $(".sortindex").click(function () {
+                var newsindex = $(this).attr('sindex');
+                if (newsindex == nowsortindex) {
+                    if (issortdesc == 0) {
+                        issortdesc = 1;
+                        $(this).removeClass('fa-caret-down').addClass('fa-caret-up').addClass('active');
+                    } else {
+                        issortdesc = 0;
+                        $(this).removeClass('fa-caret-up').addClass('fa-caret-down').addClass('active');
+                    }
+                } else {
+                    $(".sortindex").removeClass('fa-caret-up').removeClass('active').addClass('fa-caret-down')
+                    issortdesc = 1;
+                    $(this).removeClass('fa-caret-down').addClass('fa-caret-up').addClass('active');
+                }
+                nowsortindex = newsindex;
+                resetpage();
+            });
+            $("#table_data").delegate((".tostudent"), "click", function () {
+                CreatePost('@Url.Action("StudentAnalystReport")', {'teacherid':'@ViewBag.teacherid','studentid':$(this).attr('value'),classid:'@ViewBag.classid' });
+            });
+        });
+
+        function resetpage() {
+            var _chapterid = $("#sel_chapter").val();
+            $.post('@Url.Action("AnalystReportData")', {
+                chapterid: _chapterid, teacherid: '@ViewBag.teacherid', classid: '@ViewBag.classid',
+                issortdesc: issortdesc, nowsortindex: nowsortindex}, function (data) {
+                $("#div_ChapterConcept").empty().html(data.TeacherSuggest);
+                for (var idx = 1; idx <= 10; idx++) {
+                   $("#th_subject" + idx).empty().text(data["S" + idx + "Str"]);
+                  //  $("#th_subject" + idx).empty().append('<i class="fa fa-caret-down sortindex"  style="cursor: pointer"  sindex="' + (idx+4)+'"></i>' + data["S" + idx + "Str"]);
+                }
+                $("#table_data tbody").empty();
+                var dataarr = [];
+                for (var idx = 0; idx < data.SData.length; idx++) {
+                    dataarr.push('<tr><td class="text-center"><a href="#" class="tostudent" value="' + data.SData[idx].SID +'">' + data.SData[idx].Name + '</a></td>');
+                    dataarr.push('<td class="text-center">' + data.SData[idx].SNum + '</td>');
+                    dataarr.push('<td class="text-center">' + data.SData[idx].Time + '</td>');
+                    dataarr.push('<td class="text-center">' + data.SData[idx].Rate + '%</td>');
+                    dataarr.push('<td class="text-center">' + data.SData[idx].S1Rate + '%</td>');
+                    dataarr.push('<td class="text-center">' + data.SData[idx].S2Rate + '%</td>');
+                    dataarr.push('<td class="text-center">' + data.SData[idx].S3Rate + '%</td>');
+                    dataarr.push('<td class="text-center">' + data.SData[idx].S4Rate + '%</td>');
+                    dataarr.push('<td class="text-center">' + data.SData[idx].S5Rate + '%</td></tr>');
+                    //dataarr.push('<td class="text-center">' + data.SData[idx].S6Rate + '%</td>');
+                    //dataarr.push('<td class="text-center">' + data.SData[idx].S7Rate + '%</td>');
+                    //dataarr.push('<td class="text-center">' + data.SData[idx].S8Rate + '%</td>');
+                    //dataarr.push('<td class="text-center">' + data.SData[idx].S9Rate + '%</td>');
+                    //dataarr.push('<td class="text-center">' + data.SData[idx].S10Rate + '%</td>');
+                }
+                    dataarr.push('<tr class="total"><td class="text-center">合計</td>');
+                dataarr.push('<td class="text-center">' + data.TotalNum + '</td>');
+                dataarr.push('<td class="text-center">' + data.TotalTime + '</td>');
+                dataarr.push('<td class="text-center">' + data.TotalRate + '%</td>');
+                dataarr.push('<td class="text-center">' + data.S1Rate + '%</td>');
+                dataarr.push('<td class="text-center">' + data.S2Rate + '%</td>');
+                dataarr.push('<td class="text-center">' + data.S3Rate + '%</td>');
+                dataarr.push('<td class="text-center">' + data.S4Rate + '%</td>');
+                    dataarr.push('<td class="text-center">' + data.S5Rate + '%</td></tr>');
+                //dataarr.push('<td class="text-center">' + data.S6Rate + '%</td>');
+                //dataarr.push('<td class="text-center">' + data.S7Rate + '%</td>');
+                //dataarr.push('<td class="text-center">' + data.S8Rate + '%</td>');
+                //dataarr.push('<td class="text-center">' + data.S9Rate + '%</td>');
+                //dataarr.push('<td class="text-center">' + data.S10Rate + '%</td>');
+                $(dataarr.join('')).appendTo("#table_data tbody");
+            });
+        }
+    </script>
+
+}

@@ -1,0 +1,44 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
+    ViewBag.Title = ViewBag.Title ?? "Internal Server Error";
+    Layout = null;
+}
+
+@{
+    ViewBag.Title = "Error Page";
+}
+<!--page banner end-->
+<!--主要內容區 start-->
+<div class="main_content">
+    <div class="container">
+        <div class="main_content_box">
+
+            <!--one content start-->
+            <div class="one_content">
+
+                <!--main content start-->
+                <div class="one_con">
+                  @if (Model != null && HttpContext.Current.IsDebuggingEnabled)
+                  {
+                    <div>
+                        <p>
+                            <b>Exception:</b> @Model.Exception.Message<br />
+                            <b>Controller:</b> @Model.ControllerName<br />
+                            <b>Action:</b> @Model.ActionName
+                        </p>
+                        <div style="overflow-x:auto">
+                        <pre> @Model.Exception.StackTrace</pre>
+                        </div>
+                    </div>
+                  }
+                </div>
+                <!--main content end-->
+
+            </div>
+            <!--one content end-->
+
+        </div>
+    </div>
+</div>
+
+

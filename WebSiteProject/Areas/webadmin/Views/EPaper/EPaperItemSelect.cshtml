@@ -1,0 +1,113 @@
+﻿@model SearchModelBase
+@Html.AntiForgeryToken()
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+@*<script src="//cdn.ckeditor.com/4.12.1/full/ckeditor.js"></script>*@
+<!-- 載入 summernote 中文語系 -->
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            模組元件
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index")">電子報管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            編輯自動電子報
+        </li>
+    </ul>
+
+</div>
+<!--page bar end-->
+<!--message start-->
+<h2>@ViewBag.Title</h2>
+
+<div class="portlet light bordered">
+    <!--set item start-->
+    <button type="button" class="btn blue" id="btn_return" onclick="document.location.href='@Url.Action("EPaperContentMenu")?id=@ViewBag.ID'">返回列表</button>
+    <!--table start-->
+    <div class="table-scrollable">
+        <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0"
+               id="eventtable"
+               data-url="@Url.Action("PagingMenuItem")"
+               data-sort-name='Sort'
+               data-page-size='10'
+               data-filed-id='ItemID'
+               data-max-pagination='10'>
+            <thead>
+                <tr class="bg-grey_1" filed-class='odd gradeX'>
+                    <th filed-name='Selected' width="80px" class="text-center" filed-type='checkbox' filed-item-class="checkboxes selitem">選取</th>
+                    <th filed-name='customertr' filed-type='function'>標題</th>
+                    <th filed-name='customertr' width="80px" filed-type='function'>前台顯示</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="page_number" class="table-toolbar">
+        <div class="col-md-4 col-sm-12 col-xs-12 page_total" id="tableinfo"></div>
+        <div class="col-md-8 col-sm-12 col-xs-12 page_icon">
+            <div class="btn-group" id="pagination">
+            </div>
+        </div>
+    </div>
+    <!--table end-->
+</div>
+@section scripts {
+    <script>
+         $(document).ready(function () {
+            var menuid = '@ViewBag.MenuId';
+            var id = '@ViewBag.ID';
+            var mainid = '@ViewBag.MainID';
+            var modelid = '@ViewBag.ModelID';
+            mytable = $("#eventtable").myDataTable().TableList[0];
+            mytable.settingTdData = myDataTableTr;
+            mytable.settingTableInfo = function (tableinfoId, totalcnt, offsetcnt, nowpagecnt) {
+                var totalclick = mytable.keepcheckid.length;
+                $("#" + tableinfoId).html('總筆數:' + totalcnt + '，顯示' + (totalcnt <= 0 ? 0 : offsetcnt) + "~" + (offsetcnt + nowpagecnt - 1));
+            };
+            mytable.SearchModelBase.ModelID = menuid;
+            mytable.SearchModelBase.Key = id;
+            mytable.GetData(1);
+
+            $("#eventtable").delegate(".selitem", "change", function () {
+
+                var issel = $(this)[0].checked;
+                var obj = {};
+                obj.issel = issel;
+                obj.itemid = $(this).attr('value');
+                obj.menuid = menuid;
+                obj.modelid = modelid;
+                obj.mainid = mainid;
+                obj.id = '@ViewBag.ID';;
+                $.post('@Url.Action("SetEpaperItem")', obj, function (data) {
+
+                });
+            });
+        });
+
+        function customertr(row, columnidx, idx, filedname, tableid, type, fileditemclass) {
+            if (columnidx == "2") {
+                return "<td>" + row["Title"] + "</td>"
+            } else {
+                if (row['Enabled']) {
+                    return "<td class='text-center'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>" +
+                        "<input type='checkbox' class='checkboxes' checked='checked'  disabled='disabled'/><span></span></label></td>";
+                } else {
+                    return "<td class='text-center'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>" +
+                        "<input type='checkbox' class='checkboxes' disabled='disabled'/><span></span></label></td>";
+                }
+            }
+        }
+    </script>
+}
+

@@ -1,0 +1,149 @@
+﻿@model SiteLangTextModel
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>版面設定<i class="fa fa-circle"></i></li>
+        <li>語系通用文字設定</li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">語系通用文字設定 </div>
+<div class="portlet light bordered">
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveSiteLangText")'>
+        @Html.AntiForgeryToken()
+        <div class="portlet light form-fit bordered" id="div_seo">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body">
+
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 col-sm-12 search_item">語系通用文字設定</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                @{
+                                    foreach (var key in Model.Group1.Keys)
+                                    {
+                                        <div class="row col-md-12" style="margin-left:0px">
+                                            <div>
+                                                <div class="col-md-1 col-sm-12 ">
+                                                    <label for="exampleInputFile" class="" style="width:150px">@Model.GroupKey1[key]</label>
+                                                </div>
+                                                <div class="col-md-11 col-sm-12 ">
+                                                    @Html.EditorFor(model => model.Group1[key], new { htmlAttributes = new { @class = "form-control display_inline", style = "" } })
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 col-sm-12 search_item">內容頁功能項目</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                @{
+                                    foreach (var key in Model.Group2.Keys)
+                                    {
+                                        <div class="row col-md-12" style="margin-left:0px">
+                                            <div>
+                                                <div class="col-md-1 col-sm-12 ">
+                                                    <label for="exampleInputFile" class="" style="width:150px">@Model.GroupKey2[key]</label>
+                                                </div>
+                                                <div class="col-md-11 col-sm-12 ">
+                                                    @Html.EditorFor(model => model.Group2[key], new { htmlAttributes = new { @class = "form-control display_inline", style = "" } })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 col-sm-12 search_item">分頁選項</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                @{
+                                    foreach (var key in Model.Group3.Keys)
+                                    {
+                                        <div class="row col-md-12" style="margin-left:0px">
+                                            <div>
+                                                <div class="col-md-1 col-sm-12 ">
+                                                    <label for="exampleInputFile" class="" style="width:150px">@Model.GroupKey3[key]</label>
+                                                </div>
+                                                <div class="col-md-11 col-sm-12 ">
+                                                    @Html.EditorFor(model => model.Group3[key], new { htmlAttributes = new { @class = "form-control display_inline", style = "" } })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 col-sm-12 search_item">其他</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                @{
+                                    foreach (var key in Model.Group4.Keys)
+                                    {
+                                        <div class="row col-md-12" style="margin-left:0px">
+                                            <div>
+                                                <div class="col-md-1 col-sm-12 ">
+                                                    <label for="exampleInputFile" class="" style="width:150px">@Model.GroupKey4[key]</label>
+                                                </div>
+                                                <div class="col-md-11 col-sm-12 ">
+                                                    @Html.EditorFor(model => model.Group4[key], new { htmlAttributes = new { @class = "form-control display_inline", style = "" } })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+        </div>
+    </form>
+</div>
+
+    @section scripts {
+        <script>
+            $(function () {
+
+                $('#editform').submit(function (event) {
+                    var t = $(this).serialize();
+                    $.ajax({
+                        url: this.action,
+                        type: this.method,
+                        data: $(this).serialize(),
+                        success: function (result) {
+                            if (result == "") {
+                                alert("儲存成功");
+                            } else {
+                                alert(result);
+                            }
+                        }
+                    });
+                    return false;
+                })
+            });
+        </script>
+
+    }
+

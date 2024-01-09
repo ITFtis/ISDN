@@ -1,0 +1,65 @@
+﻿<!--page banner start-->
+@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel, Model.LangId);
+}
+@model EventListFrontIndexModel
+<div id="content" class="page_content">
+    <div class="container">
+
+        <div class="page_top">
+            <a href="#;return false;" title="@Common.GetLangText("主要內容區")" accesskey="@if(Model.LangId == "1"){@("C") }else{ @("C")}" id="main-content">:::</a>
+            @Html.Raw(Model.LinkStr)
+        </div>
+
+        <div class="title">
+            <h2 >@Model.Title</h2>
+        </div>
+
+        <div class="content_con">
+            <div class="left">
+
+                <div class="event_list">
+                    @if (Model.EventListItem != null)
+                    {
+                        var group = Model.EventListItem.GroupBy(v => v.Year).OrderByDescending(v => v.Key).ToList();
+                        foreach (var g in group)
+                        {
+                            <div class="item">
+                                <div class="year">@g.Key</div>
+                                <ul>
+                                    @foreach (var gdata in g.ToList())
+                                    {
+                                        if (string.IsNullOrEmpty(gdata.HtmlContent) || gdata.Link_Mode == 2)
+                                        {
+                                                 <li>@gdata.Title</li>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("EventDetail",new { id=gdata.ItemID,mid=Model.MenuID})" title='@gdata.Title'><li>@gdata.Title</li></a>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    }
+                </div>
+
+            </div>
+
+            <div class="right">
+                @Html.Raw(Model.LeftMenu)
+            </div>
+        </div>
+
+    </div>
+</div>
+@section scripts {
+    <script>
+
+        $(document).ready(function () {
+
+        });
+
+    </script>
+}
+<!--main content end-->

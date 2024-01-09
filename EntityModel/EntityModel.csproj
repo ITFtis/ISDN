@@ -1,0 +1,306 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{09EFD2C4-D9CC-45D2-B090-5413168E375C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ViewModels</RootNamespace>
+    <AssemblyName>ViewModels</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DBModels\Active\ActiveDateRange.cs" />
+    <Compile Include="DBModels\Active\ActiveItem.cs" />
+    <Compile Include="DBModels\Active\ActivePhoto.cs" />
+    <Compile Include="DBModels\Active\ActivePhotoCount.cs" />
+    <Compile Include="DBModels\Active\ActiveUnitSetting.cs" />
+    <Compile Include="DBModels\Active\ActiveFiles.cs" />
+    <Compile Include="DBModels\AD\AD.cs" />
+    <Compile Include="DBModels\AD\ADBase.cs" />
+    <Compile Include="DBModels\Admin\AdminFunction.cs" />
+    <Compile Include="DBModels\Admin\AdminFunctionAuth.cs" />
+    <Compile Include="DBModels\Admin\AdminMember.cs" />
+    <Compile Include="DBModels\AD\ADSet.cs" />
+    <Compile Include="DBModels\Article\ArticelGroupItem.cs" />
+    <Compile Include="DBModels\BaseData\BaseDataColumnSetting.cs" />
+    <Compile Include="DBModels\BaseData\BaseDataGroupSetting.cs" />
+    <Compile Include="DBModels\BaseData\BaseDataInput.cs" />
+    <Compile Include="DBModels\BaseData\BaseDataItem.cs" />
+    <Compile Include="DBModels\BaseData\BaseDataUnitSetting.cs" />
+    <Compile Include="DBModels\BaseData\ModelBaseDataMain.cs" />
+    <Compile Include="DBModels\City.cs" />
+    <Compile Include="DBModels\ClassRecord.cs" />
+    <Compile Include="DBModels\ClickCountTable.cs" />
+    <Compile Include="DBModels\ColumnSetting.cs" />
+    <Compile Include="DBModels\Company.cs" />
+    <Compile Include="DBModels\ContactWindowData.cs" />
+    <Compile Include="DBModels\Country.cs" />
+    <Compile Include="DBModels\CountSearchKey.cs" />
+    <Compile Include="DBModels\CouponRecord.cs" />
+    <Compile Include="DBModels\Course\CourseApplyLetter.cs" />
+    <Compile Include="DBModels\Course\CourseBasicColumn.cs" />
+    <Compile Include="DBModels\Course\CourseCheckin.cs" />
+    <Compile Include="DBModels\Course\CourseDeledItem.cs" />
+    <Compile Include="DBModels\Course\CourseEvent.cs" />
+    <Compile Include="DBModels\Course\CourseFormSetting.cs" />
+    <Compile Include="DBModels\Course\CourseItem.cs" />
+    <Compile Include="DBModels\Course\CourseJoinApply.cs" />
+    <Compile Include="DBModels\Course\CoursePaymentSetting.cs" />
+    <Compile Include="DBModels\Course\CoursePrice.cs" />
+    <Compile Include="DBModels\Course\CourseSetting.cs" />
+    <Compile Include="DBModels\Course\CourseSignin.cs" />
+    <Compile Include="DBModels\Course\CourseSignleApply.cs" />
+    <Compile Include="DBModels\Course\CourseSignleApplyBC.cs" />
+    <Compile Include="DBModels\Course\CourseSignleApplyInfo.cs" />
+    <Compile Include="DBModels\Course\CourseUnitSetting.cs" />
+    <Compile Include="DBModels\Course\GroupPrice.cs" />
+    <Compile Include="DBModels\DownloadIndexMain.cs" />
+    <Compile Include="DBModels\EPaper\EPaperSubscriber.cs" />
+    <Compile Include="DBModels\EPaper\EPaper.cs" />
+    <Compile Include="DBModels\EPaper\EPaperAD.cs" />
+    <Compile Include="DBModels\EPaper\EPaperContent.cs" />
+    <Compile Include="DBModels\EPaper\EPaperItem.cs" />
+    <Compile Include="DBModels\EPaper\EPaperUnitSetting.cs" />
+    <Compile Include="DBModels\EquipmentInfo.cs" />
+    <Compile Include="DBModels\FileDownload\FileDownloadFiles.cs" />
+    <Compile Include="DBModels\Group\GroupItemArticle.cs" />
+    <Compile Include="DBModels\Group\GroupPatent.cs" />
+    <Compile Include="DBModels\Link\LinkItem.cs" />
+    <Compile Include="DBModels\PageLayout\PageJournalEdit.cs" />
+    <Compile Include="DBModels\PageLayout\PageLayoutActivity.cs" />
+    <Compile Include="DBModels\PageLayout\PageLayoutOP3.cs" />
+    <Compile Include="DBModels\PageLayout\PageLayoutOP2.cs" />
+    <Compile Include="DBModels\PageLayout\PageLayoutOP1.cs" />
+    <Compile Include="DBModels\PageLayout\PageActiveEdit.cs" />
+    <Compile Include="DBModels\PageLayout\PageNewsEdit.cs" />
+    <Compile Include="DBModels\Patent\PatentDetail.cs" />
+    <Compile Include="DBModels\Patent\PatentUnitSetting.cs" />
+    <Compile Include="DBModels\Patent\PatentItem.cs" />
+    <Compile Include="DBModels\Patent\ModelPatentMain.cs" />
+    <Compile Include="DBModels\FileDownload\FileDownloadItem.cs" />
+    <Compile Include="DBModels\FileDownload\FileDownloadUnitSetting.cs" />
+    <Compile Include="DBModels\Form\FormInput.cs" />
+    <Compile Include="DBModels\Form\FormInputNote.cs" />
+    <Compile Include="DBModels\Form\FormSelItem.cs" />
+    <Compile Include="DBModels\Form\FormSetting.cs" />
+    <Compile Include="DBModels\Form\FormUnitSetting.cs" />
+    <Compile Include="DBModels\Form\ForumItem.cs" />
+    <Compile Include="DBModels\Form\ForumReplyItem.cs" />
+    <Compile Include="DBModels\Form\ForumSubject.cs" />
+    <Compile Include="DBModels\Form\ForumUnitSetting.cs" />
+    <Compile Include="DBModels\Group\GroupActive.cs" />
+    <Compile Include="DBModels\Group\GroupArticle.cs" />
+    <Compile Include="DBModels\Group\GroupBaseData.cs" />
+    <Compile Include="DBModels\Group\GroupCourse.cs" />
+    <Compile Include="DBModels\Group\GroupFileDownload.cs" />
+    <Compile Include="DBModels\Group\GroupForum.cs" />
+    <Compile Include="DBModels\Group\GroupKnowledgeBase.cs" />
+    <Compile Include="DBModels\Group\GroupVideo.cs" />
+    <Compile Include="DBModels\Group\GroupMessage.cs" />
+    <Compile Include="DBModels\Group\GroupUser.cs" />
+    <Compile Include="DBModels\Img.cs" />
+    <Compile Include="DBModels\Lang\Lang.cs" />
+    <Compile Include="DBModels\Lang\LangInputText.cs" />
+    <Compile Include="DBModels\Lang\LangKey.cs" />
+    <Compile Include="DBModels\Lang\LangKeyUnit.cs" />
+    <Compile Include="DBModels\LogisticsCompany.cs" />
+    <Compile Include="DBModels\LogisticsSetting.cs" />
+    <Compile Include="DBModels\Member.cs" />
+    <Compile Include="DBModels\Menu\Menu.cs" />
+    <Compile Include="DBModels\Menu\MenuMessageItem.cs" />
+    <Compile Include="DBModels\Menu\MenuUrl.cs" />
+    <Compile Include="DBModels\EventList\EventListItem.cs" />
+    <Compile Include="DBModels\EventList\EventListUnitSetting.cs" />
+    <Compile Include="DBModels\EventList\ModelEventListMain.cs" />
+    <Compile Include="DBModels\PageLayout\PageSeminar.cs" />
+    <Compile Include="DBModels\Article\ArticleItem.cs" />
+    <Compile Include="DBModels\Article\ArticleUnitSetting.cs" />
+    <Compile Include="DBModels\Article\ModelArticleMain.cs" />
+    <Compile Include="DBModels\Message\MessageItem.cs" />
+    <Compile Include="DBModels\Message\MessageUnitSetting.cs" />
+    <Compile Include="DBModels\Active\ModelActiveEditMain.cs" />
+    <Compile Include="DBModels\FileDownload\ModelFileDownloadMain.cs" />
+    <Compile Include="DBModels\ModelFormMain.cs" />
+    <Compile Include="DBModels\ModelForumMain.cs" />
+    <Compile Include="DBModels\ModelInfo.cs" />
+    <Compile Include="DBModels\ModelKnowledgeMain.cs" />
+    <Compile Include="DBModels\ModelLangMain.cs" />
+    <Compile Include="DBModels\Message\ModelMessageMain.cs" />
+    <Compile Include="DBModels\PageEdit\ModelPageEditMain.cs" />
+    <Compile Include="DBModels\ModelProductMain.cs" />
+    <Compile Include="DBModels\PageLayout\PageActiveItem.cs" />
+    <Compile Include="DBModels\WebSiteMap\WebSiteMapInfo.cs" />
+    <Compile Include="DBModels\WebSiteMap\ModelWebsiteMapMain.cs" />
+    <Compile Include="DBModels\ModPage.cs" />
+    <Compile Include="DBModels\PageIndexItem.cs" />
+    <Compile Include="DBModels\PageIndexSetting.cs" />
+    <Compile Include="DBModels\PageLayout\PageLayout.cs" />
+    <Compile Include="DBModels\PageUnitSetting.cs" />
+    <Compile Include="DBModels\Patient.cs" />
+    <Compile Include="DBModels\SEO.cs" />
+    <Compile Include="DBModels\Site\SiteConfig.cs" />
+    <Compile Include="DBModels\Site\SiteFlow.cs" />
+    <Compile Include="DBModels\Site\SiteLayout.cs" />
+    <Compile Include="DBModels\SQLRepositoryInstances.cs" />
+    <Compile Include="DBModels\StudentFormSetting.cs" />
+    <Compile Include="DBModels\SystemRecord.cs" />
+    <Compile Include="DBModels\Users.cs" />
+    <Compile Include="DBModels\VerifyData\VerifyData.cs" />
+    <Compile Include="DBModels\ZipCode.cs" />
+    <Compile Include="ViewModel\Active\ActiveSearchModel.cs" />
+    <Compile Include="ViewModel\Active\ActiveItemResult.cs" />
+    <Compile Include="ViewModel\Active\ActiveEditModel.cs" />
+    <Compile Include="ViewModel\Active\AddPhotoModel.cs" />
+    <Compile Include="ViewModel\Active\ActiveUnitSettingModel.cs" />
+    <Compile Include="ViewModel\Active\ActiveFrontIndexModel.cs" />
+    <Compile Include="ViewModel\Active\ActiveFrontViewModel.cs" />
+    <Compile Include="ViewModel\Article\ArticleFrontGroupListModel.cs" />
+    <Compile Include="ViewModel\Common\UnitSettingColumn.cs" />
+    <Compile Include="ViewModel\EPaper\EPaperFrontIndexModel.cs" />
+    <Compile Include="ViewModel\EPaper\SubscriberSearchModel.cs" />
+    <Compile Include="ViewModel\EPaper\EPaperUnitSettingModel.cs" />
+    <Compile Include="ViewModel\EPaper\EPaperItemResult.cs" />
+    <Compile Include="ViewModel\EPaper\EPaperEditModel.cs" />
+    <Compile Include="ViewModel\EPaper\EPaperDefaultADModel.cs" />
+    <Compile Include="ViewModel\EPaper\EPaperContentItem.cs" />
+    <Compile Include="ViewModel\Link\LinkItemResult.cs" />
+    <Compile Include="ViewModel\Link\LinkEditModel.cs" />
+    <Compile Include="ViewModel\Patent\PatentFrontViewModel.cs" />
+    <Compile Include="ViewModel\Patent\PatentEditModel.cs" />
+    <Compile Include="ViewModel\Patent\PatentFrontIndexModel.cs" />
+    <Compile Include="ViewModel\Patent\PatentItemResult.cs" />
+    <Compile Include="ViewModel\Patent\PatentSearchModel .cs" />
+    <Compile Include="ViewModel\Patent\PatentUnitSettingModel.cs" />
+    <Compile Include="ViewModel\Map\MapFrontIndexModel.cs" />
+    <Compile Include="ViewModel\Site\PageJournalEditModel.cs" />
+    <Compile Include="ViewModel\Site\PageActiveEditModel.cs" />
+    <Compile Include="ViewModel\Site\PageEditModel.cs" />
+    <Compile Include="ViewModel\Site\PageNewsEditModel.cs" />
+    <Compile Include="ViewModel\Site\PageSeminarModel.cs" />
+    <Compile Include="ViewModel\Site\PageActiveResult.cs" />
+    <Compile Include="ViewModel\WebSiteMap\WebSiteEditModel.cs" />
+    <Compile Include="ViewModel\FileDownload\FileDownloadFrontIndexModel.cs" />
+    <Compile Include="ViewModel\Form\FormFrontIndexModel.cs" />
+    <Compile Include="ViewModel\Form\FormInputResult.cs" />
+    <Compile Include="ViewModel\Form\FormItemSettingModel.cs" />
+    <Compile Include="ViewModel\Form\FormSettingModel.cs" />
+    <Compile Include="ViewModel\Form\FormUnitSettingModel.cs" />
+    <Compile Include="ViewModel\FrontPage\HomeIndexModel.cs" />
+    <Compile Include="ViewModel\EventList\EventListEditModel.cs" />
+    <Compile Include="ViewModel\EventList\EventListFrontIndexModel.cs" />
+    <Compile Include="ViewModel\EventList\EventListFrontViewModel.cs" />
+    <Compile Include="ViewModel\EventList\EventListItemResult.cs" />
+    <Compile Include="ViewModel\EventList\EventListSearchModel.cs" />
+    <Compile Include="ViewModel\EventList\EventListUnitSettingModel.cs" />
+    <Compile Include="ViewModel\Article\ArticleEditModel.cs" />
+    <Compile Include="ViewModel\Article\ArticleFrontIndexModel.cs" />
+    <Compile Include="ViewModel\Article\ArticleFrontViewModel.cs" />
+    <Compile Include="ViewModel\Article\ArticleItemResult.cs" />
+    <Compile Include="ViewModel\Article\ArticleSearchModel.cs" />
+    <Compile Include="ViewModel\Article\ArticleUnitSettingModel.cs" />
+    <Compile Include="ViewModel\Message\MessageFrontViewModel.cs" />
+    <Compile Include="ViewModel\Message\MessageFrontIndexModel.cs" />
+    <Compile Include="ViewModel\Page\PageFrontIndexModel.cs" />
+    <Compile Include="ViewModel\Search\AdvanceSearchModel.cs" />
+    <Compile Include="ViewModel\Search\SearchModelBase.cs" />
+    <Compile Include="ViewModel\Search\SearchResult.cs" />
+    <Compile Include="ViewModel\Site\HomePageLayoutModel.cs" />
+    <Compile Include="ViewModel\SystemRecord\SystemRecordResult.cs" />
+    <Compile Include="ViewModel\SystemRecord\SystemRecordSearchModel.cs" />
+    <Compile Include="ViewModel\Admin\AdminFunctionModel.cs" />
+    <Compile Include="ViewModel\Site\SiteLangTextModel.cs" />
+    <Compile Include="ViewModel\Mail\MailInputModel.cs" />
+    <Compile Include="ViewModel\Mail\MailSearchModel.cs" />
+    <Compile Include="ViewModel\Common\MasterPageModel.cs" />
+    <Compile Include="ViewModel\Page\PageLayoutModel.cs" />
+    <Compile Include="ViewModel\Site\SiteLayoutModel.cs" />
+    <Compile Include="ViewModel\Menu\MenuEditModel.cs" />
+    <Compile Include="ViewModel\FileDownload\FileDownloadEditModel.cs" />
+    <Compile Include="ViewModel\FileDownload\FileDownloadItemResult.cs" />
+    <Compile Include="ViewModel\FileDownload\FileDownloadSearchModel .cs" />
+    <Compile Include="ViewModel\FileDownload\FileDownloadUnitSettingModel.cs" />
+    <Compile Include="ViewModel\Message\MessageItemResult.cs" />
+    <Compile Include="ViewModel\Message\MessageEditModel.cs" />
+    <Compile Include="ViewModel\Message\MessageSearchModel.cs" />
+    <Compile Include="ViewModel\Page\PageIndexSettingModel.cs" />
+    <Compile Include="ViewModel\Page\PageEditItemModel.cs" />
+    <Compile Include="ViewModel\Message\MessageUnitSettingModel.cs" />
+    <Compile Include="ViewModel\Common\SEOViewModel.cs" />
+    <Compile Include="ViewModel\AD\ADListResult.cs" />
+    <Compile Include="ViewModel\AD\ADEditModel.cs" />
+    <Compile Include="ViewModel\Common\EmptySearchModel.cs" />
+    <Compile Include="ViewModel\AD\ADSearchModel.cs" />
+    <Compile Include="ViewModel\Site\SiteConfigModel.cs" />
+    <Compile Include="ViewModel\Site\SiteLangModel.cs" />
+    <Compile Include="ViewModel\Admin\UserGroupListResult.cs" />
+    <Compile Include="ViewModel\Page\PageUnitSettingModel.cs" />
+    <Compile Include="ViewModel\Admin\AdminMemberModel.cs" />
+    <Compile Include="ViewModel\Admin\AdminMemberListResult.cs" />
+    <Compile Include="ViewModel\Admin\AuthoritySearchModel.cs" />
+    <Compile Include="ViewModel\LogIn\LogInViewModel.cs" />
+    <Compile Include="ViewModel\Common\Paging.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\Common\WrappedJsonResult.cs" />
+    <Compile Include="ViewModel\VerifyData\VerifyDataResult.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ResourceLibrary\ResourceLibrary.csproj">
+      <Project>{f54c1c17-61a5-4fd0-86ba-7f2288f77dbb}</Project>
+      <Name>ResourceLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SQLModel\SQLModel.csproj">
+      <Project>{b9127546-557f-4865-9783-a67c098aba91}</Project>
+      <Name>SQLModel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

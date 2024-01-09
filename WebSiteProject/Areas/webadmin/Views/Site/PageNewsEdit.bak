@@ -1,0 +1,241 @@
+﻿@model  PageNewsEditModel
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>版面設定<i class="fa fa-circle"></i></li>
+        <li>入口首頁配置</li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<h2>入口首頁管理</h2>
+<div class="portlet light bordered">
+
+    <!--management item start-->
+    <div class="table-toolbar">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="display_inline">
+                <p class="class_title">管理項目</p>
+                <select class="form-control_1" onChange="window.location.href=this.value">
+                    <option value="@Url.Action("PageSeminar")" >說明會</option>
+                    <option value="#" selected>新聞動態</option>
+                    <option value="@Url.Action("PageActiveEdit")">活動訊息</option>
+                    <option value="@Url.Action("PageJournalEdit")">永續產業發展期刊</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <!--management item end-->
+    <!--table start-->
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SavePageNewEdit")' enctype="multipart/form-data">
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item"><span class="red">*</span> 連結模組</div><!--以模組為基準-->
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <select class="form-control w-auto float_left margin_3" id="sel_modeltype">
+                                    <!--<option>請選擇程式模組</option>-->
+                                    <option value="">請選擇</option>
+                                    <option value="2">訊息管理</option>
+                                    <option value="3">活動管理</option>
+                                    <option value="4">文件下載</option>
+                                </select>
+
+                                <select class="form-control w-auto float_left margin_3" id="sel_modelitem"></select>
+                                <span class="required" id="Seltype-error" style="display:none;">連結模組 必須選取！</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item"><span class="red">*</span> 首頁標題</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control input-medium checkitem" } })
+                                <span class="required" id="Title-error" style="display:none;">首頁標題 必須填寫！</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item"><span class="red">*</span> 首頁標題(英文)</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.TitleEng, new { htmlAttributes = new { @class = "form-control input-medium checkitem" } })
+                                <span class="required" id="TitleEng-error" style="display:none;">首頁標題(英文) 必須填寫！</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item"><span class="red">*</span> 連結項目</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+
+                                <span class="required" id="span_tableinfo">最多8筆，目前已選取<span id="span_selcnt">0</span>筆</span>
+                                <span class="required" id="SelItem-error" style="display:none;"><br />&nbsp;&nbsp;連結項目 必須選取！</span>
+                                <!--table start--><!--最多可勾選8筆，上架僅供瀏覽-->
+                                <div class="table-scrollable">
+                                    <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0"
+                                           id="eventtable"
+                                           data-url="@Url.Action("GetModelItemList")"
+                                           data-sort-name='Sort'
+                                           data-page-size='10'
+                                           data-filed-id='ItemID'
+                                           data-max-pagination='10'>
+                                        <thead>
+                                            <tr>
+                                                <th width="60" class="text-center delete_th" filed-type='delcheckbox'>
+                                                    選取
+                                                </th>
+                                                <th width="60" class="text-center" filed-name='Sort' filed-item-class='text-center'>排序</th>
+                                                <th width="10%" class="text-center" filed-name='PublicshDate' filed-item-class='text-center'>發佈日期</th>
+                                                <th class="text-center" style="min-width:100px" filed-name='Title'>標題</th>
+                                                <th width="10%" class="text-center" filed-name='GroupName' filed-item-class='text-center'>類別</th>
+                                                <th width="115" class="text-center" filed-name='IsRange' filed-item-class='text-center'>是否在顯示區間</th>
+                                                <th width="70" class="text-center" filed-name='Enabled' filed-type='checkbox' filed-item-class="checkboxes  disabled">上架</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <!--table end-->
+                                <!--頁碼 start-->
+                                <div id="page_number" class="table-toolbar">
+                                    <div class="col-md-4 col-sm-12 col-xs-12 page_total" id="tableinfo"></div>
+                                    <div class="col-md-8 col-sm-12 col-xs-12 page_icon">
+                                        <div class="btn-group" id="pagination">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--頁碼 end-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--table end-->
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue">確認</button>
+        </div>
+    </form>
+</div>
+
+@section scripts {
+    <script>
+        var mytable;
+        $(function () {
+            mytable = $("#eventtable").myDataTable().TableList[0];
+            mytable.iskeepSelect = true;
+            mytable.settingTdData = myDataTableTr;
+            var olditemlist = '@Model.ModelItemList';
+            if (olditemlist != '') { mytable.keepcheckid = olditemlist.split(','); $("#span_selcnt").text(mytable.keepcheckid.length);}
+            mytable.settingTableInfo = function (tableinfoId, totalcnt, offsetcnt, nowpagecnt) {
+                var totalclick = mytable.keepcheckid.length;
+                $("#" + tableinfoId).html('總筆數:' + totalcnt + '，顯示' + (totalcnt <= 0 ? 0 : offsetcnt) + "~" + (offsetcnt + nowpagecnt - 1));
+                $(".disabled").attr('disabled', 'disabled');
+            };
+            if (@Model.SelModelID> 0) {
+                $("#sel_modeltype").val('@Model.SelModelID');
+                  $.post('@Url.Action("GetModelItem")', { "modelid":'@Model.SelModelID'}, function (data) {
+                         $(data).appendTo('#sel_modelitem');
+                      $("#sel_modelitem").val('@Model.SelModelItemID');
+                      GetData();
+                });
+            }
+            $('#sel_modeltype').change(function () {
+                $("#eventtable tbody").empty();
+                $("#sel_modelitem").empty();
+                $.post('@Url.Action("GetModelItem")', { "modelid": $('#sel_modeltype').val() }, function (data) {
+                    mytable.keepcheckid = [];
+                    $(data).appendTo('#sel_modelitem');
+                });
+            });
+            $("#eventtable").delegate((".chksel"), "click", function () {
+                var selitem = mytable.keepcheckid;
+                var _index = $(this).val();
+                if ($(this)[0].checked) {
+                    if (selitem.length > 7) {
+                        alert('只能選取8組,超過選取上限');
+                        return false;
+                    }
+                    if (jQuery.inArray(_index, selitem) < 0) {
+                        mytable.keepcheckid.push(_index);
+                    }
+                } else {
+                    mytable.keepcheckid = jQuery.grep(mytable.keepcheckid, function (value) {
+                        return value != _index;
+                    });
+                }
+                $("#span_selcnt").text(mytable.keepcheckid.length);
+            });
+            $('#sel_modelitem').change(function () {
+                mytable.keepcheckid = [];
+                $("#span_selcnt").text('0');
+                GetData();
+            });
+
+            $('#editform').submit(function (event) {
+                $(".required").not("#span_tableinfo").hide();
+                var iscon = true;
+                var inputval = $("#editform :input").filter(function () { return $(this).val() == "" && $(this).hasClass('checkitem'); });
+                for (var idx = 0; idx < inputval.length; idx++) {
+                    $("#" + inputval[idx].id + "-error").show();
+                    iscon = false;
+                }
+            
+                if ($('#sel_modeltype').val() == "" || $('#sel_modelitem').val()=="") {
+                    $('#Seltype-error').show(); 
+                    iscon = false;
+                }
+                if (mytable.keepcheckid.length==0) {
+                    $('#SelItem-error').show();
+                    iscon = false;
+                }
+                if (iscon==false) { return false; }
+                var selitem = mytable.keepcheckid;
+                var formData = new FormData();
+                var array = $('#editform').serializeArray();
+                $.each(array, function () {
+                    formData.append(this.name, this.value);
+                });
+                formData.append("ModelItemList", mytable.keepcheckid.join(','));
+                formData.append("SelModelID", $('#sel_modeltype').val() );
+                formData.append("SelModelItemID", $('#sel_modelitem').val());
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data == "") {
+                            alert("作業完成");
+                        } else {
+                            alert(data);
+                        }
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+            });
+   
+        });
+
+        function GetData() {
+            if ($('#sel_modelitem').val() != "") {
+                mytable.SearchModelBase.Key = $('#sel_modeltype').val();
+                mytable.SearchModelBase.ModelID = $('#sel_modelitem').val();
+                mytable.GetData(1);
+            }
+        }
+    </script>
+
+}
+

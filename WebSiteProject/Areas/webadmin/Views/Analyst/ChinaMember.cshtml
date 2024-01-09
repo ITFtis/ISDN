@@ -1,0 +1,244 @@
+﻿
+<script src="@Url.Content("~/Scripts/ammap/ammap.js")"></script>
+<script src="@Url.Content("~/Scripts/ammap/plugins/export/export.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ammap/themes/light.js")"></script>
+<script src="@Url.Content("~/Scripts/chinaHigharea.js")"></script>
+<style>
+    #chartdiv {
+        width: 100%;
+        height: 500px;
+        font-size: 11px;
+    }
+</style>
+
+	<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <span href="#">Home</span>
+            <i class="fa fa-circle"></i>
+            <span href="#">資料分析</span>
+            <i class="fa fa-circle"></i>
+            <span href="#">會員大陸地區分布</span>
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="member_title">會員大陸地區分布</div>
+
+<div class="portlet light bordered">
+
+    <!--set item start-->
+    <div class="table-toolbar">
+        <div class="col-md-6 col-sm-12 col-xs-12"></div>
+
+        <div class="col-md-6 col-sm-12 col-xs-12 mobile_left">
+            <button class="btn blue-hoki alert_box"  id="btn_download">下載 <i class="fa fa-file-photo-o"></i></button>
+            <button class="btn blue-hoki alert_box" id="btn_save">儲存 <i class="fa fa-download"></i></button>
+            <button class="btn blue-hoki alert_box" id="btn_print">列印 <i class="fa fa-print"></i></button>
+        </div>
+    </div>
+    <!--set item end-->
+    <!--content start-->
+    <div style="width: 100%; background-color:#EEEEEE; padding:5%">
+        <div id="mapdiv" style="width: 100%; background-color:#EEEEEE; height: 450px;"></div>
+    </div>
+    <br>
+    <div align="center">
+        <table  border="1" cellspacing="0" cellpadding="0" style="border:solid #ccc 1px;margin:10px; max-width:300px;width:90%" id="info_table">
+            <tbody>
+                <tr  id="TR-CN-EAST">
+                    <td class="text-center padding_4" width="100">華東</td>
+                    <td class="text-center">@ViewBag.cneastcount</td>
+                </tr>
+                <tr  id="TR-CN-WEST">
+                    <td class="text-center padding_4">華南</td>
+                    <td class="text-center">@ViewBag.cnwestcount</td>
+                </tr>
+                <tr  id="TR-CN-CENTER">
+                    <td class="text-center padding_4">華中</td>
+                    <td class="text-center">@ViewBag.cncentercount</td>
+                </tr>
+                <tr  id="TR-CN-NORTH">
+                    <td class="text-center padding_4">華北</td>
+                    <td class="text-center">@ViewBag.cnnorthcount</td>
+                </tr>
+                <tr  id="TR-CN-SOUTHNORTH">
+                    <td class="text-center padding_4">西北</td>
+                    <td class="text-center">@ViewBag.cnsouthnorthcount</td>
+                </tr>
+                <tr  id="TR-SOUTHWEST">
+                    <td class="text-center padding_4">西南</td>
+                    <td class="text-center">@ViewBag.cnsouthwestcount</td>
+                </tr>
+                <tr  id="TR-EASTNORTH">
+                    <td class="text-center padding_4">東北</td>
+                    <td class="text-center">@ViewBag.cneastnorthcount</td>
+                </tr>
+                <tr  id="TR-CN-HK">
+                    <td class="text-center padding_4">港澳</td>
+                    <td class="text-center">@ViewBag.cnhkcount</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--content end-->
+
+</div>
+<!--message end-->
+@section scripts {
+    <script>
+        var selvalue = [];
+        var map = null;
+        $(document).ready(function () {
+            map = AmCharts.makeChart("mapdiv", {
+                "type": "map",
+                "theme": "light",
+                "colorSteps": 10,
+                "dataProvider": {
+                    mapVar: AmCharts.maps.chinaHigharea,
+                    areas: [
+                   {
+                       id: "CN-EAST",//華東
+                       color: "#FF0F00",
+                       value: '@ViewBag.cneastcount'
+                   },
+                {
+                    id: "CN-WEST",//華南
+                    color: "#FF6600",
+                    value: '@ViewBag.cnwestcount'
+                },
+                {
+                    id: "CN-CENTER",//華中
+                    color: "#04D215",
+                    value: '@ViewBag.cncentercount'
+                },
+                {
+                    id: "CN-NORTH",//華北
+                    color: "#0D8ECF",
+                    value: '@ViewBag.cnnorthcount'
+                },
+                {
+                    id: "CN-SOUTHNORTH",//西北
+                    color: "#F8FF01",
+                    value: '@ViewBag.cnsouthnorthcount'
+                },
+                {
+                    id: "CN-SOUTHWEST",//西南
+                    color: "#B0DE09",
+                    value: '@ViewBag.cnsouthwestcount'
+                },
+                {
+                    id: "CN-EASTNORTH",//東北
+                    color: "#CD0D74",
+                    value: '@ViewBag.cneastnorthcount'
+                },
+                {
+                    id: "CN-HK",//港澳
+                    color: "#8A0CCF",
+                    value: '@ViewBag.cnhkcount'
+                }]
+                },
+                "areasSettings": {
+                    "autoZoom": false,
+                    "balloonText": "[[title]] 會員數 [[value]]"
+                }, "legend": {
+                    "width": "100%",
+                    "marginRight": 27,
+                    "marginLeft": 27,
+                    "equalWidths": false,
+                    "backgroundAlpha": 0.5,
+                    "backgroundColor": "transparent",
+                    "borderColor": "transparent",
+                    "borderAlpha": 1,
+                    "top": 0,
+                    "left": 0,
+                    "horizontalGap": 10,
+                    "data": [{
+                        "title": "華東(" + '@ViewBag.cneastcount' + ")",
+                        "color": "#FF0F00"
+                    }, {
+                        "title": "華南(" + '@ViewBag.cnwestcount' + ")",
+                        "color": "#FF6600"
+                    }, {
+                        "title": "華中(" + '@ViewBag.cncentercount' + ")",
+                        "color": "#04D215"
+                    }, {
+                        "title": "華北(" + '@ViewBag.cnnorthcount' + ")",
+                        "color": "#0D8ECF"
+                    }, {
+                        "title": "西北(" + '@ViewBag.cnsouthnorthcount' + ")",
+                        "color": "#F8FF01"
+                    }, {
+                        "title": "西南(" + '@ViewBag.cnsouthwestcount' + ")",
+                        "color": "#B0DE09"
+                    }, {
+                        "title": "東北(" + '@ViewBag.cneastnorthcount' + ")",
+                        "color": "#CD0D74"
+                    }, {
+                        "title": "港澳(" + '@ViewBag.cnhkcount' + ")",
+                        "color": "#8A0CCF"
+                    }]
+                },
+                "zoomControl": {
+                    "panControlEnabled": false,
+                    "zoomControlEnabled": false,
+                    "homeButtonEnabled": false
+                }, "export": {
+                    "enabled": true,
+                    "menu": []
+                },
+                "doDoubleClickZoom": false,
+                "dragMap": false
+            });
+
+            $("#mapdiv").delegate((".amcharts-map-area"), "mouseover", function () {
+                var thisclass = $(this).attr('class');
+                $("#info_table tr").css('background-color', 'white');
+                if (thisclass.indexOf('CN-EAST') > 0) {
+                    $("#TR-CN-EAST").css('background-color', '#ECCBF1');
+                } else if (thisclass.indexOf('CN-WEST') > 0) {
+                    $("#TR-CN-WEST").css('background-color', '#ECCBF1');
+                } else if (thisclass.indexOf('CN-CENTER') > 0) {
+                    $("#TR-CN-CENTER").css('background-color', '#ECCBF1');
+                } else if (thisclass.indexOf('CN-NORTH') > 0) {
+                    $("#TR-CN-NORTH").css('background-color', '#ECCBF1');
+                } else if (thisclass.indexOf('CN-SOUTHNORTH') > 0) {
+                    $("#TR-CN-SOUTHNORTH").css('background-color', '#ECCBF1');
+                } else if (thisclass.indexOf('CN-SOUTHWEST') > 0) {
+                    $("#TR-SOUTHWEST").css('background-color', '#ECCBF1');
+                } else if (thisclass.indexOf('CN-EASTNORTH') > 0) {
+                    $("#TR-CN-EASTNORTH").css('background-color', '#ECCBF1');
+                } else if (thisclass.indexOf('CN-HK') > 0) {
+                    $("#TR-CN-HK").css('background-color', '#ECCBF1');
+                }
+            });
+            $("#mapdiv").delegate((".amcharts-map-area"), "mouseout", function () {
+                $("#info_table tr").css('background-color', 'white');
+            });
+            $("#btn_download").click(function () {
+                map["export"].capture({}, function () {
+                    this.toPNG({}, function (base64) {
+                        var tempopj = {};
+                        tempopj.save = base64;
+                        this.download(base64, this.defaults.formats.PNG.mimeType, "會員大陸地區分布.png");
+                    });
+                });
+            });
+
+            $("#btn_print").click(function () {
+                map.export.capture({}, function () {
+                    this.toPRINT();
+                });
+            });
+
+            $("#btn_save").click(function () {
+                map.export.toXLSX({}, function (data) {
+                    this.download(data, this.defaults.formats.XLSX.mimeType, "會員大陸地區分布.xlsx");
+                });
+            });
+
+        });
+    </script>
+}

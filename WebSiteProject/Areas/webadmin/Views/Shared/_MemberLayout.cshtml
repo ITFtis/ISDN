@@ -1,0 +1,231 @@
+﻿<!DOCTYPE html>
+@{
+
+    if (Request.IsAuthenticated)
+    {
+        var user = Request.GetOwinContext().Authentication.User;
+        var role = user.FindFirst(System.Security.Claims.ClaimTypes.Role);
+        if (Session["MemberCode"] == null)
+        {
+            var cstr = System.Configuration.ConfigurationManager.ConnectionStrings["TPCA"].ConnectionString;
+            var memberobj = new Services.Manager.MemberManager(
+                new SQLModel.SQLRepository<SQLModel.Models.Member>(cstr));
+            var mid = Session["MemberId"];
+            var member = memberobj.Where(new SQLModel.Models.Member()
+            {
+                MemberID = int.Parse(mid.ToString())
+            });
+            Session["MemberCode"] = member.First().Code;
+            Session["MemberName"] = member.First().Name;
+        }
+        ViewBag.UserName = Session["MemberCode"] + " " + Session["MemberName"];
+        if (role != null) { ViewBag.Role = role.Value; }
+
+    }
+    else
+    {
+        Response.Redirect(Url.Action("Login", "Account", new { area = "webadmin" }));
+    }
+    ViewBag.urlcontroller = this.ViewContext.RouteData.Values["controller"].ToString().ToLower();
+}
+<html lang="zh">
+<head>
+    <meta charset="utf-8" />
+    <title>TPCA 台灣電路板協會 會員中心</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    @Styles.Render("~/Content/css")
+    <link href="@Url.Content("~/Content/admincss/urlfont.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/admincss/font-awesome.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/admincss/simple-line-icons.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/admincss/components.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/admincss/layout.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/admincss/darkblue.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/admincss/custom.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/admincss/style.css")" rel="stylesheet" />
+    <link rel="shortcut icon" href="@Url.Content("~/img/favicon.ico")" />
+
+    <script src="@Url.Content("~/Scripts/jquery-1.12.4.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.js")"></script>
+    <script src="@Url.Content("~/Scripts/app.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/layout.min.js")"></script>
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        var gname = '@ViewBag.Role';
+    </script>
+</head>
+
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
+
+    <!--top menu start-->
+    <div class="page-header navbar navbar-fixed-top">
+        <div class="page-header-inner ">
+
+            <!--logo start-->
+            <div class="page-logo">
+                <a href="@Url.Action("Index","Member")" class="logo-default">電路板協會</a>
+                <div class="menu-toggler sidebar-toggler">
+                    <span></span>
+                </div>
+            </div>
+            <!--logo end-->
+            <!--mobile menu start-->
+            <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+                <span></span>
+            </a>
+            <!--mobile menu end-->
+            <!--top menu start-->
+            <div class="top-menu hidden-sm hidden-xs">
+                <ul class="nav navbar-nav pull-right">
+                    <li class="dropdown link_index">
+                        <a href="@Url.Action("Index","Member")" class="dropdown-toggle">
+                            <i class="fa fa-television"></i>
+                            <span class="title">回系統管理</span>
+                        </a>
+                    </li>
+                    <li class="dropdown dropdown-quick-sidebar-toggler">
+                        <a href="@Url.Action("Logout","Account")" class="dropdown-toggle">
+                            <i class="icon-logout"></i>
+                            <span class="title">登出</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!--top menu end-->
+
+        </div>
+    </div>
+    <!--top menu end-->
+
+    <div class="page-container">
+
+        <!--left menu start-->
+        <div class="page-sidebar-wrapper">
+            <div class="page-sidebar navbar-collapse collapse">
+                <ul class="page-sidebar-menu  page-header-fixed " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+
+                    <!--member name start-->
+                    <li class="heading">
+                        <h3 class="member_name" style="background-color:#5bb95b">@ViewBag.UserName</h3>
+                    </li>
+                    <!--member name end-->
+
+                    <li class="nav-item start active open">
+                        <a href="@Url.Action("Index","MemberHome")" class="nav-link nav-toggle">
+                            <i class="icon-home"></i>
+                            <span class="title">Home</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item letter" id="menu_member">
+                        <a href="#" class="nav-link nav-toggle">
+                            <i class="icon-notebook"></i>
+                            <span class="title">會員資料</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="nav-item">
+                                <a href="@Url.Action("Basic","Member")" class="nav-link ">
+                                    <span class="title">基本資料</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("LocalBranch", "Member")" class="nav-link ">
+                                    <span class="title">分公司資訊</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("CompanyIndustryInfo", "Member")" class="nav-link ">
+                                    <span class="title">產業/產品資訊</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("ContactWindow", "Member")" class="nav-link ">
+                                    <span class="title">聯絡窗口</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item letter">
+                        <a href="@Url.Action("CouponInfo","Member")" class="nav-link nav-toggle">
+                            <i class="icon-credit-card"></i>
+                            <span class="title">抵用券資訊</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item letter">
+                        <a href="@Url.Action("Index","MemberInfo")" class="nav-link nav-toggle">
+                            <i class="icon-users"></i>
+                            <span class="title">學員資訊</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item letter">
+                        <a href="@Url.Action("MemberIndex","Meeting")" class="nav-link nav-toggle">
+                            <i class="fa fa-file-text-o"></i>
+                            <span class="title">最新消息</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item letter">
+                        <a href="@Url.Action("Mail","CustomerService")" class="nav-link nav-toggle">
+                            <i class="icon-envelope-open"></i>
+                            <span class="title">客服信箱</span>
+                        </a>
+                    </li>
+
+
+                    <li class="nav-item hidden-lg hidden-md">
+                        <a href="@Url.Action("Index","Member")">
+                            <i class="fa fa-television"></i>
+                            <span class="title">回TPCA系統</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item hidden-lg hidden-md">
+                        <a href="javascript:;">
+                            <i class="icon-logout"></i>
+                            <span class="title">登出</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+
+
+        <!--left menu end-->
+        <!--content start-->
+        <div class="page-content-wrapper">
+            <div class="page-content" id="page_content">
+                @RenderBody()
+            </div>
+        </div>
+        <!--content end-->
+
+    </div>
+
+    <!--footer start-->
+    <div class="page-footer">
+        <div class="page-footer-inner">Powered by Taiwan Printed Circuit Association</div>
+        <div class="scroll-to-top">
+            <i class="icon-arrow-up"></i>
+        </div>
+    </div>
+    <!--footer end-->
+    <script type="text/javascript">
+        (function ($) {
+            var tempcontroller = '@ViewBag.urlcontroller';
+            if (tempcontroller != "") {
+                var menu = $("#menu_" + tempcontroller);
+                menu.addClass("open");
+                menu.find('.arrow').first().addClass("open");
+                menu.find('.sub-menu').first().css('display', 'block');
+            }
+    }(jQuery));
+    </script>
+
+</body>
+
+</html>

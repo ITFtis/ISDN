@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "PageNotFound";
+    Layout = null;
+}
+@Html.AntiForgeryToken()
+<link href="@Url.Content("~/Content/admincss/components.min.css")" rel="stylesheet" />
+<link href="@Url.Content("~/Content/admincss/bootstrap.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Scripts/jquery-1.12.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap.js")"></script>
+<script src="@Url.Content("~/Scripts/respond.js")"></script>
+
+<div class="container">
+    <div class="col-lg-8 col-lg-offset-2 text-center">
+        <div class="logo">
+            <h1>404</h1>
+        </div>
+        <p class="lead text-muted">@Resource.PageNotFound</p>
+        <div class="clearfix"></div>
+        @*<div class="col-lg-6 col-lg-offset-3">
+                <form action="@Url.Action("Index","Home")">
+                    <div class="input-group">
+                        <input type="text" placeholder="search ..." class="form-control">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"></button>
+                        </span>
+                    </div>
+                </form>
+            </div>*@
+        <div class="clearfix"></div>
+        <br>
+        <div class="col-lg-6 col-lg-offset-3">
+            <div class="btn-group btn-group-justified">
+                <a href="javascript:history.go(-1)" class="btn btn-info" title='@Resource.GoBackPage'>@Resource.GoBackPage</a>
+                <a href=@Url.Action("Login", "Account", new { area = "webadmin" }) class="btn btn-warning" title='@Common.GetLangText("回首頁")'>@Common.GetLangText("回首頁")</a>
+            </div>
+        </div>
+    </div>
+</div>

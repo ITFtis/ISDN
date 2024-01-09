@@ -1,0 +1,325 @@
+﻿@model  ViewModels.MasterPageModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="@(Model.LangId=="1"?"Zh-hant":"en")" xml:lang="@(Model.LangId=="1"?"Zh-hant":"en")">
+<!--英文版<html lang="en" xml:lang="en">-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>National Center for High-performance Computing</title><!--英文 National Center for High-performance Computing-->
+    <link rel="icon" href="@Url.Content("~/img/favicon.ico")" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/bootstrap.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/theme.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/theme-elements.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/settings.css")" media="screen">
+    <!--fontawesome start-->
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/font-awesome.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/fontawesome.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/brands.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/solid.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/regular.min.css")">
+    <!--fontawesome end-->
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/style.css")">
+    <script src="@Url.Content("~/js/jquery.js")"></script>
+    <script src="@Url.Content("~/js/main.js")"></script>
+    <noscript>
+        <link rel="stylesheet" href="@Url.Content("~/frontcss/css/noscript.css")">
+    </noscript>
+
+    <!--owl.carousel start-->
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/owl.carousel.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/owl.theme.default.min.css")">
+    <script src="@Url.Content("~/js/owl.carousel.min.js")"></script>
+    <script src="@Url.Content("~/js/main_owl.js")"></script>
+    <script src="@Url.Content("~/Scripts/custom.js")"></script>
+    <!--owl.carousel end-->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120661325-6"></script>
+    @if (string.IsNullOrEmpty(Model.SEOScript[2]) == false)
+    {
+        <title>@Model.SEOScript[2]</title>
+    }
+    else
+    {
+        <title>@(ViewBag.title == null ? "" : ViewBag.title)</title>
+    }
+    @if (Model.SEOScript[1] != "")
+    {
+        @Html.Raw(Model.SEOScript[1])
+    }
+    @if (Model.SEOScript[0] != "")
+    {
+        <meta name="description" content="@Model.SEOScript[0]" />
+    }
+    @*<script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', 'UA-120661325-6');
+        </script>*@
+</head>
+<body>
+    <!--header start-->
+    <noscript>
+        <div class="noscript_font">
+            Your browser doesn’t seem to support JavaScript syntax, but it doesn’t matter becasue it will not affect the presentation of the content. You can use “Ctrl + (+)/(-)” on the keyboard to increase or decrease the font size if you want to choose it. “Alt + (←)” provided by the browser can be used to go back to previous page. You can also use “Ctrl + p”-printing function offered by the browser to print. In need to save the website, “Ctrl + d” on the keyboard can be used to add to my favorite.
+        </div>
+    </noscript>
+    <!--header start-->
+    <header id="header" data-plugin-options='{"stickyEnabled": true, "stickyEnableOnBoxed": true, "stickyEnableOnMobile": false, "stickyStartAt": 0, "stickySetTop": "0", "stickyChangeLogo": false}'>
+        <div class="header-body">
+
+            <!--topmenu start-->
+            <div class="header-container container">
+                <div class="header-row">
+                    <div class="header-column">
+
+                        <div class="header-logo">
+                            <a href="#main-content" class="sr-only  sr-only-focusable" title="Jump to the main content area">Jump to the main content area</a><!-- 英文版 <a href="#main-content" class="sr-only" title="" tabindex="1">Jump to the main content area</a>  -->
+                            <h1>
+                                <a href="@Url.Action("Index","Home")" title="National Center for High-performance Computing">
+                                    <img alt="National Center for High-performance Computing" width="340" data-sticky-width="330" data-sticky-top="0" src="@Model.LogoUrl"><!--英文版 ；建議尺寸360*70px-->
+                                </a>
+                            </h1>
+                        </div>
+                        <button class="btn header-btn-collapse-nav float_right" data-toggle="collapse" data-target=".header-nav-main">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </div>
+                    <div class="header-column">
+                        <div class="header-row hidden-xs">
+                            <nav class="header-nav-top">
+                                <ul class="nav nav-pills">
+                                    <li>
+                                        <a href="#;return false;" title="Top menu area" accesskey="U" class="accesskey">:::</a><!--英文<a href="#;return false;" title="" accesskey="U" class="accesskey">:::</a>-->
+                                    </li>
+                                    @if (Model.TopMenu != "")
+                                    {@Html.Raw(Model.TopMenu) }
+                                else
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index","Map")" title="SiteMap"><i class="fa fa-sitemap"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index","Home")" title="Home"><i class="fa fa-home"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Chinese" class="langchange" langid="1" id="link_lang">中文</a>
+                                    </li>
+                                }
+
+                                    <li class="font_size hidden-xs">
+
+                                        <a href="#" class="size_s" onClick="size_set('font_s')" onkeypress="size_set('font_s')" title="小字級">A-</a><!--英文 S-->
+                                        <a href="#" class="size_m" onClick="size_set('font_m')" onkeypress="size_set('font_m')" title="中字級">A</a><!--英文 M-->
+                                        <a href="#" class="size_l" onClick="size_set('font_l')" onkeypress="size_set('font_l')" title="大字級">A+</a><!--英文 L-->
+
+                                    </li>
+                                    <li class="share_icon">
+                                        <a href="https://www.facebook.com/%E5%9C%8B%E7%A0%94%E9%99%A2%E5%9C%8B%E7%B6%B2%E4%B8%AD%E5%BF%83-292580541692362/?notify_field=blurb&modal=profile_completion&notif_id=1558930416338465&notif_t=page_profile_blurb" target="_blank" title="facbook(new window)">
+                                            <!--英文 facebook(new window)-->
+                                            <span class="fa-stack fa-xs">
+                                                <i class="fa fa-square fa-stack-2x" style="color: #345db7;"></i>
+                                                <i class="fab fa-facebook-f fa-stack-1x" style="color: #fff;"></i>
+                                            </span>
+                                        </a>
+                                        <a href="https://www.youtube.com/channel/UCWrzkYUM5cwpZExQ4Et5vSw?view_as=subscriber" target="_blank" title="youtube(new window)">
+                                            <!--英文 youtube(new window)-->
+                                            <span class="fa-stack fa-xs">
+                                                <i class="fa fa-square fa-stack-2x" style="color: #e50012;"></i>
+                                                <i class="fab fa-youtube fa-stack-1x" style="color: #fff;"></i>
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="header-row">
+                            <div class="header-nav">
+                                <div class="header-nav-search header-nav-main-effect-1 header-nav-main-sub-effect-1 collapse">
+                                    <nav>
+                                        <ul class="nav nav-pills">
+
+                                            <li class="search_box">
+                                                <input id="" type="text" class="search_input" placeholder="Search...">
+                                                <button type="submit" class="search_icon" onClick="location.href='search.html'" onkeypress="location.href='search.html'"><i class="fa fa-search"></i></button><!--無障礙需求：使用onClick, 需同時使用onkeypress-->
+                                            </li>
+
+                                        </ul>
+                                    </nav>
+                                </div>
+
+                                <div class="header-nav-main header-nav-main-effect-1 header-nav-main-sub-effect-1 collapse">
+                                    <nav>
+                                        <ul class="nav nav-pills" id="mainNav">
+                                            @Html.Raw(Model.MainMenu)
+                                        </ul>
+
+                                        <ul class="nav nav-top visible-xs">
+                                            @if (Model.TopMenu != "")
+                                            {@Html.Raw(Model.TopMenu) }
+                                        else
+                                        {
+                                            <li>
+                                                <a href="@Url.Action("Index","Map")" title="SiteMap"><i class="fa fa-sitemap"></i></a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Index","Home")" title="Home"><i class="fa fa-home"></i></a>
+                                            </li>
+                                            <li>
+                                                <a href="#" title="Chinese" class="langchange" langid="2" id="link_lang">中文</a>
+                                            </li>
+                                        }
+                                            <li>
+                                                <a href="https://www.facebook.com/%E5%9C%8B%E7%A0%94%E9%99%A2%E5%9C%8B%E7%B6%B2%E4%B8%AD%E5%BF%83-292580541692362/?notify_field=blurb&modal=profile_completion&notif_id=1558930416338465&notif_t=page_profile_blurb" target="_blank" title="facbook(new window)">
+                                                    <!--英文 facebook(new window)-->
+                                                    <i class="fab fa-facebook-f"></i> facebook
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="https://www.youtube.com/channel/UCWrzkYUM5cwpZExQ4Et5vSw?view_as=subscriber" target="_blank" title="youtube(new window)">
+                                                    <!--英文 youtube(new window)-->
+                                                    <i class="fab fa-youtube"></i> youtube
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--topmenu end-->
+
+        </div>
+    </header>
+    <!--header end-->
+    <!--header end-->
+    @RenderBody()
+    <!--footer start-->
+    <footer id="footer">
+        <div class="container">
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <ul class="footer_menu">
+                    <a href="#;return false;" title="Footer area" accesskey="G">:::</a>
+                    @Html.Raw(Model.FooterMenu)
+                </ul>
+
+                <div class="search" data-sr="enter botom over 1.5s">
+                    <label for="footer_search">
+                        <input type="text" id="footer_search"  name="footer_search">
+                    </label>
+                    <button type="button" class="search_icon" title="search" alt="search" id="btn_mainsearch"><i class="fa fa-search"></i></button>
+                    <div class="hotword" id="hot_keyword">Popular search：@Html.Raw(Model.SearchKey)</div>
+                </div>
+
+                <ul class="link">
+                    <li data-sr="enter botom over 1.5s">
+                        <a href="https://www.facebook.com/%E5%9C%8B%E7%A0%94%E9%99%A2%E5%9C%8B%E7%B6%B2%E4%B8%AD%E5%BF%83-292580541692362/?notify_field=blurb&modal=profile_completion&notif_id=1558930416338465&notif_t=page_profile_blurb" target="_blank" title="facbook(new window)">
+                            <!--英文 facebook(new window)-->
+                            <span class="fa-stack fa-1g">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li data-sr="enter botom over 1.5s">
+                        <a href="https://www.instagram.com/nchc.tw/?hl=zh-tw" target="_blank" title="instagram(new window)">
+                            <!--英文 instagram(new window)-->
+                            <span class="fa-stack fa-1g">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li data-sr="enter botom over 1.5s">
+                        <a href="https://www.youtube.com/channel/UCWrzkYUM5cwpZExQ4Et5vSw?view_as=subscriber" target="_blank" title="youtube(new window)">
+                            <!--英文 youtube(new window)-->
+                            <span class="fa-stack fa-1g">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-youtube fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="line visible-sm visible-xs"></div>
+            @Html.Raw(Model.FooterString)
+        </div>
+        <div class="copyright">
+            <div class="container">
+                @Html.Raw(Model.PublishContent)
+            </div>
+        </div>
+    </footer>
+    <!--footer end-->
+    <script src="@Url.Content("~/js/bootstrap.js")"></script>
+    <script src="@Url.Content("~/js/theme.js")"></script>
+    <script src="@Url.Content("~/js/theme.init.js")"></script>
+
+    <!--banner start-->
+    <script src="@Url.Content("~/js/jquery.appear.min.js")"></script>
+    <script src="@Url.Content("~/js/jquery.themepunch.tools.min.js")"></script>
+    <script src="@Url.Content("~/js/jquery.themepunch.revolution.min.js")"></script>
+    <!--banner end-->
+    <!--滾動效果 start-->
+    <script src="@Url.Content("~/js/scrollReveal.js")"></script>
+    <!--滾動效果 end-->
+
+
+</body>
+</html>
+<script type="text/javascript">
+    $(function () {
+        $("body").delegate((".newopen"), "click", function () {
+            var width = $(this).attr('owidth');
+            var height = $(this).attr('oheight');
+            var path = $(this).attr('path');
+            var constr = [];
+            if (width !== undefined) { constr.push("width=" + width); }
+            if (height !== undefined) { constr.push("height=" + height); }
+            if (constr.length > 0) {
+                window.open(path, "", config = constr.join(','));
+            } else {
+                document.location.href = path; 
+            }
+        });
+        $("#hot_keyword").delegate((".topserch"), "click", function () {
+            var key = $(this).attr('key');
+            CreatePost('@Url.Action("Search", "Search")', { 'key': key});
+        });
+        $("#btn_mainsearch").click(function () {
+            var key = $("#footer_search").val();
+            if (key == "") { alert('@Common.GetLangText("請確實輸入搜尋關鍵字")'); return false; }
+            CreatePost('@Url.Action("Search", "Search")', { 'key': key});
+        });
+        @*
+        $("#btn_mainsearch2").click(function () {
+            var key = $("#txt_search2").val();
+            if (key == "") { alert('@Common.GetLangText("請確實輸入搜尋關鍵字")'); return false; }
+            CreatePost('@Url.Action("Search", "Search")', { 'key': key});
+        });*@
+        var nowlangid = '@Model.LangId';
+        if (nowlangid == "1") {
+            $(".langchange").attr('langid', "2");
+        } else {
+            $(".langchange").attr('langid', "1");
+        }
+       $(".sellang").val('@ViewBag.langid');
+       $(".langchange").click(function () {
+              var lang = $(this).attr('langid');
+                $.post('@Url.Action("SetLang","Home")', { lang: lang }, function (data) {
+                    document.location.href = '@Url.Action("Index","Home")';
+                });
+           });
+           if ('@ViewBag.showmessage' == "Y") {
+               showauth();
+           }
+    });
+
+</script>

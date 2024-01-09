@@ -1,0 +1,103 @@
+﻿@model AuthoritySearchModel
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<script src="~/Scripts/clipboard.min.js"></script>
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Model")">模組管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            專利管理
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<div class="title_01">專利管理</div>
+<div class="portlet light bordered">
+    <!--set item start-->
+    <div class="table-toolbar">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+
+        </div>
+        <div class="col-md-6 col-sm-12 col-xs-12 mobile_left">
+            <p class="display_inline">
+                <button class="btn green-meadow" id='btn_add'>新增 <i class="fa fa-plus"></i></button>
+            </p>
+        </div>
+    </div>
+    <div class="table-scrollable">
+        <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0"
+               id="eventtable"
+               data-url="@Url.Action("PagingMain")"
+               data-sort-name='Sort'
+               data-page-size='10'
+               data-filed-id='ID'
+               data-max-pagination='10'>
+            <thead>
+                <tr class="bg-grey_1" filed-class='odd gradeX'>
+                    <th width="80" class="text-center" filed-type='delcheckbox'>
+                        <label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>
+                            <input type='checkbox' class='checkboxes' id="chk_all" /><span></span>
+                        </label><button class="btn red-mint btn-xs" id='btn_del'><i class="glyphicon glyphicon-trash"></i></button>
+                    </th>
+                    <th filed-name='Sort' width="160px" class="text-center" filed-type='numbertextcheck' filed-item-class="sortedit">排序</th>
+                    <th filed-name='Name' class="text-center" filed-type='link'>單元名稱</th>
+                    <th filed-name='customertr' width="400px" class="text-center"  filed-type='function' >單元路徑</th>
+                    <th filed-name='管理' width="80px" class="text-center" filed-type='button' filed-item-class="btn grey-mint manage">管理</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="page_number" class="table-toolbar">
+        <div class="col-md-4 col-sm-12 col-xs-12 page_total" id="tableinfo"></div>
+        <div class="col-md-8 col-sm-12 col-xs-12 page_icon">
+            <div class="btn-group" id="pagination">
+            </div>
+        </div>
+    </div>
+    <!--table end-->
+</div>
+
+<!--message end-->
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            mytable = $("#eventtable").myDataTable().TableList[0];
+            mytable.settingTdData = myDataTableTr;
+            mytable.settingTableInfo = function (tableinfoId, totalcnt, offsetcnt, nowpagecnt) {
+                var totalclick = mytable.keepcheckid.length;
+                $("#" + tableinfoId).html('總筆數:' + totalcnt + '，顯示' + (totalcnt <= 0 ? 0 : offsetcnt) + "~" + (offsetcnt + nowpagecnt - 1));
+            };
+            var SearchModelBase = mytable.SearchModelBase;
+            mytable.GetData(1);
+            var obj = {};
+            obj.idkey="mainid"
+            obj.item = "單元名稱";
+            RegisterOrder("#eventtable", ".sortedit", '@Url.Action("EditSeq")', obj);
+            RegisterClickAll("#chk_all", '#eventtable tbody .chksel', "#selvalue");
+            RegisterDelete("#btn_del", '#eventtable .chksel:checked', '@Url.Action("SetMainDelete")', obj);
+            RegisterClicklink("#eventtable", ".edit", '@Url.Action("EditUnit")', obj, 'UpdateItem');
+            RegisterClicklink("#eventtable", ".manage", '@Url.Action("ModelItem")', obj);
+
+            $("#btn_add").click(function () { CallAddDialog('@Url.Action("EditUnit")', { mainid: -1, item: "單元名稱" }); });
+            var clipboard = new Clipboard('.btn', {
+                text: function (event) {
+                    return $(event).attr('copy');
+                }
+            });
+        });
+        function customertr(row, columnidx, idx, filedname, tableid, type, fileditemclass) {
+            return "<td><input  type='text' readonly=readonly style='width:300px; display:inline' class='form-control' value='Patent/Index?itemid=" + row[tableid] + "'/><button class='btn grey-mint' style='margin-left:20px' copy='Patent/Index?itemid=" + row[tableid] + "'>複製</button></td>";
+        }
+    </script>
+}

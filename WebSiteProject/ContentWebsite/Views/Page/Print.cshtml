@@ -1,0 +1,53 @@
+﻿@{ Layout = null;}
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/bootstrap.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/font-awesome.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/theme.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/theme-elements.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/style.css")">
+    <script src="@Url.Content("~/Scripts/jquery-3.1.1.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery-migrate-3.0.0.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/main.js")"></script>
+    <script src="@Url.Content("~/Scripts/owl.carousel.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.8.17.custom.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/scrollReveal.js")"></script>
+</head>
+<body style="max-width:806px; margin:0 auto;">
+    <div class="con_box">
+        @{
+            var imageurl = string.IsNullOrEmpty(ViewBag.BannerImage) ? @Url.Content("~/img/print_banner.jpg") : ViewBag.BannerImage;
+        }
+        <div class="con_banner"><img src="@imageurl" alt="" /></div>
+        <div class="page_title" data-sr="enter left over 1.5s">@Html.Raw(ViewBag.Title)</div>
+        <!--page content start-->
+        <div class="page_con">
+            @if (ViewBag.ImageName != "")
+            {
+                if (@ViewBag.ImageFileLocation == "1")
+                {
+                    <img src="@Url.Content("~/UploadImage/PageEdit/")@ViewBag.ImageName" class="img_padding" width="200" alt="@ViewBag.ImageFileDesc" align="left">
+                }
+                else if (@ViewBag.ImageFileLocation == "2")
+                {
+                    <div align="center"><img src="@Url.Content("~/UploadImage/PageEdit/")@ViewBag.ImageName" class="img_padding" width="200" alt="@ViewBag.ImageFileDesc"></div>
+                }
+                else if (@ViewBag.ImageFileLocation == "3")
+                {
+                    <img src="@Url.Content("~/UploadImage/PageEdit/")@ViewBag.ImageName" class="img_padding" width="200" alt="@ViewBag.ImageFileDesc" align="right">
+                }
+            }
+            @Html.Raw(ViewBag.content)
+        </div>
+        <!--page content end-->
+
+    </div>
+    <div class="con_footer">@Html.Raw(ViewBag.FooterString)</div>
+</body>
+</html>

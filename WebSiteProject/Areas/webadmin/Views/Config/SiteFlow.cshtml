@@ -1,0 +1,80 @@
+﻿<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+@Html.AntiForgeryToken()
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>系統管理<i class="fa fa-circle"></i></li>
+        <li>流量分析</li>
+    </ul>
+</div>
+<!--page bar end-->
+<div class="title_01">流量分析</div>
+<div class="portlet light bordered">
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SavePasswordEdit")'>
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">流量分析網址</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white table_font">
+                                <input id="txt_path" type="text" class="form-control input-large inline-block" name="Siteflow_Link" value="@ViewBag.Path" />
+                                <a href="#" class="btn grey-mint" role="button" id="a_open">檢視流量</a>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">流量程式碼</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white table_font">
+                                <textarea id="txtcode" rows="5" class="form-control" name="Siteflow_Code">@ViewBag.Code</textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center search_padding">
+            <button type="button" class="btn blue" id="btn_submit">確認</button>
+        </div>
+    </form>
+</div>
+
+<!--message end-->
+@section scripts {
+    <script>
+
+        $(document).ready(function () {
+            var path = $('#txt_path').val();
+            $('#a_open').click(function () {
+                  window.open(
+                    path,
+                    '_blank'
+                );
+            });
+
+           $('#btn_submit').click(function () {
+                var id = '@ViewBag.ID';
+                $.post('@Url.Action("SetSiteFlowCode")', {
+                    code: encodeURIComponent($("#txtcode").val()),
+                    path: $("#txt_path").val(), id:id
+                }, function (data) {
+                      if (data == "") {
+                          alert('修改成功');
+                    } else {
+                        alert(data);
+                    }
+                });
+            })
+        });
+
+    </script>
+}

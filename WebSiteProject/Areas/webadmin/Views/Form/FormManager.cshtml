@@ -1,0 +1,186 @@
+﻿@Html.AntiForgeryToken()
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Model")">模組管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Form")">表單管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">表單</a>
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<div class="title_01">@ViewBag.mainname </div>
+<div class="portlet light bordered">
+    <!--set item start-->
+    <div class="table-toolbar">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="display_inline">
+                <p class="class_title">管理項目</p>
+                <select class="form-control_1" id="sel_unit" onChange="window.location.href=this.value">
+                    <option value="@Url.Action("MailModelItem", new { mainid = ViewBag.mainid })">信件管理</option>
+                    <option value="#" selected>表單管理</option>
+                    <option value="@Url.Action("FormSetting", new { mainid = ViewBag.mainid })">表單設定</option>
+                    <!--<option value="@Url.Action("UnitSetting", new { mainid = ViewBag.mainid })">單元設定</option>-->
+                </select>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <div class="table-toolbar">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="display_inline">
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-12 col-xs-12 mobile_left" id="div_buttons">
+            <p class="display_inline">
+                <button class="btn green-meadow" id='btn_add'>新增 <i class="fa fa-plus"></i></button>
+                <button type="button" class="btn grey-mint" id="btn_return" onclick="document.location.href='@Url.Action("Index")'">返回</button>
+            </p>
+        </div>
+    </div>
+    <!--table start-->
+    <div class="table-scrollable">
+        <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0"
+               id="eventtable"
+               data-url="@Url.Action("PagingSelItem")"
+               data-sort-name='Sort'
+               data-page-size='10'
+               data-filed-id='ID'
+               data-max-pagination='10'>
+            <thead>
+                <tr class="bg-grey_1" filed-class='odd gradeX'>
+                    <th width="80" class="text-center delete_th" filed-type='delcheckbox'>
+                        <label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>
+                            <input type='checkbox' class='checkboxes' id="chk_all" /><span></span>
+                        </label>
+                        <button class="btn red-mint btn-xs" id='btn_del'><i class="glyphicon glyphicon-trash"></i></button>
+                    </th>
+                    <th filed-name='Sort' width="160px" class="text-center" filed-type='numbertextcheck' filed-item-class="sortedit">排序</th>
+                    <th filed-name='Title' class="text-center" filed-type='link'>欄位名稱</th>
+                    <th filed-name='customertr' filed-type='function'>表單元件</th>
+                    <th filed-name='Description' class="text-center">欄位說明</th>
+                    <th filed-name='customerchecktr' width="80px" class="text-center" filed-type='function' filed-item-class="checkboxes">必填</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="page_number" class="table-toolbar">
+        <div class="col-md-4 col-sm-12 col-xs-12 page_total" id="tableinfo"></div>
+        <div class="col-md-8 col-sm-12 col-xs-12 page_icon">
+            <div class="btn-group" id="pagination">
+            </div>
+        </div>
+    </div>
+    <!--table end-->
+
+</div>
+
+<!--message end-->
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#btn_return").hide();
+             if ('@ViewBag.IsFromClick' == 'Y') {
+                $("#btn_return").show();
+            }
+
+            var mainid = '@ViewBag.mainid'
+            mytable = $("#eventtable").myDataTable().TableList[0];
+            mytable.settingTdData = myDataTableTr;
+            mytable.settingTableInfo = function (tableinfoId, totalcnt, offsetcnt, nowpagecnt) {
+                var totalclick = mytable.keepcheckid.length;
+                $("#" + tableinfoId).html('總筆數:' + totalcnt + '，顯示' + (totalcnt <= 0 ? 0 : offsetcnt) + "~" + (offsetcnt + nowpagecnt - 1));
+            };
+            mytable.SearchModelBase.ModelID = mainid;
+            mytable.GetData(1);
+            if ('@ViewBag.isview' == 'Y') {
+                $('#sel_unit,#editform :input').attr('disabled', 'disabled');
+                $('#div_buttons').empty().append('<button type="button" class="btn grey-mint"  onclick="window.location.href=\'@Url.Action("Verify", "Config")\'">返回列表</button>');
+            } else {
+                        RegisterOrder("#eventtable", ".sortedit", '@Url.Action("UpdateItemSeq")', { modelid:@ViewBag.mainid});
+                       RegisterClicklink("#eventtable", ".edit", '@Url.Action("ItemEdit")', { mainid: mainid }, "itemid");
+                    RegisterClick("#eventtable", ".chkstatus", '@Url.Action("SetItemIsMust")', {});
+                    RegisterClickAll("#chk_all", '#eventtable tbody .chksel', "#selvalue");
+                     RegisterDelete("#btn_del", '#eventtable .chksel:checked', '@Url.Action("SetItemDelete")', {});
+            }
+
+            $("#btn_add").click(function () {
+               var obj = {};
+                obj.mainid = mainid;
+                CreatePost('@Url.Action("ItemEdit")', obj);
+            });
+
+        });
+
+        function customerchecktr(row, columnidx, idx, filedname, tableid, type, fileditemclass) {
+            var isdisable = "";
+            if (row["KayName"] != "" && row["KayName"] != null && row["KayName"] != undefined) { isdisable = 'disabled=disabled'; }
+            if (columnidx == 6) {
+                filedname = "MustInput";
+                if (isdisable == "") {fileditemclass = 'checkboxes chkstatus';}
+            } else if (columnidx == 1) {
+                if (isdisable == "") { fileditemclass = 'chksel';}
+            }
+            if (row[filedname]) {
+                return "<td class='text-center'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>" +
+                    "<input type='checkbox' class='" + fileditemclass + "' checked='checked' " + isdisable + " value='" + row[tableid] + "' index='" + idx + "'/><span></span></label></td>";
+            } else {
+                return "<td class='text-center'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>" +
+                    "<input type='checkbox' class='" + fileditemclass + "' " + isdisable + " value='" + row[tableid] + "' index='" + idx + "'/><span></span></label></td>";
+            }
+        }
+        function customertr(row, columnidx, idx, filedname, tableid, type, fileditemclass) {
+            if (row["ItemMode"] == 1) {
+                return "<td><input type='text'  readonly=readonly/></td>";
+            } else if (row["ItemMode"] == 2) {
+                return "<td><textarea  rows='2' cols='20'  readonly=readonly></textarea></td>";
+            } else if (row["ItemMode"] == 3) {
+                var list = row["SelList"];
+                var listarr = [];
+                listarr.push("")
+                var sellist = list.split("^");
+                for (var idx = 0; idx < sellist.length; idx++) {
+                    listarr.push("<input  type='radio' name='" + row[tableid] + "'/>&nbsp;" + sellist[idx] + "&nbsp;&nbsp;");
+                }
+                return "<td>" + listarr.join('')+"</td>";
+            } else if (row["ItemMode"] == 4) {
+                var list = row["SelList"];
+                var listarr = [];
+                listarr.push("")
+                var sellist = list.split("^");
+                for (var idx = 0; idx < sellist.length; idx++) {
+                    listarr.push("<input type='checkbox'/>&nbsp;" + sellist[idx] + "&nbsp;&nbsp;");
+                }
+                return "<td>" + listarr.join('') + "</td>";
+            } else if (row["ItemMode"] == 5) {
+                var list = row["SelList"];
+                var listarr = [];
+                listarr.push("")
+                var sellist = list.split("^");
+                for (var idx = 0; idx < sellist.length; idx++) {
+                    listarr.push("<option>" + sellist[idx] + "</option>");
+                }
+                return "<td><select>" + listarr.join('') + "</select></td>";
+            }
+
+        }
+    </script>
+}

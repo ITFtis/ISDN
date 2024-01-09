@@ -1,0 +1,340 @@
+﻿@model System.Collections.Generic.List<PageLayoutModel>  
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>版面設定<i class="fa fa-circle"></i></li>
+        <li>入口首頁配置</li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">@ViewBag.Title</div>
+
+<div class="portlet light bordered">
+    <div class="table-toolbar">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <p class="class_title">管理項目</p>
+            <div class="display_inline">
+                <select class="form-control_1" id="sel_unit" onChange="window.location.href=this.value">
+                    <option value="@Url.Action("PageNewsEdit")">焦點新聞</option>
+                    <option value="@Url.Action("PageActiveEdit")">活動專區</option>
+                    <option value="@Url.Action("PageLayoutOP1Edit")">自由編輯區1</option>
+                    <option value="#" selected>自由編輯區2</option>
+                    <option value="@Url.Action("PageLayoutOP3Edit")">自由編輯區3</option>
+                    <option value="@Url.Action("PageLayoutLink")">首頁相關連結</option>
+                    <option value="@Url.Action("PageActivity")">相關活動</option>
+                </select>
+            </div>
+        </div>
+    </div> <hr>
+           <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SavePageLayoutEdit")' enctype="multipart/form-data">
+               @Html.HiddenFor(Model => Model[0].ImgNameOri)
+               @Html.HiddenFor(Model => Model[1].ImgNameOri)
+               @Html.HiddenFor(Model => Model[0].ID)
+               @Html.HiddenFor(Model => Model[1].ID)
+               @Html.AntiForgeryToken()
+               <div class="portlet light form-fit bordered">
+                   <div class="portlet-body form">
+                       <div class="form-horizontal form-bordered">
+                           <div class="form-body" id="form-body2">
+                               <div class="form-group">
+                                   <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item"><span class="red">*</span>標題</div>
+                                   <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                       <input id="Title" type="text" class="form-control checkitem" name="[0].Title" />
+                                       <span class="required" id="Title-error" style="display:none;">標題 必須填寫！</span>
+                                   </div>
+                               </div>
+                               @*<div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">內容連結模式</div>
+                            <div class="col-md-10 col-sm-4 col-xs-12 bg-white mobile_white">
+                                <div class="input-group input-large">
+                                    @Html.RadioButtonFor(model => model[0].LinkMode, 1, new { style = "margin-left :0px", @checked = "checked", @class = "LinkMode" })網站選單
+                                    @Html.RadioButtonFor(model => model[0].LinkMode, 2, new { style = "margin-left :40px", @class = "LinkMode" }) 模組單元
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 hidden-xs bg-white">&nbsp;</div>
+                        </div>*@
+                               <div class="form-group">
+                                   <div class="col-md-2 col-sm-2 col-xs-12 search_item">連結項目</div>
+                                   <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                       <div class="col-md-12" id="div_menu">
+                                           <div class="col-md-1">選單項目</div>
+                                           <select style="" id="sel_MenuItem" name='[0].MenuItem'>
+                                               <option value="1">主要選單</option>
+                                               <option value="2">上方選單</option>
+                                               <option value="3">下方選單</option>
+                                           </select><br />
+                                           <div class="col-md-1">主選單</div>
+                                           <select style="" id="sel_MenLevel1" name='[0].MenuLevel1'>@Html.Raw(ViewBag.L1option)</select><br />
+
+                                           <div class="col-md-1">次選單</div>
+                                           <select style="" id="sel_MenLevel2" name='[0].MenuLevel2'></select><br /><div class="col-md-1">子選單</div>
+                                           <select style="" id="sel_MenLevel3" name='[0].MenuLevel3'></select><br />
+                                       </div>
+                                       <div class="col-md-12" id="div_model" style="display:none">
+                                           <div class="col-md-1">模組單元</div>
+                                           <select style="" id="sel_model" name='[0].ModelID'>
+                                               <option value="">請選擇程式模組</option>
+                                               <option value="2">訊息管理</option>
+                                               <option value="16">常見問答</option>
+                                           </select>
+                                           <select style="margin-left :40px" id="sel_modelitem" name='[0].ModelItemID'></select>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <div class="portlet light form-fit bordered">
+                   <div class="portlet-body form">
+                       <div class="form-horizontal form-bordered">
+                           <div class="form-body" id="form-body2_1">
+                               <div class="form-group">
+                                   <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item"><span class="red">*</span>標題</div>
+                                   <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                       <input id="Title_1" type="text" class="form-control checkitem" name="[1].Title" />
+                                       <span class="required" id="Title_1-error" style="display:none;">標題 必須填寫！</span>
+                                   </div>
+                               </div>
+                               <div class="form-group">
+                                   <div class="col-md-2 col-sm-2 col-xs-12 search_item">連結項目</div>
+                                   <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                       <div class="col-md-12" id="div_menu_1">
+                                           <div class="col-md-1">選單項目</div>
+                                           <select style="" id="sel_MenuItem_1" name='[1].MenuItem'>
+                                               <option value="1">主要選單</option>
+                                               <option value="2">上方選單</option>
+                                               <option value="3">下方選單</option>
+                                           </select><br />
+
+                                           <div class="col-md-1">主選單</div>
+                                           <select style="" id="sel_MenLevel1_1" name='[1].MenuLevel1'>@Html.Raw(ViewBag.L1option)</select><br />
+
+                                           <div class="col-md-1">次選單</div>
+                                           <select style="" id="sel_MenLevel2_1" name='[1].MenuLevel2'></select><br /><div class="col-md-1">子選單</div>
+                                           <select style="" id="sel_MenLevel3_1" name='[1].MenuLevel3'></select><br />
+                                       </div>
+                                       <div class="col-md-12" id="div_model_1" style="display:none">
+                                           <div class="col-md-1">模組單元</div>
+                                           <select style="" id="sel_model_1" name='[1].ModelID'>
+                                               <option value="">請選擇程式模組</option>
+                                               <option value="2">訊息管理</option>
+                                               <option value="16">常見問答</option>
+                                           </select>
+                                           <select style="margin-left :40px" id="sel_modelitem_1" name='[1].ModelItemID'></select>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <div class="text-center search_padding">
+                   <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+               </div>
+           </form>
+
+</div>
+@section scripts {
+    <script>
+        $(function () {
+            if ('@Model[0].ID' != '-1') {
+                $('#Title').val('@Html.Raw(Model[0].Title)');
+                if ('@Model[0].LinkMode' == '1') {
+                    $('#sel_MenuItem').val('@Model[0].MenuItem');
+                    $.post('@Url.Action("GetMenOption")', { "menuitem": $('#sel_MenuItem').val(), "level": 1, "parentid": -1 }, function (data) {
+                        $('#sel_MenLevel1').empty('');
+                        $(data).appendTo('#sel_MenLevel1');
+                        $('#sel_MenLevel1').val('@Model[0].MenuLevel1');
+                        $.post('@Url.Action("GetMenOption")', { "menuitem": $('#sel_MenuItem').val(), "level": 2, "parentid": $('#sel_MenLevel1').val() }, function (data) {
+                            $('#sel_MenLevel2').empty('');
+                            $(data).appendTo('#sel_MenLevel2');
+                            $('#sel_MenLevel2').val('@Model[0].MenuLevel2');
+                            $.post('@Url.Action("GetMenOption")', { "menuitem": $('#sel_MenuItem').val(), "level": 3, "parentid": $('#sel_MenLevel2').val() }, function (data) {
+                                $('#sel_MenLevel3').empty('');
+                                $(data).appendTo('#sel_MenLevel3');
+                                $('#sel_MenLevel3').val('@Model[0].MenuLevel3');
+                            });
+                        });
+                    });
+                } else {
+                    $('#sel_model').val('@Model[0].ModelID');
+                    $.post('@Url.Action("GetModelItem")', { "modelid": $('#sel_model').val() }, function (data) {
+                        $('#sel_modelitem').empty('');
+                        $(data).appendTo('#sel_modelitem');
+                        $('#sel_modelitem').val('@Model[0].ModelItemID');
+                    });
+                    $('#div_menu').hide();
+                    $('#div_model').show();
+                }
+            }
+            //==============================
+            if ('@Model[1].ID' != '-1') {
+                $('#Title_1').val('@Html.Raw(Model[1].Title)');
+                if ('@Model[1].LinkMode' == '1') {
+                    $('#sel_MenuItem_1').val('@Model[1].MenuItem');
+                    $.post('@Url.Action("GetMenOption")', { "menuitem": $('#sel_MenuItem_1').val(), "level": 1, "parentid": -1 }, function (data) {
+                        $('#sel_MenLevel1_1').empty('');
+                        $(data).appendTo('#sel_MenLevel1_1');
+                        $('#sel_MenLevel1_1').val('@Model[1].MenuLevel1');
+                        $.post('@Url.Action("GetMenOption")', { "menuitem": $('#sel_MenuItem_1').val(), "level": 2, "parentid": $('#sel_MenLevel1_1').val() }, function (data) {
+                            $('#sel_MenLevel2_1').empty('');
+                            $(data).appendTo('#sel_MenLevel2_1');
+                            $('#sel_MenLevel2_1').val('@Model[1].MenuLevel2');
+                            $.post('@Url.Action("GetMenOption")', { "menuitem": $('#sel_MenuItem_1').val(), "level": 3, "parentid": $('#sel_MenLevel2_1').val() }, function (data) {
+                                $('#sel_MenLevel3_1').empty('');
+                                $(data).appendTo('#sel_MenLevel3_1');
+                                $('#sel_MenLevel3_1').val('@Model[1].MenuLevel3');
+                            });
+                        });
+                    });
+                } else {
+                    $('#sel_model_1').val('@Model[1].ModelID');
+                    $.post('@Url.Action("GetModelItem")', { "modelid": $('#sel_model_1').val() }, function (data) {
+                        $('#sel_modelitem_1').empty('');
+                        $(data).appendTo('#sel_modelitem_1');
+                        $('#sel_modelitem_1').val('@Model[1].ModelItemID');
+                    });
+                    $('#div_menu_1').hide();
+                    $('#div_model_1').show();
+                }
+            }
+            $('#sel_MenuItem,#sel_MenuItem_1').change(function () {
+                var tempid = this.id;
+                if (this.id == "sel_MenuItem") {
+                    $('#sel_MenLevel1').empty('');
+                    $('#sel_MenLevel2').empty('');
+                    $('#sel_MenLevel3').empty('');
+                } else {
+                    $('#sel_MenLevel1_1').empty('');
+                    $('#sel_MenLevel2_1').empty('');
+                    $('#sel_MenLevel3_1').empty('');
+                }
+                $.post('@Url.Action("GetMenOption")', { "menuitem": $('#' + this.id).val(), "level":1,"parentid":-1 }, function (data) {
+                    if (tempid== "sel_MenuItem") { $(data).appendTo('#sel_MenLevel1'); } else { $(data).appendTo('#sel_MenLevel1_1'); }
+                });
+            });
+            $('#sel_MenLevel1,#sel_MenLevel1_1').change(function () {
+                var tempid = this.id;
+                if (this.id == "sel_MenLevel1") {
+                    $('#sel_MenLevel2').empty('');
+                    $('#sel_MenLevel3').empty('');
+                    $.post('@Url.Action("GetMenOption")', { "menuitem": $('#sel_MenuItem').val(), "level": 2, "parentid": $('#sel_MenLevel1').val() }, function (data) {
+                         $(data).appendTo('#sel_MenLevel2');
+                    });
+                } else {
+                    $('#sel_MenLevel2_1').empty('');
+                    $('#sel_MenLevel3_1').empty('');
+                    $.post('@Url.Action("GetMenOption")', { "menuitem": $('#sel_MenuItem_1').val(), "level": 2, "parentid": $('#sel_MenLevel1_1').val() }, function (data) {
+                        $(data).appendTo('#sel_MenLevel2_1');
+                     });
+                }
+            });
+
+            $('#sel_MenLevel2,#sel_MenLevel2_1').change(function () {
+                if (this.id == "sel_MenLevel2") {
+                     $('#sel_MenLevel3').empty('');
+                     $.post('@Url.Action("GetMenOption")', { "menuitem": $('#sel_MenuItem').val(), "level": 3, "parentid": $('#sel_MenLevel2').val() }, function (data) {
+                         $(data).appendTo('#sel_MenLevel3');
+                     });
+                } else {
+                     $('#sel_MenLevel3_1').empty('');
+                    $.post('@Url.Action("GetMenOption")', { "menuitem": $('#sel_MenuItem_1').val(), "level": 3, "parentid": $('#sel_MenLevel2_1').val() }, function (data) {
+                        $(data).appendTo('#sel_MenLevel3_1');
+                     });
+                }
+            });
+
+            $('#sel_model,#sel_model_1').change(function () {
+               if (this.id == "sel_model") {
+                        $('#sel_modelitem').empty();
+                        $.post('@Url.Action("GetModelItem")', { "modelid": $('#sel_model').val() }, function (data) {
+                            $(data).appendTo('#sel_modelitem');
+                        });
+                } else {
+                        $('#sel_modelitem_1').empty();
+                       $.post('@Url.Action("GetModelItem")', { "modelid": $('#sel_model_1').val() }, function (data) {
+                            $(data).appendTo('#sel_modelitem_1');
+                        });
+                }
+            });
+            $('.LinkMode').change(function () {
+                var value = $('.LinkMode:checked').val();
+                if (value != "2") {$('#div_menu').show();$('#div_model').hide();} else {$('#div_menu').hide();$('#div_model').show(); }
+            });
+            $('.LinkMode2').change(function () {
+                var value = $('.LinkMode2:checked').val();
+                if (value != "2") { $('#div_menu_1').show(); $('#div_model_1').hide(); } else { $('#div_menu_1').hide(); $('#div_model_1').show(); }
+            });
+           $('#editform').submit(function (event) {
+               $(".required").hide(); 
+               var inputval = $("#editform :input").filter(function () { return $(this).val() == "" && $(this).hasClass('checkitem'); });
+               for (var idx = 0; idx < inputval.length; idx++) {
+                   $("#" + inputval[idx].id + "-error").show();
+               }
+               if (inputval.length > 0) { return false; }
+               var value = $('.LinkMode:checked').val();
+               if (value != "2") {
+                   if ($('#sel_MenLevel1').val() != "" && $('#sel_MenLevel2').val() == "" && $('#sel_MenLevel3').val() == "") {
+                       alert($('#Title').val()+"請選擇選單項目");
+                       return false;
+                   }
+               } else {
+                   if ($('#sel_model').val() != "" && $('#sel_modelitem').val() == "") {
+                       alert($('#Title').val()+"請選擇程式模組");
+                       return false;
+                   }
+               }
+
+               var value2 = $('.LinkMode2:checked').val();
+               if (value2 != "2") {
+                   if ($('#sel_MenLevel1_1').val() != "" && $('#sel_MenLevel2_1').val() == "" && $('#sel_MenLevel3_1').val() == "") {
+                       alert($('#Title_1').val() +"請選擇選單項目");
+                       return false;
+                   }
+               } else {
+                   if ($('#sel_model_1').val() != "" && $('#sel_modelitem_1').val() == "") {
+                       alert($('#Title_1').val() +"請選擇程式模組");
+                       return false;
+                   }
+               }
+                var formData = new FormData();
+                var array = $('#editform').serializeArray();
+                $.each(array, function () {
+                    formData.append(this.name, this.value);
+                });
+                formData.append("Title", encodeURIComponent($('#Title').val()));
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data == "") {
+                            alert("作業完成");
+                        } else {
+                            alert(data);
+                        }
+
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+
+}
+

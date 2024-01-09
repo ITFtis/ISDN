@@ -1,0 +1,107 @@
+﻿<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+@Html.AntiForgeryToken()
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            系統管理
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>審核管理</li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">審核管理</div>
+
+<div class="portlet light bordered">
+    <!--set item start-->
+    <div class="table-toolbar">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="display_inline">
+                <p class="class_title">審核狀態</p>
+                <select class="form-control_1" id="sel_status">
+                    <option value="">全部</option>
+                    <option value="0" selected>審核中</option>
+                    <option value="1">已通過</option>
+                    <option value="2">未通過</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <!--set item end-->
+    <!--table start-->
+    <div class="table-scrollable">
+        <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0"
+               id="eventtable"
+               data-url="@Url.Action("PagingVerify")"
+               data-sort-name='ModelID'
+               data-page-size='10'
+               data-filed-id='ID'
+               data-max-pagination='10'>
+            <thead>
+                <tr>
+                    <th filed-name='UpdateTime' width="160px" class="text-center">新增/修改時間</th>
+                    <th filed-name='Name' class="text-center" width="100px">模組名稱</th>
+                    <th filed-name='TitleLink' class="text-center">訊息標題</th>
+                    <th filed-name='UpdateUser' class="text-center" width="80px">新增/修改人員</th>
+                    <th filed-name='UpdateStatus' class="text-center" width="50px">更動狀態</th>
+                    <th filed-name='Status' class="text-center" width="50px">審核狀態</th>
+                    <th filed-name='OptionHtml' class="text-center" width="180px">審核</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <!--table end-->
+    <!--頁碼 start-->
+    <div id="page_number" class="table-toolbar">
+        <div class="col-md-4 col-sm-12 col-xs-12 page_total" id="tableinfo"></div>
+        <div class="col-md-8 col-sm-12 col-xs-12 page_icon">
+            <div class="btn-group" id="pagination">
+            </div>
+        </div>
+    </div>
+    <!--頁碼 end-->
+</div>
+<!--message end-->
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            mytable = $("#eventtable").myDataTable().TableList[0];
+            mytable.settingTdData = myDataTableTr;
+            mytable.settingTableInfo = function (tableinfoId, totalcnt, offsetcnt, nowpagecnt) {
+                var totalclick = mytable.keepcheckid.length;
+                $("#" + tableinfoId).html('總筆數:' + totalcnt + '，顯示' + (totalcnt <= 0 ? 0 : offsetcnt) + "~" + (offsetcnt + nowpagecnt - 1));
+            };
+            var SearchModelBase = mytable.SearchModelBase;
+            SearchModelBase.Key = "0";
+            mytable.GetData(1);
+            $("#sel_status").change(function () {
+                SearchModelBase.Key = $("#sel_status").val();
+                mytable.GetData(1);
+            });
+            RegisterClickAndData("#eventtable", ".verifyok", '@Url.Action("SetVerifyOK")', {},mytable);
+            RegisterClickAndData("#eventtable", ".verifyrefuse", '@Url.Action("SetVerifyRefuse")', {}, mytable);
+            $("#eventtable").delegate((".verifyview"), "click", function () {
+
+                var modid = $(this).attr('modid');
+                var itemid = $(this).attr('itemid');
+                var mainid = $(this).attr('mainid');
+                if (modid == "1") { CreatePost('@Url.Action("ModelItem", "PageEdit")', { 'id': mainid, 'itemid': itemid, 'isview': 'Y' }); }
+                else if (modid == "2") { CreatePost('@Url.Action("MessageEdit", "Message")', { 'mainid': mainid, 'itemid': itemid, 'isview': 'Y' }); }
+                else if (modid == "3") { CreatePost('@Url.Action("ActiveEdit", "Active")', { 'mainid': mainid, 'itemid': itemid, 'isview': 'Y' }); }
+                else if (modid == "4") { CreatePost('@Url.Action("FileDownloadEdit", "FileDownload")', { 'mainid': mainid, 'itemid': itemid, 'isview': 'Y' }); }
+                else if (modid == "11") { CreatePost('@Url.Action("FormManager", "Form")', { 'mainid': mainid, 'itemid': itemid, 'isview': 'Y' }); }
+                else if (modid == "17") { CreatePost('@Url.Action("EventListEdit", "EventList")', { 'mainid': mainid, 'itemid': itemid, 'isview': 'Y'});}
+                else if (modid == "18") { CreatePost('@Url.Action("VideoEdit", "Video")', { 'mainid': mainid, 'itemid': itemid, 'isview': 'Y' }); }
+                else if (modid == "19") { CreatePost('@Url.Action("PatentEdit", "Patent")', { 'mainid': mainid, 'itemid': itemid, 'isview': 'Y'});}
+            });
+        });
+    </script>
+}

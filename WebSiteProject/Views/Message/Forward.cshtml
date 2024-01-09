@@ -1,0 +1,154 @@
+﻿@{
+    Layout = null;
+}
+<html lang="Zh-hant" xml:lang="Zh-hant">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    @*<meta http-equiv="Content-Security-Policy" content="default-src 'self'; child-src 'none';script-src 'self'">*@
+    <title>@Common.GetLangText("產業永續發展整合資訊網")</title><!--英文 -->
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/bootstrap.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/theme.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/theme-elements.css")/">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/settings.css")" media="screen">
+
+    <!--fontawesome start-->
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/font-awesome.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/fontawesome.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/brands.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/solid.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/regular.min.css")">
+    <!--fontawesome end-->
+
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/style.css")">
+    <script src="@Url.Content("~/Scripts/jquery-3.5.1.min.js")"></script>
+    <noscript>
+        <link rel="stylesheet" href="@Url.Content("~/frontcss/css/noscript.css")">
+    </noscript>
+
+
+</head>
+<body class="forward_con">
+    <div class="con_box">
+        <div class="con_banner"><img src="@ViewBag.LogoUrl" alt="" /></div><!--建議尺寸740*185px；後台未上傳圖片時show預設圖print_banner.jpg -->
+        <h2>@ViewBag.Title</h2>
+        <!--page content start-->
+        @if (ViewBag.result != "ok")
+        {
+        <form action="@Url.Action("SendMail")" method="post" id="inputform">
+            @Html.AntiForgeryToken()
+            <input id="Url" type="hidden" name="Url" value="@ViewBag.Url" />
+            <input id="Title" type="hidden" name="Title" value="@ViewBag.Title" />
+            <input id="itemid" type="hidden" name="itemid" value="@ViewBag.itemid" />
+            <input id="mid" type="hidden" name="mid" value="@ViewBag.mid" />
+            <input id="menutype" type="hidden" name="menutype" value="@ViewBag.menutype" />
+            <input id="sitemenuid" type="hidden" name="sitemenuid" value="@ViewBag.sitemenuid" />
+            <input id="captch" type="hidden" name="captch" value="@ViewBag.captch" />
+            <div class="page_con">
+                <div class="form_con">
+                    <div class="table form_box">
+                        <div class="table-row">
+                            <div class="form_q"><label for="Sender">寄件者</label><span class="required">(必填)</span></div><!--英文版Sender--> <!--標題label for值需與對應input id值相同-->
+                            <div class="form_a">
+                                <input id="Sender" type="text" class="form-control" name="Sender" value="@ViewBag.Sender">
+                                @if (ViewBag.SenderError == "Y")
+                                {
+                                    <span class="required">@Common.GetLangText("寄件者") @Common.GetLangText("必須填寫")！</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="table-row">
+                            <div class="form_q"><label for="SenderEMail">寄件者Email</label><span class="required">(必填)</span></div><!--英文版Sender's Email-->
+                            <div class="form_a">
+                                <input type="text" class="form-control" id="SenderEMail" name="SenderEMail" value="@ViewBag.SenderEMail">
+                                @if (ViewBag.SenderEMailError == "Y")
+                                {
+                                    <span class="required">@Common.GetLangText("寄件者Email") @Common.GetLangText("必須填寫")！</span>
+                                }
+                                @if (ViewBag.SenderEMailFormatError == "Y")
+                                {
+                                    <span class="required">@(Common.GetLangText("寄件者Email"))@(Common.GetLangText("格式錯誤"))！</span>
+                                }
+
+                            </div>
+                        </div>
+                        <div class="table-row">
+                            <div class="form_q"><label for="ForwardEMail">朋友Email</label><span class="required">(必填)</span></div><!--英文版Receive Email-->
+                            <div class="form_a">
+                                <input type="text" class="form-control" id="ForwardEMail" name="ForwardEMail"  value="@ViewBag.ForwardEMail">
+                                <div class="required">多組 Email 間請以 ; 分隔</div><!--英文版Multiple sets of mail please;-->
+                                @if (ViewBag.ForwardEMailError == "Y")
+                                {
+                                    <span class="required">@Common.GetLangText("朋友Email") @Common.GetLangText("必須填寫")！</span>
+                                }
+                                @if (ViewBag.ForwardEMailFormatError == "Y")
+                                {
+                                    <span class="required">@(Common.GetLangText("朋友Email"))@(Common.GetLangText("格式錯誤"))！</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="table-row">
+                            <div class="form_q"><label for="message">給朋友的訊息</label></div><!--英文版Give friends a message-->
+                            <div class="form_a">
+                                <textarea rows="5" class="form-control" type="text" id="ForwardMessage" name="ForwardMessage">@ViewBag.ForwardMessage</textarea>
+                            </div>
+                        </div>
+                        <div class="table-row" id="div_captch">
+                            <div class="form_q"><label for="img_captch">驗證碼<span class="red">(必填)</span></label></div>
+                            <div class="form_a">
+                                <input name="img_captch" class="form-control input-small float_left" id="img_captch" type="text" placeholder="請輸入驗證碼">
+                                <span class="verification_code">
+                                    <img id="image" alt="驗證碼" src="@ViewBag.captchimg">
+                                    <a title="重新整理" id="a_captchRefresh" style="cursor: pointer;" href="@Url.Action("Forward",
+                                                                                                       new { itemid=ViewBag.itemid,mid=ViewBag.mid,sitemenuid=ViewBag.sitemenuid})">
+                                        <i class="fa fa-refresh" aria-hidden="true"></i>重新整理
+                                    </a>
+                                    <a title="語音播放" id="i_voice" href="@ViewBag.audio?text=@ViewBag.captch" target="_blank">
+                                        <i class="fa fa-volume-up" aria-hidden="true" style="cursor: pointer;"></i><span class="sr-only">語音撥放 </span>
+                                    </a>
+                                </span>
+
+                                @if (ViewBag.CaptchError == "Y")
+                                {<div class="required" id="err_captch" > 驗證碼必填！</div>}
+                                @if (ViewBag.CaptchInputError  == "Y")
+                                {<div class="required" id="err_captchnomatch" > 驗證碼輸入錯誤！</div>}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="submit_btn">
+                    <label for="submit">
+                        <input id="submit" name="submit" title="@Common.GetLangText("送出")" type="submit" class="btn_01" value="@Common.GetLangText("送出")"><!--英文submit-->
+
+                    </label>
+                    <label for="cancel">
+                        <input id="cancel" name="cancel" title="@Common.GetLangText("取消")" type="submit" class="btn_01" value="@Common.GetLangText("取消")"><!--英文cancel-->
+                    </label>
+                </div>
+            </div>
+        </form>
+        }
+        else if (ViewBag.result == "exception")
+        {
+            <span class="required">郵件寄信失敗:@ViewBag.errorinfo </span>
+        }
+        else
+        {
+            <span class="required">郵件已經寄出</span>
+        }
+
+    </div>
+    <div class="con_footer">@Html.Raw(ViewBag.FooterString)</div>
+</body>
+</html>
+<script>
+           var catchstr = "@ViewBag.captch";
+    $(document).ready(function () {
+        var fid = '@ViewBag.FocusID';if (fid != "") { $("#" + fid).focus();}
+     });
+</script>

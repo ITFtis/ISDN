@@ -1,0 +1,69 @@
+﻿<!--page top start-->
+@model StudentStudentClass
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<div class="page_top page_margin">
+    <div class="container">
+        <div class="col-md-12 col-sm-12 col-xs-12" data-sr="enter left over 1.5s">
+            <ul>
+                <li><a href="@Url.Action("Index","Home")">HOME</a></li>
+                <li><a href="#">統計報表</a></li>
+            </ul>
+        </div>
+        <!--<div class="col-md-3 col-sm-4 col-xs-12" data-sr="enter right over 1.5s">
+            <script>$.include("blocks/page_top_right.html");</script>
+        </div>-->
+    </div>
+</div>
+<!--page top end-->
+<!--main content start-->
+<div id="particles-js" style="position:absolute; z-index:-1"></div>
+<div class="page_content">
+    <div class="container">
+        <div class="page_title" data-sr="enter left over 1.5s">統計報表</div>
+        <div class="page_con">
+            <!--page content start-->
+            <div class="table-scrollable">
+                <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0">
+                    <thead>
+                        <tr>
+                            <th class="text-center">班級</th>
+                            <th width="10%" class="text-center">學年度</th>
+                            <th width="10%" class="text-center">年級</th>
+                            <th class="text-center">使用日期</th>
+                            <th width="10%" class="text-center">統計報表</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var _class in Model.StudentClassArr)
+                        {
+                            <tr>
+                                <td>@_class.ClassName</td>
+                                <td class="text-center">@_class.ClassYear</td>
+                                <td class="text-center">@(Common.GetGradeName(_class.GradeID.ToString()))</td>
+                                <td class="text-center">@_class.RangeDateStr</td>
+                                <td class="text-center"><a href="#" class="toreport" classid="@_class.ClassID"><button class="btn_grade">查詢</button></a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!--page content end-->
+
+        </div>
+
+    </div>
+</div>
+<!--main content end-->
+@section scripts {
+
+    <script>
+        $(document).ready(function () {
+            $('.toreport').click(function (event) {
+                var cid = $(this).attr('classid');
+                var classid = $(this).attr('classid');
+                CreatePost('@Url.Action("AnalystReport")', {  classid: classid});
+            })
+
+        });
+    </script>
+}

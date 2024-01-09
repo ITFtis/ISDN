@@ -1,0 +1,151 @@
+﻿@{ Layout = null;}
+@model ActiveFrontViewModel
+@Html.AntiForgeryToken()
+<!DOCTYPE html>
+<html lang="Zh-hant" xml:lang="Zh-hant">
+<!--英文版<html lang="en" xml:lang="en">-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@Common.GetLangText("產業永續發展整合資訊網")</title><!--英文 -->
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; child-src 'none';script-src 'self'">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/bootstrap.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/theme.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/theme-elements.css")/">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/settings.css")" media="screen">
+
+    <!--fontawesome start-->
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/font-awesome.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/fontawesome.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/brands.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/solid.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/regular.min.css")">
+    <!--fontawesome end-->
+
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/style.css")">
+    <script src="@Url.Content("~/js/jquery.js")"></script>
+    @*<script src="@Url.Content("~/js/main.js")"></script>
+    <script src="@Url.Content("~/js/scrollReveal.js")"></script>*@
+    <noscript>
+        <link rel="stylesheet" href="@Url.Content("~/frontcss/css/noscript.css")">
+    </noscript>
+
+
+</head>
+<body style="max-width:806px; margin:0 auto;">
+    <div class="con_box">
+        <div class="con_banner">
+            @if (Model.PrintImageUrl.IsNullorEmpty() == false)
+            {
+                <img src="@Url.Content(Model.PrintImageUrl)" alt="" />
+            }
+            else
+            {
+                <img src="@(Model.LangId=="1"? @Url.Content("~/img/print_banner.jpg") : @Url.Content("~/img/print_banner_en.jpg"))" alt="" />
+            }
+        </div><!--建議尺寸740*185px；後台未上傳圖片時show預設圖print_banner.jpg -->
+
+        <h2>@Model.Title</h2>
+        <!--page content start-->
+        <div class="page_con">
+            <div class="date">
+                @if (string.IsNullOrEmpty(Model.PublicshDate) == false)
+                {@(Common.GetLangText("發佈日期") + "：" + Model.PublicshDate)}      @if (@Model.GroupName != "")
+                {<span class="top_class">@Model.GroupName</span>}
+            </div>
+            <div class="activity_banner" style="max-width:806px"><img src="@Url.Content("~/UploadImage/ActiveItem/")@Model.ImageName" alt="@Model.Title 主視覺圖片" /></div>
+
+            <div class="portlet light form-fit bordered">
+                <!--後台未輸入資料者，整列不顯示-->
+                <div class="portlet-body form">
+                    <div class="form-horizontal form-bordered">
+                        <div class="form-body">
+
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 search_item">主辦單位</div>
+                                <div class="col-md-4 col-sm-12 bg-white table_font">@Model.Organizer</div>
+                                <div class="col-md-2 col-sm-12 search_item">活動辦理日期</div>
+                                <div class="col-md-4 col-sm-12 bg-white table_font">@Model.ActiveDateStr</div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 search_item">活動地點</div>
+                                <div class="col-md-4 col-sm-12 bg-white table_font">@Model.Location</div>
+                                <div class="col-md-2 col-sm-12 search_item">活動報名狀態</div>
+                                <div class="col-md-4 col-sm-12 bg-white table_font">
+                                    @if (Model.IsActive)
+                                    {
+                                        <div class="activity_icon_01">報名中</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="activity_icon_02">報名截止</div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 search_item">活動資訊</div>
+                                <div class="col-md-10 col-sm-12 bg-white table_font">@Model.Info</div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 search_item">報名費用</div>
+                                <div class="col-md-4 col-sm-12 bg-white table_font">@Model.Price</div>
+                                <div class="col-md-2 col-sm-12 search_item">報名方式</div>
+                                <div class="col-md-4 col-sm-12 bg-white table_font">@Model.Way</div>
+                            </div>
+                            @if (Model.WebSite.IsNullorEmpty() == false)
+                            {
+                                <div class="form-group">
+                                    <div class="col-md-2 col-sm-12 search_item">報名資訊</div>
+                                    <div class="col-md-10 col-sm-12 bg-white table_font"><a href="@Model.WebSite" class="btn_01" title="報名網址(另開新視窗)" target="_blank">報名網址</a> &nbsp;<a href="@Model.WebSite" class="btn_01" title="報名查詢(另開新視窗)" target="_blank">報名查詢</a></div>
+                                </div>
+                            }
+                            @if (Model.Contact.IsNullorEmpty() == false)
+                            {
+                                <div class="form-group">
+                                    <div class="col-md-2 col-sm-12 search_item">聯絡人資訊</div>
+                                    <div class="col-md-10 col-sm-12 bg-white table_font">@Model.Contact &nbsp;&nbsp; <i class="fas fa-phone"></i>&nbsp;@Model.ContactMail  &nbsp; &nbsp; <i class="fas fa-fax"></i>&nbsp;@Model.ContactFax</div><!--後台未輸入，前台就不顯示(含icon)-->
+                                </div>
+                            }
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 search_item">附件檔案</div>
+                                <div class="col-md-10 col-sm-12 bg-white table_font">
+                                    @if (Model.ActiveFiles != null)
+                                    {
+                                        foreach (var file in Model.ActiveFiles)
+                                        {
+                                            <a href="@Url.Action("FileDownLoad",new { fileid=file.ID})" target="_blank" title="@(file.FileDesc)(另開新視窗)">@file.FileDesc</a>
+                                        }
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 search_item">資料來源</div>
+                                <div class="col-md-10 col-sm-12 bg-white table_font">@Model.Source</div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 search_item">活動內容說明</div>
+                                <div class="col-md-10 col-sm-12 bg-white table_font">
+                                    @Html.Raw(Model.Content)
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--page content end-->
+
+    </div>
+    <div class="con_footer">@Html.Raw(Model.PrintContent)</div>
+</body>
+
+</html>

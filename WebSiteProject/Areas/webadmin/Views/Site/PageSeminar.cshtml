@@ -1,0 +1,213 @@
+﻿@model  PageSeminarModel
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>版面設定<i class="fa fa-circle"></i></li>
+        <li>入口首頁配置</li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<h2>入口首頁管理</h2>
+<div class="portlet light bordered">
+
+    <!--management item start-->
+    <div class="table-toolbar">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="display_inline">
+                <p class="class_title">管理項目</p>
+                <select class="form-control_1" onChange="window.location.href=this.value">
+                    <option value="#" selected>說明會</option>
+                    <option value="@Url.Action("PageNewsEdit")">新聞動態</option>
+                    <option value="@Url.Action("PageActiveEdit")">活動訊息</option>
+                    <option value="@Url.Action("PageJournalEdit")">永續產業發展期刊</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <!--management item end-->
+    <!--table start-->
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SavePageSeminar")' enctype="multipart/form-data">
+        @Html.HiddenFor(Model => Model.StyleUploadFileName)
+        @Html.AntiForgeryToken()
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item"><span class="red">*</span> 活動日期</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <input class="form-control form-control-inline input-small date-picker checkitem" size="16" type="text"
+                                       placeholder="選取日期" data-date-format="yyyy/mm/dd" name="ActiveDate" value="@Model.ActiveDate" />
+                                <span class="required" id="ActiveDate-error" style="display:none;">活動日期 必須填寫！</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item"><span class="red">*</span> 標題</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <input id="Title" type="text" class="form-control checkitem" name="Title" value="@Model.Title" />
+                                <span class="required" id="Title-error" style="display:none;">標題 必須填寫！</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item"><span class="red">*</span> 活動簡介</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <textarea class="form-control checkitem" rows="3" placeholder="限100字內" maxlength="100" id="Introduction" name="Introduction">@Model.Introduction</textarea>
+                                <span class="required" id="Introduction-error" style="display:none;">活動簡介 必須填寫！</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item"><span class="red">*</span> 背景圖</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white float_left">
+                                <div class="radio_inline" id="div_radio">
+                                    <label class="mt-radio mt-radio-outline">
+                                        @Html.RadioButtonFor(model => model.BGStyle, 1)樣式一
+                                        <span></span>
+                                        <img src="@Url.Content("~/img/meeting_bg_01.jpg")" width="30" />
+                                    </label>
+
+                                    <label class="mt-radio mt-radio-outline">
+                                        @Html.RadioButtonFor(model => model.BGStyle, 2)樣式二
+                                        <span></span>
+                                        <img src="@Url.Content("~/img/meeting_bg_02.jpg")" width="30" />
+                                    </label>
+
+                                    <label class="mt-radio mt-radio-outline">
+                                        @Html.RadioButtonFor(model => model.BGStyle, 3)樣式三
+                                        <span></span>
+                                        <img src="@Url.Content("~/img/meeting_bg_03.jpg")" width="30" />
+                                    </label>
+
+                                    <label class="mt-radio mt-radio-outline">
+                                        @Html.RadioButtonFor(model => model.BGStyle, 4)自訂樣式
+                                        <span></span>
+                                    </label>
+
+                                </div>
+                                <span class="required" id="BGStyle-error" style="display:none">背景圖 必須點選！</span>
+                                <div>
+                                    <div id="div_custstyle" class="toggleChoice_padding " style="@(Model.BGStyle==4?"":"display:none" )">
+                                        <div id="div_oldfile" style="display:none">
+                                            <a href="@Model.StyleUploadFileUrl" target="preview">@Html.Raw(Model.StyleUploadFileNameOrg)</a>
+                                            <label style="color:blue;margin-left:10px;cursor:pointer" id="delimage">刪除</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input id="file_image" type="file" class="display_inline" name="ImageFile" accept="image/*" />
+                                            <span class="required" id="BGStyle-error" style="display:none">背景圖 必須點選！</span>
+                                            <div class="red">建議尺寸 800 x 850 px</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item"><span class="red">*</span> 活動連結</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Link, new { htmlAttributes = new { @class = "form-control checkitem" } })
+                                <span class="required" id="Link-error" style="display:none;">活動連結 必須填寫！</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--table end-->
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue">確認</button>
+        </div>
+    </form>
+</div>
+
+@section scripts {
+    <script>
+        $(function () {
+            $("#div_radio :radio").click(function () {
+                if ($(this).val() == "4") { $("#div_custstyle").show(); } else { $("#div_custstyle").hide(); }
+            });
+            var fileupload = '@Model.StyleUploadFileName';
+            if (fileupload !== "") { $("#div_oldfile").show(); }
+            $('#delimage').click(function () { $('#div_oldfile').hide(); $('#StyleUploadFileName').val(''); });
+
+            $('#editform').submit(function (event) {
+                $(".required").hide();
+                var iscon = true;
+                var inputval = $("#editform :input").filter(function () { return $(this).val() == "" && $(this).hasClass('checkitem'); });
+                for (var idx = 0; idx < inputval.length; idx++) {
+                    $("#" + inputval[idx].name + "-error").show();
+                }
+                var formData = new FormData();
+                var rval = $("#div_radio :radio:checked").val();
+                if (rval === undefined) {
+                    $("#BGStyle-error").show();
+                    return false; 
+                } else {
+                    
+                    if (rval == "4") {
+                        var file = $("#file_image");
+                        var _validFileExtensions = [".jpg", ".png", ".gif", ".jpeg"];
+                        var sFileName = file.val();
+                        if (sFileName.length > 0) {var blnValid = false;
+                            for (var j = 0; j < _validFileExtensions.length; j++) {
+                                var sCurExtension = _validFileExtensions[j];
+                                if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                                    blnValid = true;break;}
+                            }
+                            if (!blnValid) {alert("只能上傳Image檔案"); file.outerHTML = file.outerHTML;iscon = false;}
+                        }
+                        var images = $('#file_image').get(0).files;
+                        if (images.length > 0) {
+                            formData.append("UploadFile", images[0]);
+                        } else {
+                            if ($("#StyleUploadFileName").val() == '' || $("#StyleUploadFileName").val() == undefined) {
+                                alert("請上傳背景圖"); iscon = false;
+                            }
+                        }
+                    }
+                }
+                if (inputval.length > 0) { return false; }
+                if (iscon == false) { return false; }
+            
+       
+               var array = $('#editform').serializeArray();
+               $.each(array, function () {
+                   formData.append(this.name, this.value);
+              });
+              formData.append("Title", encodeURIComponent($('#Title').val()));
+               formData.append("Introduction", encodeURIComponent($('#Introduction').val()));
+          
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                        location.href='@Url.Action("PageSeminar")'
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+
+}
+

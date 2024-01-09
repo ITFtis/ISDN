@@ -1,0 +1,232 @@
+﻿@model  System.Collections.Generic.List<SQLModel.Models.Menu>
+@Html.AntiForgeryToken()
+<!--page bar start-->
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<style>
+    .btn i {
+        margin-left: 0px;
+    }
+</style>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            網站選單
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>@ViewBag.Title</li>
+    </ul>
+
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">@ViewBag.Title</div>
+
+<div class="portlet light bordered">
+
+    <!--set item start-->
+    <div class="table-toolbar">
+        <button class="btn green-meadow" id="Btn_AddMenu">新增主選單<i class="fa fa-plus"></i></button>
+    </div>
+    <!--set item end-->
+    <!--課程類別列程 start-->
+    @using (Ajax.BeginForm("MainMenu", new AjaxOptions { UpdateTargetId = "eventtable" }))
+    {
+        <div class="table-scrollable" id="eventtable">
+            <table class="table table-bordered competence_table class_table" style="width:100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                    @{
+                        var l1arr = Model.Where(v => v.MenuLevel == 1);
+                        foreach (var l1 in l1arr)
+                        {
+                            var l2arr = Model.Where(v => v.ParentID == l1.ID).ToArray();
+                            if (ViewBag.onlylevle1 == "Y")
+                            {
+                                l2arr = new SQLModel.Models.Menu[] { };
+                            }
+                            var l1rowcount = 0;
+                            var arrl2stratidx = new List<int>();
+                            var l3useidx = 0;
+                            foreach (var l2 in l2arr)
+                            {
+                                var l3cnt = Model.Where(v => v.ParentID == l2.ID).Count();
+                                arrl2stratidx.Add(l1rowcount);
+                                l1rowcount += Math.Max(1, l3cnt);
+                            }
+                            l1rowcount = l1rowcount == 0 ? 1 : l1rowcount;
+                            IList<SQLModel.Models.Menu> _l3menu = null;
+                            for (var idx = 0; idx < l1rowcount; idx++)
+                            {
+                                <tr>
+                                    @if (idx == 0)
+                                    {
+                                        <td class='class_03' rowspan='@l1rowcount'>
+                                            <div class='display_inline' style='float:left'>
+                                                @if (ViewBag.onlylevle1 != "Y")
+                                                {
+                                                    <button type='button' class='btn green-meadow btn-xs addmenu' index='@l1.ID' nextlevel='@(l1.MenuLevel + 1)'><i class='fa fa-plus'></i></button>
+                                                }
+                                                <button type='button' class='btn red-mint btn-xs delmenu' index='@l1.ID'><i class='glyphicon glyphicon-trash'></i></button>
+                                                @if (l1.Status.Value)
+                                                {
+                                                    <button type='button' class='btn yellow btn-xs menudisable' index='@l1.ID'><i class='fa fa-check-square'></i></button>}
+                                                else
+                                                {
+                                                    <button type='button' class='btn yellow btn-xs menuenable' index='@l1.ID'><i class='fa fa fa-square-o'></i></button>}
+                                                <button type='button' class='btn btn-default btn-xs menusortup' index='@l1.ID'><i class='fa fa-angle-up'></i></button>
+                                                <button type='button' class='btn btn-default btn-xs menusortdown' index='@l1.ID'><i class='fa fa-angle-down'></i></button>
+                                            </div>
+                                            <div class='training_class_title' style='float:left; margin-left:10px' level='@l1.MenuLevel'><a href="#" class="update" index='@l1.ID'>@(string.IsNullOrEmpty(l1.DisplayName) ? l1.MenuName : l1.DisplayName)</a></div>
+                                        </td>
+                                        if (l2arr.Count() == 0)
+                                        {
+                                            <td class='class_03'>&nbsp;</td>
+                                            <td class='class_03'>&nbsp;</td>
+                                        }
+                                    }
+                                    @if (arrl2stratidx.Contains(idx))
+                                    {
+                                        var l2arridx = arrl2stratidx.IndexOf(idx);
+                                        if (l2arridx >= l2arr.Count())
+                                        {
+                                            <td class='class_03'>&nbsp;</td>
+                                        }
+                                        else
+                                        {
+                                            _l3menu = Model.Where(v => v.ParentID == @l2arr[l2arridx].ID).ToArray();
+                                            l3useidx = 0;
+                                            <td class='class_03' rowspan='@(_l3menu.Count()==0?1:_l3menu.Count())'>
+                                                <div class='display_inline' style='float:left'>
+                                                    @if (ViewBag.onlylevle2 != "Y")
+                                                    {
+                                                        <button type='button' class='btn green-meadow btn-xs addmenu' index='@l2arr[l2arridx].ID' nextlevel='@(l2arr[l2arridx].MenuLevel + 1)'><i class='fa fa-plus'></i></button>
+                                                    }
+
+                                                    <button type='button' class='btn red-mint btn-xs delmenu' index='@l2arr[l2arridx].ID'><i class='glyphicon glyphicon-trash'></i></button>
+                                                    @if (l2arr[l2arridx].Status.Value)
+                                                    {
+                                                        <button type='button' class='btn yellow btn-xs menudisable' index='@l2arr[l2arridx].ID'><i class='fa fa-check-square'></i></button>}
+                                                    else
+                                                    {
+                                                        <button type='button' class='btn yellow btn-xs menuenable' index='@l2arr[l2arridx].ID'><i class='fa fa fa-square-o'></i></button>}
+                                                    <button type='button' class='btn btn-default btn-xs menusortup' index='@l2arr[l2arridx].ID'><i class='fa fa-angle-up'></i></button>
+                                                    <button type='button' class='btn btn-default btn-xs menusortdown' index='@l2arr[l2arridx].ID'><i class='fa fa-angle-down'></i></button>
+                                                </div>
+                                                <div class='training_class_title' style='float:left; margin-left:10px' level='@l2arr[l2arridx].MenuLevel'><a href="#" class="update" index='@l2arr[l2arridx].ID'>@(string.IsNullOrEmpty(l2arr[l2arridx].DisplayName) ? l2arr[l2arridx].MenuName : l2arr[l2arridx].DisplayName)</a></div>
+                                            </td>
+                                            if (_l3menu.Count() == 0)
+                                            {
+                                                <td class='class_03'>&nbsp;</td>
+                                            }
+                                        }
+                                    }
+
+                                    @if (_l3menu != null && l3useidx < _l3menu.Count())
+                                    {
+                                        <td class='class_03'>
+                                            <div class='display_inline' style='float:left'>
+                                                <button type='button' class='btn red-mint btn-xs delmenu' index='@_l3menu[l3useidx].ID'><i class='glyphicon glyphicon-trash'></i></button>
+                                                @if (_l3menu[l3useidx].Status.Value)
+                                                {
+                                                    <button type='button' class='btn yellow btn-xs menudisable' index='@_l3menu[l3useidx].ID'><i class='fa fa-check-square'></i></button>}
+                                                else
+                                                {
+                                                    <button type='button' class='btn yellow btn-xs menuenable' index='@_l3menu[l3useidx].ID'><i class='fa fa fa-square-o'></i></button>}
+                                                <button type='button' class='btn btn-default btn-xs menusortup' index='@_l3menu[l3useidx].ID'><i class='fa fa-angle-up'></i></button>
+                                                <button type='button' class='btn btn-default btn-xs menusortdown' index='@_l3menu[l3useidx].ID'><i class='fa fa-angle-down'></i></button>
+                                            </div>
+                                            <div class='training_class_title' style='float:left; margin-left:10px' level='@_l3menu[l3useidx].MenuLevel'><a href="#" class="update" index='@_l3menu[l3useidx].ID'>@(string.IsNullOrEmpty(_l3menu[l3useidx].DisplayName) ? _l3menu[l3useidx].MenuName : _l3menu[l3useidx].DisplayName)</a></div>
+                                        </td>
+                                        l3useidx += 1;
+                                    }
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+</div>
+@section scripts {
+    <script>
+		$(function () {
+			$(".addmenu").click(function () {
+				var obj = {};
+				obj.menuid = '-1';
+				obj.menutype='@ViewBag.menutype'
+				obj.level = $(this).attr("nextlevel");
+				obj.parentid = $(this).attr("index");
+				CreatePost('@Url.Action("MenuEdit")', obj);
+            });
+
+            $(".delmenu").click(function () {
+                var index = $(this).attr("index");
+                bootbox.confirm({
+                    title: "確定刪除?",
+                    message: "是否確定刪除?",
+                    buttons: { cancel: { label: '<i class="fa fa-times"></i>取消' }, confirm: { label: '<i class="fa fa-check"></i> 確認' } },
+                    callback: function (result) {
+                        if (result) {
+
+                            $.post('@Url.Action("DeleteMenu")', { "menuid": index }, function (data) {
+                                 alert(data);
+                                  CreatePost('@Url.Action("MainMenu")', { menutype:'@ViewBag.menutype'});
+                               });
+
+                        }
+                    }
+                });
+
+            });
+
+            $(".menuenable").click(function () {
+                $.post('@Url.Action("Menueabled")', { "menuid": $(this).attr("index") }, function (data) {
+                    alert(data);
+                       CreatePost('@Url.Action("MainMenu")', { menutype:'@ViewBag.menutype'});
+                });
+            });
+
+              $(".menudisable").click(function () {
+                $.post('@Url.Action("Menudisabled")', { "menuid": $(this).attr("index") }, function (data) {
+                    alert(data);
+                      CreatePost('@Url.Action("MainMenu")', { menutype:'@ViewBag.menutype'});
+                });
+			});
+              $(".menusortdown").click(function () {
+                $.post('@Url.Action("SortNext")', { "menuid": $(this).attr("index") }, function (data) {
+                   CreatePost('@Url.Action("MainMenu")', { menutype:'@ViewBag.menutype'});
+                });
+            });
+              $(".menusortup").click(function () {
+                $.post('@Url.Action("SortUp")', { "menuid": $(this).attr("index") }, function (data) {
+                        CreatePost('@Url.Action("MainMenu")', { menutype:'@ViewBag.menutype'});
+                });
+              });
+
+          $(".update").click(function () {
+              	var obj = {};
+                 obj.menuid = $(this).attr("index");
+				obj.menutype='@ViewBag.menutype'
+				obj.level = '-1';
+				obj.parentid="-1";
+				CreatePost('@Url.Action("MenuEdit")', obj);
+            });
+			$("#Btn_AddMenu").click(function () {
+				var obj = {};
+				obj.menuid = '-1';
+				obj.menutype='@ViewBag.menutype'
+				obj.level = '1';
+				obj.parentid="-1";
+				CreatePost('@Url.Action("MenuEdit")', obj);
+			});
+
+		});
+    </script>
+
+}

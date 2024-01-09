@@ -1,0 +1,172 @@
+﻿@model MailInputModel
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<script src="~/Scripts/clipboard.min.js"></script>
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Model")">模組管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Form")">表單管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">信件處理</a>
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<div class="title_01">@ViewBag.Title</div>
+<div class="portlet light bordered">
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("Save")'>
+        @Html.HiddenFor(Model => Model.ID)
+        @Html.AntiForgeryToken()
+        <div class="portlet light form-fit bordered" id="div_seo">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body">
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">諮詢時間</div>
+                            <div class="col-md-10 col-sm-4 col-xs-12 bg-white mobile_white">
+                                <div class="input-group input-large">
+                                    @Model.CreateDatetime
+                                </div>
+                            </div>
+                        </div>
+                        @{
+                            for (var idx = 0; idx < Model.InputKey.Count; idx++)
+                            {
+                                <div class="form-group">
+                                    <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">@Model.InputKey[idx]</div>
+                                    <div class="col-md-9 col-sm-9 col-xs-12 bg-white mobile_white">
+                                        <div class="input-group input-large">
+                                            @Model.InputValue[idx]
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">處理進度</div>
+                            <div class="col-md-10 col-sm-4 col-xs-12 bg-white mobile_white">
+                                <select id="sel_Progress">
+                                    <option value="0" selected="selected">0%</option>
+                                    <option value="10">10%</option>
+                                    <option value="20">20%</option>
+                                    <option value="30">30%</option>
+                                    <option value="40">40%</option>
+                                    <option value="50">50%</option>
+                                    <option value="60">60%</option>
+                                    <option value="70">70%</option>
+                                    <option value="80">80%</option>
+                                    <option value="90">90%</option>
+                                    <option value="100">100%</option>
+                                </select>
+                                <button type="button" class="btn blue" id="btn_saveprocess">儲存進度</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">處理備註</div>
+                            <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                @foreach (var p in Model.ProcessNote)
+                                {
+                                    <span> @p.Account&nbsp;&nbsp;&nbsp;@p.CreateDateTime<br />@p.NoteText</span>
+                                }
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">處理備註輸入</div>
+                            <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                <span id="span_progress">0/1000</span>
+                                <textarea id="txt_Progress" rows="5" class="form-control" maxlength="1000"></textarea>
+                                <button type="button" class="btn blue" id="btn_sendprogressnote">確定</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">回覆內容</div>
+                            <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                @foreach (var p in Model.ReplyNote)
+                                {
+                                    <span> @p.Account&nbsp;&nbsp;&nbsp;@p.CreateDateTime<br />@p.NoteText</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">回覆內容輸入</div>
+                            <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                <span id="span_reply">0/1000</span>
+                                <textarea id="txt_reply" rows="5" class="form-control" maxlength="1000"></textarea>
+                                <button type="button" class="btn blue" id="btn_sendreply">寄送</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="text-center search_padding">
+            <button type="button" class="btn grey-mint" id="btn_return">回上一頁</button>
+        </div>
+    </form>
+</div>
+
+    @section scripts {
+        <script>
+        $(function () {
+            $("#sel_Progress").val('@Model.Progress');
+            $("#btn_return").click(function () { CreatePost('@Url.Action("MailModelItem")', { mainid: '@Model.MainID' }); });
+            $("#btn_return").click(function () { CreatePost('@Url.Action("MailModelItem")', { mainid: '@Model.MainID' }); });
+            $("#txt_Progress").keyup(function () {
+                var length = $("#txt_Progress").val().length;
+                $("#span_progress").html(length + "/" + (1000 - length));
+            });
+            $("#txt_reply").keyup(function () {
+                var length = $("#txt_reply").val().length;
+                $("#span_reply").html(length + "/" + (1000 - length));
+            });
+            $("#btn_sendprogressnote").click(function () {
+                var obj = {};
+                obj.text = $("#txt_Progress").val();
+                if (obj.text == "") { alert('請確實輸入處理備註'); return false;}
+                obj.id = $("#ID").val();
+                $.post('@Url.Action("SaveProgressNote")', obj, function (data) {
+                    alert(data);
+                    document.location.href = '@Url.Action("MailProcess")?itemid=@Model.ID';
+                });
+            });
+            $("#btn_sendreply").click(function () {
+                var obj = {};
+                obj.text = $("#txt_reply").val();
+                if (obj.text == "") { alert('請確實輸入回覆內容'); return false; }
+                obj.id = $("#ID").val();
+                $.post('@Url.Action("SaveReply")', obj, function (data) {
+                    alert(data);
+                    document.location.href = '@Url.Action("MailProcess")?itemid=@Model.ID';
+                });
+            });
+
+            $("#btn_saveprocess").click(function () {
+                var obj = {};
+                obj.progress = $("#sel_Progress").val();
+                obj.id = $("#ID").val();
+                $.post('@Url.Action("SaveProgress")', obj, function (data) {
+                        alert(data);
+                });
+            });
+
+        });
+        </script>
+
+    }
+
+

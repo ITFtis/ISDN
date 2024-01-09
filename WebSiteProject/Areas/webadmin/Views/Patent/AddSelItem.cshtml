@@ -1,0 +1,32 @@
+﻿<tr id="tr_@(ViewBag.index)" class="selitem" seqidx="@(ViewBag.seqindex)">
+    <td class="text-center">
+        <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+            <input type="checkbox" class="checkboxes">
+            <span name="check_@(ViewBag.index)"></span>
+        </label>
+    </td>
+    <td><input type="text" class="form-control Nation" value="" /></td>
+    <td><input type="text" class="form-control Patentno" value="" /></td>
+    <td><input type="text" class="form-control PatentDate" value=""  maxlength="10" id="PatentDate@(ViewBag.seqindex)"/></td>
+    <td><input type="text" class="form-control EarlyPublicDate" value="" maxlength="10"  id="EarlyPublicDate@(ViewBag.seqindex)"/></td>
+    <td><input type="text" class="form-control EarlyPublicNo" value="" /></td>
+    <td><input type="text" class="form-control Deadline" value="" maxlength="10" id="Deadline@(ViewBag.seqindex)"/></td>
+</tr>
+<script>
+
+    $('#PatentDate@(ViewBag.seqindex)').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        language: 'zh-TW'
+    });
+    $('#EarlyPublicDate@(ViewBag.seqindex)').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        language: 'zh-TW'
+    });
+    $('#Deadline@(ViewBag.seqindex)').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        language: 'zh-TW'
+    });
+</script>

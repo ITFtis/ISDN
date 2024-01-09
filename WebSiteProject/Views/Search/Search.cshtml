@@ -1,0 +1,141 @@
+﻿@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel, Model.LangId);
+}
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<div id="content" class="page_content">
+    <div class="container">
+        <div class="page_top">
+            <a href="#;return false;" title="@Common.GetLangText("主要內容區")" accesskey="@if(Model.LangId == "1"){@("C") }else{ @("C")}" id="main-content">:::</a>
+            <a title='Home'><i class="fas fa-home"></i></a><i class="fa fa-angle-right"></i>
+                                                       <span class="active">@Common.GetLangText("搜尋結果")</span>
+        </div>
+        <div class="title">
+            <h2 >@Common.GetLangText("搜尋結果")</h2>
+        </div>
+
+        <div class="content_con">
+
+            <div class="con_one">
+
+                <!--list start-->
+                <div class="news_list_02" id="ul_search">
+                </div>
+                <!--list end-->
+                <!--頁碼 start-->
+                <div id="page_number" class="table-toolbar">
+                    <div class="col-md-4 col-sm-12 col-xs-12 page_total" >
+                        @Common.GetLangText("總筆數")：<span id="totalcnt"></span>
+                    </div>
+                    <div class="col-md-8 col-sm-12 col-xs-12 page_icon" data-sr="enter right over 1.5s">
+                        <div class="btn-group">
+                            <button type="button" class="btn_page accesskey btn_index" title="@Common.GetLangText("第一頁")" pageindex="1"><i class="fa fa-angle-double-left"></i></button>
+                            <button type="button" class="btn_page accesskey btn_index" title="@Common.GetLangText("上一頁")" pageindex="-1"><i class="fa fa-angle-left"></i></button>
+                            <select class="form-control page_list accesskey" id="page_list"></select>
+                            <button type="button" class="btn_page accesskey" title="@Common.GetLangText("跳頁")" id="btn_goto">
+                                @Common.GetLangText("跳頁")
+                            </button>
+                            <button type="button" class="btn_page accesskey btn_index" title="@Common.GetLangText("下一頁")" pageindex="+1"><i class="fa fa-angle-right"></i></button>
+                            <button type="button" class="btn_page accesskey btn_index" title="@Common.GetLangText("最末頁")" pageindex="" id="btn_pagemax"><i class="fa fa-angle-double-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <!--頁碼 end-->
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        var langid = '@ViewBag.langid';
+        var searchbase = {};
+        var pageidx = 1;
+        var pagesize = 10;
+        var maxpagination = 10;
+        $(document).ready(function () {
+            var token = $("input[name='__RequestVerificationToken']").val();
+            $("#txt_search").val('@ViewBag.Key');
+             searchbase.Search = '';
+             searchbase.Sort = 'Sort';
+             searchbase.Order = 'UpdateDatetime';
+            searchbase.Limit ='@ViewBag.SelLimit';
+            searchbase.NowPage = pageidx;
+            searchbase.ID = '';
+            searchbase.ModelID = '@ViewBag.mainid';
+            searchbase.LangId= '@ViewBag.langid';
+            searchbase.Key = '@ViewBag.Key';
+            searchbase.SearchType = '@ViewBag.SearchType';
+            searchbase.__RequestVerificationToken = token;
+            pagesize = searchbase.Limit;
+            searchbase.Offset = ((pageidx - 1) * pagesize);
+           $("#pagination").delegate((".btn_page"), "click", function () {
+                searchbase.NowPage = parseInt($(this).attr('pageindex'));
+                pageidx = searchbase.NowPage;
+                searchbase.Offset = ((pageidx - 1) * pagesize);
+                $.post('@Url.Action("PaddingSearch")', searchbase, function (data) {
+                    SetData(data);
+                });
+            });
+            $.post('@Url.Action("PaddingSearch")', searchbase, function (data) {
+                SetData(data);
+                searchbase.TotalCnt = data.total;
+                searchbase.Info = data.Info;
+            });
+
+            $("#btn_goto").click(function () { GetData($("#page_list").val(), true); });
+            $(".btn_index").click(function () {
+                if (searchbase.Limit != "-1") {
+                    var index = $(this).attr('pageindex');
+                    if (index == "-1") {
+                        var nowpage = parseInt($("#page_list").val());
+                        if (nowpage != 1) { nowpage -= 1; $("#page_list").val(nowpage); GetData(nowpage); }
+                    } else if (index == "+1") {
+                        var nowpage = parseInt($("#page_list").val());
+                        var max = parseInt($("#btn_pagemax").attr('pageindex'));
+                        if (nowpage != max) { nowpage += 1; $("#page_list").val(nowpage); GetData(nowpage); }
+                    } else { GetData(index); $("#page_list").val(index) }
+                }
+            });
+        });
+        function GetData(page) {
+            var pagesize = searchbase.Limit;
+            searchbase.Offset = ((page - 1) * pagesize);
+            searchbase.NowPage = page;
+             $.post('@Url.Action("PaddingSearch")', searchbase, function (data) {
+                   SetData(data);
+                 searchbase.TotalCnt = data.total;
+               
+                   searchbase.Info = data.Info;
+            });
+        }
+        function SetData(data) {
+            $("#ul_search").empty();
+            //var strarr = [];
+        
+            for (var idx = 0; idx < data.rows.length; idx++) {
+                //$('<a href="' + data.rows[idx]["Url"] + '" title="' + data.rows[idx]["Title"] +'"><div class="item"><div class="title">'
+                //    + data.rows[idx]["Text"] + '</div></div></a>').appendTo("#ul_search");
+                $('<a href="' + data.rows[idx]["Url"] + '" title="' + data.rows[idx]["Title"] + '"><div class="item"><div class="title">'
+                    + data.rows[idx]["Title"] + '</div></div></a>').appendTo("#ul_search");
+            }
+            var pagecnt = Math.ceil(data.total / pagesize);
+            var endcnt = (searchbase.Offset + parseInt(pagesize)) > parseInt(data.tota) ? parseInt(data.tota) : (searchbase.Offset + parseInt(pagesize));
+            if (data.total == 0) { endcnt = 0; searchbase.Offset = -1;}
+            $("#totalcnt").html(data.total + "，@if (Model.LangId == "1") { @("顯示 ") } else { @("Display ") }" + (searchbase.Offset + 1) + "~" + endcnt);
+            if (data.tota == "0" || searchbase.Limit == "-1" || data[2] == 1) { $("#page_number").hide(); } else {
+                            $("#page_number").show();
+                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                             maxpage = pagecnt;
+                            $("#page_list").empty();
+                          var strarr = []; $("#btn_pagemax").attr('pageindex', pagecnt);
+                            for (var idx = 1; idx <= pagecnt; idx++) {
+                                strarr.push("<option>" + idx + "</option>");
+                            }
+                $(strarr.join('')).appendTo($("#page_list")); $("#page_list").val(searchbase.NowPage);
+          }
+        }
+    </script>
+}

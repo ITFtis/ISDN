@@ -1,0 +1,103 @@
+﻿@model SiteLangModel
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <span href="#">Home</span>
+            <i class="fa fa-circle"></i>
+            <span href="#">系統權限管理</span>
+            <i class="fa fa-circle"></i>
+            <span href="#">多國語系設定</span>
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">多國語系設定</div>
+<div class="portlet light bordered">
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveLang")'>
+        @Html.AntiForgeryToken()
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body">
+                        @Html.HiddenFor(model => model.ID)
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 search_item"><span class="red">*</span>語系</div>
+                            <div class="col-md-10 col-sm-4 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Lang_Name, new { htmlAttributes = new { @class = "form-control checkitem" } })
+                                <span class="required" id="Lang_Name-error" style="display:none;">語系 必須填寫！</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 search_item"><span class="red">*</span>前台語系顯示文字</div>
+                            <div class="col-md-10 col-sm-4 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Disp_Name, new { htmlAttributes = new { @class = "form-control checkitem" } })
+                                <span class="required" id="Disp_Name-error" style="display:none;">前台語系顯示文字 必須填寫！</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 search_item"><span class="red">*</span>網址</div>
+                            <div class="col-md-10 col-sm-4 col-xs-12 bg-white mobile_white form_blank">
+                                @Html.EditorFor(model => model.Sub_Domain_Name, new { htmlAttributes = new { @class = "form-control checkitem" } }) .DomainName.com.tw
+                                <span class="required" id="Sub_Domain_Name-error" style="display:none;">網址 必須填寫！</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 search_item">內容來源方式</div>
+                            <div class="col-md-10 col-sm-4 col-xs-12 bg-white mobile_white form_blank">
+                                <div class="row">@Html.RadioButtonFor(model => model.Domain_Type, 1, new { style = "margin-left :10px", @checked = "checked" }) 自行建立</div>
+                                <div class="row" style="width:100%;margin-top:3px">
+                                    @Html.RadioButtonFor(model => model.Domain_Type, 2, new { style = "margin-left :10px;float:left" }) <span style="float:left;margin-left :10px">連結其他語系</span>
+                                @Html.DropDownList(@Html.IdFor(m => m.Link_Lang_ID).ToString(), (IEnumerable<SelectListItem>)ViewBag.langlist, new { @class = "form-control", style = "float:left;margin-left :10px;width:200px" })
+                            </div>
+
+                            <div class="row" style="width:100%;margin-top:3px">@Html.RadioButtonFor(model => model.Domain_Type, 3, new { style = "margin-left :10px;float:left" }) <span style="float:left;margin-left :10px">連結其他網址</span> @Html.EditorFor(model => model.Link_Href, new { htmlAttributes = new { @class = "form-control", style = "float:left;width:300px;margin-left :10px" } })</div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center search_padding">
+        <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+        <button type="button" class="btn grey-mint" id="btn_return" onclick="document.location.href='@Url.Action("SiteLang")'">返回列表</button>
+    </div>
+    </form>
+</div>
+@section scripts {
+    <script>
+        $(function () {
+            if ('@ViewBag.disableadd'=='Y') {
+                $('#btn_submit').hide();
+            }
+            $('#editform').submit(function (event) {
+                var inputval = $("#form-body :input").filter(function () { return $(this).val() == "" && $(this).hasClass('checkitem'); });
+                    for (var idx = 0; idx < inputval.length; idx++) {
+                        $("#" + inputval[idx].name + "-error").show();
+                    }
+                    if (inputval.length > 0) { return false; }
+                 
+                    $.ajax({
+                        url: this.action,
+                        type: this.method,
+                        data: $(this).serialize(),
+                        success: function (result) {
+                            if (result == "") {
+                                alert("儲存成功");
+                                document.location.href = '@Url.Action("SiteLang")'
+                            } else {
+                                alert(result);
+                            }
+                        }
+                   });
+                    return false;
+            })
+        });
+    </script>
+
+}
+

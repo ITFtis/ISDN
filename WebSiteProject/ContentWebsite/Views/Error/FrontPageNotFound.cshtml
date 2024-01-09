@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!--page banner end-->
+<!--主要內容區 start-->
+<div class="page_banner" style="background: url('@Url.Content("~/img/page_top_bg.jpg")');background-position: top center;background-size: cover;">
+    <!--建議尺寸1920*470px-->
+    <div class="container">
+        <div class="page_title" data-sr="enter top over 1.5s">@ViewBag.Title</div>
+    </div>
+</div>
+<!--page banner end-->
+<!--main content start-->
+<div class="page_content">
+    <div class="container">
+        <div class="page_title" data-sr="enter left over 1.5s">@ViewBag.Title</div>
+        <pre>很抱歉，您輸入的網址不存在或已被移除，請點選其他頁面重試。Sorry, the request url is not exist or has been removed. Please browse another page.</pre>
+    </div>
+</div>

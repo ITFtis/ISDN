@@ -1,0 +1,213 @@
+﻿@model MessageSearchModel
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Model")">模組管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","EventList")">大事記要模組</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            清單
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">@ViewBag.Title</div>
+
+<div class="portlet light bordered">
+
+    <!--management item start-->
+    @*<div class="table-toolbar">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="display_inline">
+                        <p class="class_title">管理項目</p>
+                        <select class="form-control_1" id="sel_unit" onChange="window.location.href=this.value">
+                            <option value="#" selected>訊息管理</option>
+                            <option value="@Url.Action("UnitSetting", new { mainid = ViewBag.mainid })">單元設定</option>
+                        </select>
+        </div>
+                </div>
+            </div>*@
+    <!--<hr>-->
+    <!--management item end-->
+    <!--set item start-->
+    <div class="table-toolbar">
+
+        <div class="col-md-12 col-sm-12 col-xs-12 mobile_left">
+            <p class="display_inline">
+                <button class="btn blue search_icon">搜尋 <i class="fa fa-search"></i></button>
+                <button class="btn green-meadow" id='btn_add'>新增 <i class="fa fa-plus"></i></button>
+            </p>
+        </div>
+    </div>
+    <!--set item end-->
+    <!--search item start-->
+    <div class="search_menu" style="display: none;">
+        <div class="portlet light form-fit bordered" id="searchForm">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <div class="col-md-2 search_item_1">發布日期</div>
+                            <div class="col-md-10 bg-white">
+                                <div class="input-group input-large date-picker input-daterange" data-date="10/11/2012" data-date-format="yyyy/mm/dd">
+                                    @Html.EditorFor(model => model.PublicshDateFrom, new { htmlAttributes = new { @class = "form-control", placeholder = "開始日期" } })
+                                    <span class="input-group-addon"> to </span>
+                                    @Html.EditorFor(model => model.PublicshDateTo, new { htmlAttributes = new { @class = "form-control", placeholder = "結束日期" } })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 search_item_1">顯示日期</div>
+                            <div class="col-md-10 bg-white">
+                                <div class="input-group input-large date-picker input-daterange" data-date="10/11/2012" data-date-format="yyyy/mm/dd">
+                                    @Html.EditorFor(model => model.DisplayFrom, new { htmlAttributes = new { @class = "form-control", placeholder = "開始日期" } })
+                                    <span class="input-group-addon"> to </span>
+                                    @Html.EditorFor(model => model.DisplayTo, new { htmlAttributes = new { @class = "form-control", placeholder = "結束日期" } })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 search_item_1">關鍵字</div>
+                            <div class="col-md-10 bg-white">
+                                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 search_item_1">是否在顯示區間</div>
+                            <div class="col-md-4 bg-white">
+                                <select class="form-control input-small" id='IsRange'>
+                                    <option value='' selected>全部</option>
+                                    <option value='1'>是</option>
+                                    <option value='0'>否</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 search_item_1">上架</div>
+                            <div class="col-md-4 bg-white">
+                                <select class="form-control input-small"  id='Enabled'>
+                                    <option value='' selected>全部</option>
+                                    <option value='1'>顯示</option>
+                                    <option value='0'>隱藏</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center search_padding">
+            <button type="button" class="btn blue" id="btn_search">搜尋 <i class="fa fa-search"></i></button>
+            <button type="button" class="btn blue-hoki" id="btn_searchrefresh">清除搜尋<i class="fa fa-refresh"></i></button>
+        </div>
+    </div>
+    <!--search item end-->
+    <!--table start-->
+    <div class="table-scrollable">
+        <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0"
+               id="eventtable"
+               data-url="@Url.Action("PagingItem")"
+               data-sort-name='Sort'
+               data-page-size='10'
+               data-filed-id='ItemID'
+               data-max-pagination='10'>
+            <thead>
+                <tr>
+                    <th width="80" class="text-center delete_th" filed-type='delcheckbox'>
+                        <label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>
+                            <input type='checkbox' class='checkboxes' id="chk_all" /><span></span>
+                        </label>
+                        <button class="btn red-mint btn-xs" id='btn_del'><i class="glyphicon glyphicon-trash"></i></button>
+                    </th>
+                    <th filed-name='Sort' width="160px" class="text-center" filed-type='numbertextcheck' filed-item-class="sortedit">排序</th>
+                    <th filed-name='PublicshDate' width="100px" class="text-center">發佈日期</th>
+                    <th filed-name='Year' width="80px" class="text-center">年度</th>
+                    <th filed-name='Title' class="text-center" filed-type='link'>標題</th>
+                    <th filed-name='VerifyStr' width="50px" class="text-center" filed-item-class='text-center'>審核狀態</th>
+                    <th filed-name='IsRange' width="80px" class="text-center" filed-item-class='text-center'>是否在顯示區間</th>
+                    <th filed-name='Enabled' width="80px" class="text-center" filed-type='checkbox' filed-item-class="checkboxes chkstatus">上架</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <!--table end-->
+    <!--頁碼 start-->
+    <div id="page_number" class="table-toolbar">
+        <div class="col-md-4 col-sm-12 col-xs-12 page_total" id="tableinfo"></div>
+        <div class="col-md-8 col-sm-12 col-xs-12 page_icon">
+            <div class="btn-group" id="pagination">
+            </div>
+        </div>
+    </div>
+    <!--頁碼 end-->
+
+
+</div>
+<!--message end-->
+<!--message end-->
+@section scripts {
+<script>
+        $(document).ready(function () {
+            $("#btn_return").hide();
+            if ('@ViewBag.IsFromClick' == 'Y') {
+                $("#btn_return").show();
+            }
+            var mainid ='@ViewBag.mainid'
+            RegisterSearchItem();
+            $("#btn_searchrefresh").click(function () {
+                $("#searchForm :input").val('');
+                mytable.GetData();
+            });
+            mytable = $("#eventtable").myDataTable().TableList[0];
+            mytable.settingTdData = myDataTableTr;
+            mytable.settingTableInfo = function (tableinfoId, totalcnt, offsetcnt, nowpagecnt) {
+                var totalclick = mytable.keepcheckid.length;
+                $("#" + tableinfoId).html('總筆數:' + totalcnt + '，顯示' + (totalcnt <= 0 ? 0 : offsetcnt) + "~" + (offsetcnt + nowpagecnt - 1));
+            };
+            mytable.SearchModelBase.ModelID = mainid;
+            mytable.GetData(1);
+            var obj = {};
+            obj.modelid = mainid;
+             $("#btn_search").click(function () {
+                var SearchModelBase = mytable.SearchModelBase;
+                SearchModelBase.DisplayFrom = $('#@Html.IdFor(m => m.DisplayFrom)').val();
+                SearchModelBase.DisplayTo = $('#@Html.IdFor(m => m.DisplayTo)').val();
+                SearchModelBase.PublicshDateFrom = $('#@Html.IdFor(m => m.PublicshDateFrom)').val();
+                SearchModelBase.PublicshDateTo = $('#@Html.IdFor(m => m.PublicshDateTo)').val();
+                 SearchModelBase.Enabled = $('#@Html.IdFor(m => m.Enabled)').val();
+                 SearchModelBase.IsRange = $('#@Html.IdFor(m => m.IsRange)').val();
+                SearchModelBase.Title = $('#@Html.IdFor(m => m.Title)').val();
+                SearchModelBase.Search = "Y";
+                mytable.GetData();
+            });
+            RegisterOrder("#eventtable", ".sortedit", '@Url.Action("UpdateItemSeq")', obj);
+            RegisterClickAll("#chk_all", '#eventtable tbody .chksel', "#selvalue");
+            RegisterDelete("#btn_del", '#eventtable .chksel:checked', '@Url.Action("SetItemDelete")', {keyindex:"3"});
+            RegisterClicklink("#eventtable", ".edit", '@Url.Action("EventListEdit")', { idkey: "itemid", mainid: mainid},"itemid");
+            RegisterClick("#eventtable", ".chkstatus", '@Url.Action("SetItemStatus")', obj);
+            $("#btn_add").click(function () {
+               var obj = {};
+               obj.mainid = mainid;
+                CreatePost('@Url.Action("EventListEdit")', obj);
+            });
+        });
+</script>
+}

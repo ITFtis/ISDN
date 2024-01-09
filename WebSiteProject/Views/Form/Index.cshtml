@@ -1,0 +1,142 @@
+﻿<!--page banner start-->
+@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel, Model.LangId);
+}
+@model FormFrontIndexModel
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<audio id="myspech" src="" type="audio/mpeg"></audio>
+
+<div id="content" class="page_content">
+    <div class="container">
+
+        <div class="content_con">
+
+            <div class="right">
+                @Html.Raw(Model.LeftMenu)
+            </div>
+            <div class="left">
+                <div class="page_top" data-sr="enter top over 1.5s">
+                    <a href="#;return false;" title="主要內容區" accesskey="C" id="main-content">:::</a> <!--英文<a href="#;return false;" title="Main content area" accesskey="C">:::</a>-->
+                    @Html.Raw(Model.LinkStr)
+                </div>
+                <h2 >@Model.Title</h2>
+                <div class="page_con">
+                    <div class="con_font">@Html.Raw(Model.Desc)</div>
+                    <input id="CatchStr" type="hidden" name="CatchStr" value="@Model.CatchStr" />
+                    <div class="form_con">
+                        <div class="table form_box" id="table_list">@Html.Raw(Model.Formhtml)</div>
+                    </div>
+                    <div class="btn_box text-center" data-sr="enter bottom over 1.5s">
+                        <input type="button" class="btn_01" id="btn_send" value="@Common.GetLangText("送出")" title="@Common.GetLangText("送出")">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+@section scripts {
+    <script>
+        var modilitem = [];
+        var searchbase = {};
+        var pageidx = 1;
+        var pagesize = 10;
+        var maxpagination = 10;
+        var catchstr = "@Model.CatchStr";
+        $(document).ready(function () {
+            $("#table_list").delegate(("#a_captchRefresh"), "click", function () {
+                 $.post('@Url.Action("CaptchRefresh")', null, function (data) {
+                     catchstr = data[0];
+                     $("#image").attr('src', data[1]);
+                     $("#table_list :input").focus();
+                     //$("#img_captch").focus();
+
+                });
+            });
+            $("#table_list").delegate(("#i_voice"), "click", function () {
+                GetAudio(catchstr);
+                $("#table_list :input").focus();
+            });
+
+            $("#btn_send").click(function () {
+                $(".error").hide();
+                var allitem = $(".formitem");
+                var haserr = false;
+                var sendobj = {};
+                var focusid = "";
+
+                for (var idx = 0; idx < allitem.length;idx++){
+                    var type = $(allitem[idx]).attr('type');
+                    var index = $(allitem[idx]).attr('index');
+                    var value = '';
+                    if (type == 1 || type == 2) {
+                        value = $("#item_" + index).val();
+                        var title = $("#item_" + index).attr('title');
+                    } else if (type ==5) {
+                        value = $("#item_" + index).val();
+                    } else if (type ==4) {
+                        var clist = $(allitem[idx]).find(':checkbox:checked')
+                        var carr = [];
+                        for (var cidx = 0; cidx < clist.length; cidx++) {
+                            carr.push(clist[cidx].value);
+                        }
+                        value = carr.join('^');
+                    } else if (type ==3) {
+                        var value = $(allitem[idx]).find('input[name=item_'+index+']:checked').val();
+                    }
+                    if ($(allitem[idx]).hasClass('require') && (value=== undefined|| value.trim()=="")) {
+                        $("#err_" + index).show();
+                        if (focusid == "") { focusid = $(allitem[idx]).find(':input').attr('id'); }
+
+                        haserr = true;
+                    }
+                    sendobj[index] = value;
+                }
+                  if ($("#img_captch").val() == "") {
+                      haserr = true;
+                      $("#err_captch").show();
+                      if (focusid == "") { focusid = 'img_captch'; }
+                }
+                if (haserr) {
+                    $("#" + focusid)[0].focus();
+                    return false;
+                }
+
+                if (catchstr != $("#img_captch").val()) { $("#img_captch")[0].focus();  $("#err_captchnomatch").show(); return false; } else { $("#err_captchnomatch").hide();}
+                $.post('@Url.Action("SaveForm")', { itemid: '@Model.MainID', jsonstr: JSON.stringify(sendobj) }, function (data) {
+                    if (data == "") {
+                      var tempopj = {};
+                      tempopj.itemid = '@Model.MainID';
+                      tempopj.mid = '@Model.MenuID';
+                     CreatePost('@Url.Action("ConfirmContent")',tempopj);
+                    } else {
+                        alert(data);
+                    }
+                 });
+            });
+
+            $("#i_voice_play").on("click", function (e) {
+                console.log($("#i_voice_play").attr("data-voice"));
+                getVoices($("#i_voice_play").attr("data-voice"));
+            });
+
+            function getVoices(log) {
+                var voices = window.speechSynthesis.getVoices();
+                var msg = new SpeechSynthesisUtterance(log);
+                msg.voice = voices[35]; // 每台電腦/瀏覽器結果可能略有不同
+                window.speechSynthesis.speak(msg);
+            }
+        });
+
+        function GetAudio(catchstr) {
+          if (catchstr != "") {
+                   var audio = document.getElementById("myspech");
+                   audio.src = '@Url.Action("GetAudio")?text=' + catchstr;
+                   audio.load();
+                   audio.play();
+            }
+        }
+    </script>
+}
+<!--main content end-->

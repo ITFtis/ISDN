@@ -1,0 +1,255 @@
+﻿@model AuthoritySearchModel
+@Html.AntiForgeryToken()
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>系統管理<i class="fa fa-circle"></i></li>
+        <li>權限管理</li>
+    </ul>
+</div>
+<!--page bar end-->
+<div class="title_01">權限管理</div>
+<div class="portlet light bordered">
+    <!--set item start-->
+    <div class="table-toolbar">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="display_inline">
+                <p class="class_title">群組</p>
+                @Html.DropDownList(@Html.IdFor(m => m.GroupId).ToString(), (IEnumerable<SelectListItem>)ViewBag.grouplist, new { @class = "form-control_1" })
+                <p class="display_inline"><a href="#" class="btn grey-mint" role="button" id="btn_groupmanager">管理</a></p>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-12 col-xs-12 mobile_left">
+            <p class="display_inline">
+                <button class="btn blue search_icon open">搜尋 <i class="fa fa-search"></i></button>
+                <button class="btn green-meadow" id='btn_add'>新增 <i class="fa fa-plus"></i></button>
+            </p>
+        </div>
+    </div>
+    <!--set item end-->
+    <!--search item start-->
+    <div class="search_menu" style="display: none;" id="searchForm">
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <form class="form-horizontal form-bordered" id="searchForm">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <div class="col-md-2 search_item_1">所屬群組</div>
+                            <div class="col-md-10 bg-white">
+                                @Html.DropDownList("searchID", (IEnumerable<SelectListItem>)ViewBag.grouplist, new { @class = "form-control input-small" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 search_item_1">帳號</div>
+                            <div class="col-md-4 bg-white">
+                                @Html.EditorFor(model => model.Account, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                            <div class="col-md-2 search_item_1">使用者姓名</div>
+                            <div class="col-md-4 bg-white">
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 search_item_1">使用者狀態</div>
+                            <div class="col-md-10 bg-white">
+                                <select class="form-control input-small" id="@Html.IdFor(m => m.Status)">
+                                    <option value="">全部</option>
+                                    <option value="1">啟用</option>
+                                    <option value="0">未啟用</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="text-center search_padding">
+            <button type="button" class="btn blue" id="btn_search">搜尋 <i class="fa fa-search"></i></button>
+            <button type="button" class="btn blue-hoki" id="btn_searchrefresh">清除搜尋<i class="fa fa-refresh"></i></button>
+        </div>
+    </div>
+    <!--search item end-->
+    <!--table start-->
+    <div class="table-scrollable">
+        <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0"
+               id="eventtable"
+               data-url="@Url.Action("PagingUser")"
+               data-sort-name='Account'
+               data-page-size='10'
+               data-filed-id='ID'
+               data-max-pagination='10'>
+            <thead>
+                <tr class="bg-grey_1" filed-class='odd gradeX'>
+                    <th width="60" class="text-center" filed-type='function' filed-name='customerdeltr'>
+                        <label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>
+                            <input type='checkbox' class='checkboxes' id="chk_all" /><span></span>
+                        </label>
+                        <button class="btn red-mint btn-xs" id='btn_del'><i class="glyphicon glyphicon-trash"></i></button>
+                    </th>
+                    <th filed-name='customernametr' class="text-center" filed-type='function'>帳號</th>
+                    <th filed-name='Name' class="text-center" filed-item-class="text-center">姓名</th>
+                    <th filed-name='GroupName' class="text-center" filed-item-class="text-center">所屬群組</th>
+                    <th filed-name='customertr' width="10%" class="text-center" filed-item-class="chkstatus" filed-type='function'>啟用</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="page_number" class="table-toolbar">
+        <div class="col-md-4 col-sm-12 col-xs-12 page_total" id="tableinfo"></div>
+        <div class="col-md-8 col-sm-12 col-xs-12 page_icon">
+            <div class="btn-group" id="pagination">
+            </div>
+        </div>
+    </div>
+    <!--table end-->
+
+</div>
+
+<!--message end-->
+@section scripts {
+    <script>
+
+        $(document).ready(function () {
+            $("#GroupId").val('');
+            mytable = $("#eventtable").myDataTable().TableList[0];
+            mytable.settingTdData = myDataTableTr;
+            mytable.settingTableInfo = function (tableinfoId, totalcnt, offsetcnt, nowpagecnt) {
+                $("#" + tableinfoId).html('總筆數:' + totalcnt + '，顯示' + (totalcnt <= 0 ? 0 : offsetcnt) + "~" + (offsetcnt + nowpagecnt - 1) );
+            };
+            RegisterClick("#eventtable", ".chkstatus", '@Url.Action("SetUserStatus")', {});
+
+            $("#btn_groupmanager").click(function () {
+                document.location.href = '@Url.Action("GroupEdit")';
+            });
+
+            $("#chk_all").click(function () {
+                var thischk = this.checked;
+                $('#eventtable tbody .chksel').prop('checked', thischk);
+                var totalclick = $(".chksel:checked").length;
+                $("#selvalue").text(totalclick);
+            });
+            $("#btn_searchrefresh").click(function () {
+                $("#searchForm :input").val('');
+                mytable.GetData();
+            });
+
+            $("#btn_del").click(function () {
+                var check = $('#eventtable .chksel:checked');
+                var str = [];
+                var idlist=[]
+                for (var idx = 0; idx < check.length; idx++) {
+                    var index = check[idx].getAttribute('index');
+                    str.push($("#tr_" + index).find('td').eq(2).text());
+                    idlist.push(check[idx].getAttribute('value'));
+                }
+                if (idlist.length == 0) { return false;}
+                var strname = str.join('，');
+
+
+                bootbox.confirm({
+                    title: "確定刪除?",
+                    message: "是否確定刪除以下人員:" + strname+"?",
+                    buttons: {
+                        cancel: {
+                            label: '<i class="fa fa-times"></i>取消'
+                        },
+                        confirm: {
+                            label: '<i class="fa fa-check"></i> 確認'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            $.post('@Url.Action("SetUserDelete")', { idlist: idlist, delaccount: strname }, function (data) {
+
+                                alert(data);
+                                mytable.GetData();
+                            });
+                        }
+                    }
+                });
+            });
+
+            $("#GroupId").change(function () {
+                $("#searchForm :input").val('');
+                var SearchModelBase = mytable.SearchModelBase;
+                SearchModelBase.GroupId = $('#GroupId').val();
+                SearchModelBase.Search = "Y";
+                mytable.GetData();
+            });
+
+            $("#eventtable").delegate((".chksel"), "click", function () {
+                var totalclick = $(".chksel:checked").length;
+                $("#selvalue").text(totalclick);
+            });
+
+            $("#eventtable").delegate((".edit"), "click", function () {
+                var tempopj = {};
+                tempopj.ID = $(this).attr('value');
+                CreatePost('@Url.Action("UserListEdit")', tempopj);
+            });
+
+            $("#btn_add").click(function () {
+                document.location.href = '@Url.Action("UserListEdit")';
+            });
+
+            $("#btn_search").click(function () {
+                var SearchModelBase = mytable.SearchModelBase;
+                SearchModelBase.GroupId = $('#searchID').val();
+                SearchModelBase.Name = $('#@Html.IdFor(m => m.Name)').val();
+                SearchModelBase.Account = $('#@Html.IdFor(m => m.Account)').val();
+                SearchModelBase.Status = $('#@Html.IdFor(m => m.Status)').val();
+                SearchModelBase.Search = "Y";
+                mytable.GetData();
+            });
+            $(".search_icon").click(function () {
+			    var collapsed=$(this).find('i').hasClass('fa-search-minus');
+			    $(".search_menu").slideToggle();
+			    $('.search_icon').find('i').removeClass('fa-search');
+			    $('.search_icon').find('i').addClass('fa-search-minus');
+			   if(collapsed)$(this).find('i').toggleClass('fa-search-minus fa-2x fa-search fa-2x')
+            });
+            $("#GroupId").trigger("change");
+        });
+
+        function customernametr(row, columnidx, idx, filedname, tableid, type, fileditemclass) {
+            if (row["Readonly"]) {
+                return "<td class='text-center'>admin</td>";
+            } else {
+                return "<td class='text-center'><a href='#' class='edit' value='" + row[tableid] + "'>" + row["Account"] + "</a></td>";
+            }
+        }
+        function customertr(row, columnidx, idx, filedname, tableid, type, fileditemclass) {
+            if (row["Readonly"]) {
+                return "<td class='text-center'></td>";
+            } else {
+                if (row['Status']) {
+                    return "<td class='text-center'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>" +
+                        "<input type='checkbox' class='" + fileditemclass + "' checked='checked' value='" + row[tableid] + "' index='" + idx + "'/><span></span></label></td>";
+                } else {
+                    return "<td class='text-center'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>" +
+                        "<input type='checkbox' class='" + fileditemclass + "' value='" + row[tableid] + "' index='" + idx + "'/><span></span></label></td>";
+                }
+            }
+        }
+
+        function customerdeltr(row, columnidx, idx, filedname, tableid, type, fileditemclass) {
+            if (row["Readonly"]) {
+                return "<td class='text-center'></td>";
+            } else {
+                return "<td class='text-center'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>" +
+                    "<input type='checkbox' class='checkboxes chksel'  value='" + row[tableid] + "'  index='" + idx + "'/><span></span></label></td>";
+            }
+        }
+    </script>
+}

@@ -1,0 +1,185 @@
+﻿<!--page banner start-->
+<link href="~/ContentWebsite/Default/css/lightbox.css" rel="stylesheet" />
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.lightbox.js")"></script>
+<!--page banner end-->
+<!--主要內容區 start-->
+<div class="main_content">
+    <div class="container">
+        <div class="main_content_box">
+
+            <!--one content start-->
+            <div class="one_content">
+
+                <!--page top start-->
+                <div class="page_top">
+                    <div class="col-md-7 col-sm-6 col-xs-12 page_top_left">
+                        <a href="index.html"><i class="fa fa-home"></i>@Common.GetLangText("首頁")</a>
+                    </div>
+                    <div class="col-md-5 col-sm-6 col-xs-12" style="display:none">
+                        <div class="page_top_right">
+                            <a href="#"><img src="img/icon_mail.png" alt=""></a>
+                            <a href="#"><img src="img/icon_print.png" alt=""></a>
+                            <a href="#"><img src="img/icon_link.png" alt=""></a>
+                            <a href="#"><img src="img/icon_download.png" alt=""></a>
+                            <a href="#" target="_blank"><img src="img/icon_facebook.png" alt="facebook分享(@Common.GetLangText("另開新視窗"))"></a>
+                            <a href="#" target="_blank"><img src="img/icon_twitter.png" alt="twitter分享(@Common.GetLangText("另開新視窗"))"></a>
+                            <a href="#" target="_blank"><img src="img/icon_plurk.png" alt="plurk分享(@Common.GetLangText("另開新視窗"))"></a>
+                            <a href="#" target="_blank"><img src="img/icon_google.png" alt="google分享(@Common.GetLangText("另開新視窗"))"></a>
+                        </div>
+                    </div>
+                </div>
+                <!--page top end-->
+                <!--main content start-->
+                @{  var cname = (Dictionary<string, string>)ViewBag.ColumnNameMapping;}
+                <div class="one_con">
+                    <h2 class="page_title">@Common.GetLangText("進階搜尋")</h2>
+
+                    <div class="form_con">
+                        <div class="table form_box">
+
+                            <div class="table-row">
+                                <div class="form_q">*@cname["查詢詞彙"]</div>
+                                <div class="form_a">
+                                    <input type="text" class="form-control" placeholder="@cname["請輸入查詢詞"]" id="txt_searchkey">
+                                    <div class="search-group">
+                                        <select class="form-control_1" id="sel_key1">
+                                            <option selected="selected" value="AND">AND</option>
+                                            <option value="OR">OR</option>
+                                            <option value="NOT">NOT</option>
+                                        </select>
+                                        <input type="text" class="form-control" placeholder="@cname["請輸入查詢詞"]" id="txt_searchkey2">
+                                    </div>
+                                    <div class="search-group">
+                                        <select class="form-control_1" id="sel_key2">
+                                            <option selected="selected" value="AND">AND</option>
+                                            <option value="OR">OR</option>
+                                            <option value="NOT">NOT</option>
+                                        </select>
+                                        <input type="text" class="form-control" placeholder="@cname["請輸入查詢詞"]" id="txt_searchkey3">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-row">
+                                <div class="form_q">@cname["每頁顯示"]</div>
+                                <div class="form_a">
+                                    <select class="form-control_1" id="sel_limit">
+                                        <option selected="selected" value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="table-row">
+                                <div class="form_q">*@cname["搜尋範圍"]</div>
+                                <div class="form_a">
+                                    <label class="mt-radio mt-radio-outline">
+                                        <input type="radio" name="origin_radio" checked value="1">@cname["標題及內文"]
+                                        <span></span>
+                                    </label>
+                                    <label class="mt-radio mt-radio-outline">
+                                        <input type="radio" name="origin_radio" value="2">@cname["標題"]
+                                        <span></span>
+                                    </label>
+                                    <label class="mt-radio mt-radio-outline">
+                                        <input type="radio" name="origin_radio" value="3">@cname["內文"]
+                                        <span></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="table-row">
+                                <div class="form_q">@cname["網站選項"]</div>
+                                <div class="form_a">
+                                    <div class="search-group">
+                                        <select class="form-control_1" id="sel_menutype">
+                                            <option selected="selected"  value="">@Common.GetLangText("不拘")</option>
+                                            <option value="1">@cname["主要選單"]</option>
+                                            <option value="2">@cname["上方選單"]</option>
+                                            <option value="3">@cname["下方選單"]</option>
+                                        </select>
+                                        <select class="form-control_1" id='sel_menulevel1'></select>
+                                        <select class="form-control_1" id='sel_menulevel2'></select>
+                                        <select class="form-control_1" id='sel_menulevel3'></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="submit_btn">
+                        <input id="btn_adsearch" type="button" value="@Common.GetLangText("確定送出")" class="btn_01" />
+                    </div>
+
+                    <br><br><br>
+                    <div class="content_con">@Html.Raw(ViewBag.content)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--主要內容區 end-->
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            $("#sel_menutype").change(function () {
+                $('#sel_menulevel1').empty();
+                $('#sel_menulevel2').empty();
+                $('#sel_menulevel3').empty();
+                if ($('#sel_menutype').val() != '') {
+                      $.post('@Url.Action("GetMenuTypeList")', { typeid: $('#sel_menutype').val(),level:'1' }, function (data) {
+                             $(data).appendTo('#sel_menulevel1');
+                       });
+             }});
+
+            $("#sel_menulevel1").change(function () {
+                $('#sel_menulevel2').empty();
+                $('#sel_menulevel3').empty();
+                if ($('#sel_menutype').val() != '') {
+                    $.post('@Url.Action("GetMenuIDList")', { menuid: $("#sel_menulevel1").val()}, function (data) {
+                        $(data).appendTo('#sel_menulevel2');
+                    });
+                }
+            });
+
+            $("#sel_menulevel2").change(function () {
+                $('#sel_menulevel3').empty();
+                if ($('#sel_menutype').val() != '') {
+                    $.post('@Url.Action("GetMenuIDList")', { menuid: $("#sel_menulevel2").val()}, function (data) {
+                        $(data).appendTo('#sel_menulevel3');
+                    });
+                }
+            });
+            $("#btn_adsearch").click(function () {
+                var key = $("#txt_searchkey").val();
+                var key2 = $("#txt_searchkey2").val();
+                var key3 = $("#txt_searchkey3").val();
+                if (key == "") { alert('@cname["請輸入查詢詞"]'); return false; }
+                var obj = {};
+                obj.key = key;
+                obj.key2 = key2;
+                obj.key3 = key3;
+                obj.sel1 = $("#sel_key1").val();
+                obj.sel2 = $("#sel_key2").val();
+                obj.sellimit = $("#sel_limit").val();
+                obj.searchtype = $('input[name=origin_radio]:checked').val();
+
+                obj.sel2 = $("#sel_key2").val();
+                obj.menutype = $("#sel_menutype").val();
+                obj.menu1 = $("#sel_menulevel1").val();
+                obj.menu2 = $("#sel_menulevel2").val();
+                obj.menu3 = $("#sel_menulevel3").val();
+
+                CreatePost('@Url.Action("Search", "Search")', obj);
+            });
+
+        });
+    </script>
+
+}

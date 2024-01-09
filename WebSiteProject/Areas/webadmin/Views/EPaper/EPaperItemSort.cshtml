@@ -1,0 +1,308 @@
+﻿@model  System.Collections.Generic.List<ViewModels.EPaperItemEdit>
+
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+@*<script src="//cdn.ckeditor.com/4.12.1/full/ckeditor.js"></script>*@
+<!-- 載入 summernote 中文語系 -->
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            模組元件
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index")">電子報管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            編輯自動電子報
+        </li>
+    </ul>
+
+</div>
+<!--page bar end-->
+<!--message start-->
+<h2>@ViewBag.Title</h2>
+
+<div class="portlet light bordered">
+    <div class="table-toolbar">
+        <div class="col-md-12 col-sm-12 col-xs-12 mobile_left">
+            <p class="display_inline">
+                <button class="btn grey-mint" onclick="location.href='@Url.Action("Index")'">回上一頁</button>
+            </p>
+        </div>
+    </div>
+    <!--set item end-->
+    <!--table start-->
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveEPaperItemSort")' enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div class="table-scrollable">
+            <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0" id="table_selContent">
+                <thead>
+                    <tr>
+                        <th width="60" class="text-center delete_th">
+                            <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                <input type="checkbox" class="checkboxes" id="chk_all" />
+                                <span id="checkAll"></span>
+                            </label>
+                            <button class="btn red-mint btn-xs" id="btn_del" type="button"><i class="glyphicon glyphicon-trash"></i></button>
+                        </th>
+                        <th width="160" class="text-center">排序</th>
+                        <th class="text-center" style="min-width:100px">標題</th>
+                        <th class="text-center">已選取項目</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var idx = 0; idx < Model.Count(); idx++)
+                    {
+                        <tr id="trm_@Model[idx].MenuID" class="mainselitemtr" seqidx="@(idx+1)">
+                            <td class="text-center">
+                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes chksel" id="chk_m_@Model[idx].MenuID" />
+                                    <span name="check_1"></span>
+                                </label>
+                            </td>
+                            <td class="text-center delete_th">
+                                <button type="button" class="btn btn-default btn-xs mainseq_list" value="0"><i class="fa fa-angle-double-up"></i></button>
+                                <button type="button" class="btn btn-default btn-xs mainseq_list" value="-1"><i class="fa fa-angle-up"></i></button>
+                                <button type="button" class="btn btn-default btn-xs mainseq_list" value="+1"><i class="fa fa-angle-down"></i></button>
+                                <button type="button" class="btn btn-default btn-xs mainseq_list" value="max"><i class="fa fa-angle-double-down"></i></button>
+                                <input type="text" class="btn btn-default btn-xs sequence_list" value="@(idx+1)" />
+                            </td>
+                            <td>@(Model[idx].Name)</td>
+                            <td>
+                                <!--table start-->
+                                <table class="table table-bordered nomarginbottom subsorttable" border="0" cellspacing="0" cellpadding="0">
+                                    <thead>
+                                        <tr>
+                                            <th width="60" class="text-center" filed-type="delcheckbox">刪除</th>
+                                            <th width="120" class="text-center">排序</th>
+                                            <th class="text-center">標題</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (var subidx = 0; subidx < Model[idx].ItemKey.Count(); subidx++)
+                                        {
+                                            <tr id="@Model[idx].ItemKey[subidx]" class="selitem" seqidx="@(subidx+1)">
+                                                <td class="text-center">
+                                                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                        <input type="checkbox" class="checkboxes chksel" id="chk_s_@Model[idx].ItemKey[subidx]">
+                                                        <span></span>
+                                                    </label>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-default btn-xs seq_list" value="0"><i class="fa fa-angle-double-up"></i></button>
+                                                    <button type="button" class="btn btn-default btn-xs seq_list" value="-1"><i class="fa fa-angle-up"></i></button>
+                                                    <button type="button" class="btn btn-default btn-xs seq_list" value="+1"><i class="fa fa-angle-down"></i></button>
+                                                    <button type="button" class="btn btn-default btn-xs seq_list" value="max"><i class="fa fa-angle-double-down"></i></button>
+                                                </td>
+                                                <td>@Model[idx].ItemName[subidx]</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <!--table end-->
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!--table end-->
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue">確認</button>
+        </div>
+    </form>
+</div>
+@section scripts {
+    <script>
+        var iseditsub = 0;
+        $(function () {
+            RegisterClickAll("#chk_all", '#table_selContent tbody .chksel', "#selvalue");
+            $("#btn_del").click(function () {
+                bootbox.confirm({
+                    title: "確定刪除?",
+                    message: "是否確定刪除?",
+                    buttons: { cancel: { label: '<i class="fa fa-times"></i>取消' }, confirm: { label: '<i class="fa fa-check"></i> 確認' } },
+                    callback: function (result) {
+                        if (result) {
+                            debugger
+                            var chksel = $("#table_selContent tbody :checked");
+                            var delid = [];
+                            for (var idx = 0; idx < chksel.length; idx++) { delid.push($(chksel[idx]).attr('id')); }
+                            var obj = {};
+                            obj.delarrid = delid;
+                            obj.eid = '@ViewBag.ID' ;
+                            $.post('@Url.Action("DeleteEPaperItemSort")', obj, function (data) {
+                                 alert(data);
+                                  CreatePost('@Url.Action("EPaperItemSort")', { id:'@ViewBag.ID'});
+                               });
+                        }
+                    }
+                });
+            });
+            $("#table_selContent").delegate((".seq_list"), "click", function () {
+                iseditsub = 1;
+                var mytable = $(this).parents('.subsorttable');
+                var alltr = mytable.find("tbody tr");
+                var nowtridx = $(this).parents('tr').attr('seqidx');
+                var sval = $(this).val();
+                var newtridx = 0;
+
+                if (sval == "+1") {
+                    newtridx = parseInt(nowtridx) + 1;
+                } else if (sval == "-1") {
+                    newtridx = parseInt(nowtridx) - 1;
+                } else if (sval == "max") {
+                    newtridx = alltr.length;
+                }
+                if (newtridx == "0") { newtridx = "1"; }
+                if (newtridx == "" || newtridx == nowtridx) { return false; }
+                if (newtridx > alltr.length) { newtridx = alltr.length; }
+                if (nowtridx == newtridx.toString()) { return false; }
+                var nowidxhtml = $(this).parents('tr')[0];
+                var addarr = [];
+                for (var idx = 1; idx <= alltr.length; idx++) {
+                    var nowtr = alltr[idx - 1];
+                    if (idx.toString() != nowtridx) {
+                        if ((newtridx > nowtridx)) {
+                            addarr.push($(nowtr));
+                            if (idx == newtridx) { addarr.push($(nowidxhtml)); }
+                        } else {
+                            if (idx == newtridx) { addarr.push($(nowidxhtml)); }
+                            addarr.push($(nowtr));
+                        }
+                    }
+                }
+                mytable.find("tbody").empty();
+                for (var idx = 0; idx < addarr.length; idx++) {
+                    $(addarr[idx]).attr('seqidx', (idx + 1));
+                    mytable.find("tbody").append(addarr[idx]);
+                }
+            });
+            $("#table_selContent").delegate((".mainseq_list"), "click", function () {
+                var alltr = $("#table_selContent tbody .mainselitemtr");
+                var nowtridx = $(this).parents('tr').attr('seqidx');
+                var sval = $(this).val();
+                var newtridx = 0;
+                if (sval == "+1") {
+                    newtridx = parseInt(nowtridx) + 1;
+                } else if (sval == "-1") {
+                    newtridx = parseInt(nowtridx) - 1;
+                } else if (sval == "max") {
+                    newtridx = alltr.length;
+                }
+                if (newtridx == "0") { newtridx = "1"; }
+                if (newtridx == "" || newtridx == nowtridx) { return false; }
+                if (newtridx > alltr.length) { newtridx = alltr.length; }
+                if (nowtridx == newtridx.toString()) { return false; }
+                var nowidxhtml = $(this).parents('tr')[0];
+                var addarr = [];
+                for (var idx = 1; idx <= alltr.length; idx++) {
+                    var nowtr = alltr[idx - 1];
+                    if (idx.toString() != nowtridx) {
+                        if ((newtridx > nowtridx)) {
+                            addarr.push($(nowtr));
+                            if (idx == newtridx) { addarr.push($(nowidxhtml)); }
+                        } else {
+                            if (idx == newtridx) { addarr.push($(nowidxhtml)); }
+                            addarr.push($(nowtr));
+                        }
+                    }
+                }
+                $("#table_selContent tbody .mainselitemtr").remove();
+                for (var idx = 0; idx < addarr.length; idx++) {
+                    $(addarr[idx]).attr('seqidx', (idx + 1));
+                    $(addarr[idx]).find('.sequence_list').val((idx + 1));
+                    $("#table_selContent").first('tbody').append(addarr[idx]);
+                }
+            });
+            $("#table_selContent").delegate((".sequence_list"), "change", function () {
+                var alltr = $("#table_selContent tbody .mainselitemtr");
+                var nowtridx = $(this).parents('tr').attr('seqidx');
+                var newtridx = $(this).val();
+                if (newtridx == "0") { newtridx = "1"; }
+                if (newtridx == "" || newtridx == nowtridx) {
+                    $(this).val(nowtridx);
+                    return false;
+                }
+                var checkint = $(this).val().match(/^[0-9]+$/g);
+                if (checkint == null) {
+                    $(this).val(nowtridx);
+                    return false;
+                }
+                if (newtridx > alltr.length) { newtridx = alltr.length; }
+                if (nowtridx == newtridx.toString()) {
+                    $(this).val(nowtridx);
+                    return false;
+                }
+                var nowidxhtml = $(this).parents('tr')[0];
+                var addarr = [];
+                for (var idx = 1; idx <= alltr.length; idx++) {
+                    var nowtr = alltr[idx - 1];
+                    if (idx.toString() != nowtridx) {
+                        if ((newtridx > nowtridx)) {
+                            addarr.push($(nowtr));
+                            if (idx == newtridx) {
+                                addarr.push($(nowidxhtml));
+                            }
+                        } else {
+                            if (idx == newtridx) {
+                                addarr.push($(nowidxhtml));
+                            }
+                            addarr.push($(nowtr));
+                        }
+                    }
+                }
+                $("#table_selContent tbody .mainselitemtr").remove();
+                for (var idx = 0; idx < addarr.length; idx++) {
+                    $(addarr[idx]).attr('seqidx', (idx + 1));
+                    $(addarr[idx]).find('.sequence_list').val((idx + 1));
+                    $("#table_selContent").first('tbody').append(addarr[idx]);
+                }
+            });
+
+
+            $('#editform').submit(function (event) {
+                var formData = new FormData();
+                var allkeytr = $("#table_selContent tbody .mainselitemtr");
+                for (var idx = 0; idx < allkeytr.length; idx++) {
+                    var key = $(allkeytr[idx]).attr('id');
+                    var subtr = $(allkeytr[idx]).find("tbody tr");
+                    var subarr = [];
+                    for (var sidx = 0; sidx < subtr.length; sidx++) {
+                        subarr.push($(subtr[sidx]).attr('id'));
+                    }
+                    formData.append("allitemkey[" + key + "]", subarr.join(','));
+                }
+                formData.append("eid", '@ViewBag.ID');
+                formData.append("iseditsub",iseditsub);   
+                
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                       CreatePost('@Url.Action("Index")',null);
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+}
+

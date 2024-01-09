@@ -1,0 +1,76 @@
+﻿@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel, Model.LangId);
+}
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<div id="content" class="page_content">
+    <div class="container">
+        <div class="page_top">
+            <a href="#;return false;" title="@Common.GetLangText("主要內容區")" accesskey="@if(Model.LangId == "1"){@("C") }else{ @("C")}" id="main-content">:::</a>
+            <a title='Home'><i class="fas fa-home"></i></a><i class="fa fa-angle-right"></i>
+                                                       <span class="active">@Common.GetLangText("搜尋結果")</span>
+        </div>
+        <div class="title">
+            <h2 >@Common.GetLangText("搜尋結果")</h2>
+        </div>
+
+        <div class="content_con">
+
+            <div class="con_one">
+
+                <!--list start-->
+                <div class="news_list_02" id="ul_search">
+                    @Html.Raw(ViewBag.Html)
+                </div>
+                <!--list end-->
+                <!--頁碼 start-->
+                @if (ViewBag.showpagenum != "N")
+                {
+                <form action="@Url.Action("SearchNoJs")" method="post" id="nojsform2">
+                    @Html.AntiForgeryToken()
+                    <input id="key" type="hidden" name="key" value="@ViewBag.key" />
+                    <input id="maxpage" type="hidden" name="maxpage" value="@ViewBag.maxpage" />
+                    <div id="page_number" class="table-toolbar">
+                        <div class="col-md-4 col-sm-12 col-xs-12 page_total" >@Common.GetLangText("總筆數") ：<span id="totalcnt">@ViewBag.TotalCntStr </span></div>
+                        <div class="col-md-8 col-sm-12 col-xs-12 page_icon" data-sr="enter right over 1.5s" style="width:500px">
+                            @if (ViewBag.maxpage > 1)
+                            {
+                                <div class="btn-group" style="width:500px">
+                                    <a href="@Url.Action("SearchNoJs",new { key=ViewBag.key,pindex="1",nowpage=ViewBag.nowpage,maxpage=ViewBag.maxpage })" class="btn_page accesskey btn_index" title="@Common.GetLangText("第一頁")" value="1"><i class="fa fa-angle-double-left"></i></a>
+                                    <a href="@Url.Action("SearchNoJs",new { key=ViewBag.key,pindex="-1" ,nowpage=ViewBag.nowpage,maxpage=ViewBag.maxpage})" class="btn_page accesskey btn_index" title="@Common.GetLangText("上一頁")" value="-1"><i class="fa fa-angle-left"></i></a>
+                                    <select class="form-control page_list accesskey" id="page_list" name="page_list">
+                                        @{
+                                            for (var idx = 1; idx <= (int)ViewBag.maxpage; idx++)
+                                            {
+                                                if (idx == ViewBag.nowpage)
+                                                {
+                                                    <option value="@idx" selected>@idx</option>}
+                                                else
+                                                {
+                                                    <option value="@idx">@idx</option> }
+                                            }
+                                        }
+                                    </select>
+                                    <button type="submit" form="nojsform2" class="btn_page accesskey" title="@Common.GetLangText("跳頁")" id="btn_goto">@Common.GetLangText("跳頁")</button>
+                                    <a href="@Url.Action("SearchNoJs",new { key=ViewBag.key, pindex="+1",nowpage=ViewBag.nowpage,maxpage=ViewBag.maxpage })" class="btn_page accesskey btn_index" title="@Common.GetLangText("下一頁")" value="+1"><i class="fa fa-angle-right"></i></a>
+                                    <a href="@Url.Action("SearchNoJs",new { key=ViewBag.key, pindex=ViewBag.maxpage,nowpage=ViewBag.nowpage,maxpage=ViewBag.maxpage })" class="btn_page accesskey btn_index" title="@Common.GetLangText("最末頁")" value="@ViewBag.maxpage" id="btn_pagemax"><i class="fa fa-angle-double-right"></i></a>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </form>
+                }
+                <!--頁碼 end-->
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@section scripts {
+    <script>
+   
+    </script>
+}

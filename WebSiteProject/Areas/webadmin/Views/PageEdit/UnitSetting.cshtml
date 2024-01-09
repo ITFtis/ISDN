@@ -1,0 +1,102 @@
+﻿@model PageUnitSettingModel
+<!--page bar start-->
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Model")">模組管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","PageEdit")">圖文編輯</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            單元設定
+        </li>
+    </ul>
+
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">@Model.Title</div>
+
+<div class="portlet light bordered">
+    <!--management item start-->
+    <div class="table-toolbar">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="display_inline">
+                <p class="class_title">管理項目</p>
+                <select class="form-control_1" onChange="window.location.href=this.value">
+                    <option value="@Url.Action("ModelItem", new { id = Model.MainID })" selected>編輯管理</option>
+                    <option value="#" selected>單元設定</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <!--management item end-->
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveUnit")'>
+        @Html.AntiForgeryToken()
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body">
+                        @Html.HiddenFor(Model => Model.MainID)
+                        @Html.HiddenFor(Model => Model.ID)
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">功能提供</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    @Html.CheckBoxFor(m => m.IsPrint, new { @class = "checkboxes" })友善列印
+                                    <span></span>
+                                </label>
+
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    @Html.CheckBoxFor(m => m.IsShare, new { @class = "checkboxes" })轉寄好友
+                                    <span></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+        </div>
+    </form>
+</div>
+<!--message end-->
+@section scripts {
+    <script>
+        $(function () {
+             $('#editform').submit(function (event) {
+                    var t = $(this).serialize();
+                    $.ajax({
+                        url: this.action,
+                        type: this.method,
+                        data: $(this).serialize(),
+                        success: function (result) {
+                            if (result == "") {
+                                alert("儲存成功");
+                            } else {
+                                alert(result);
+                                    var obj = {};
+                                  obj.modelid = '@Model.MainID'
+                                  CreatePost('@Url.Action("UnitSetting")', obj);
+                            }
+                        }
+                   });
+                    return false;
+            })
+        });
+
+    </script>
+
+}
+

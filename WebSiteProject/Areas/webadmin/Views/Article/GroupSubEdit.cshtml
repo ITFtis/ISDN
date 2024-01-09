@@ -1,0 +1,256 @@
+﻿@model SearchModelBase
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Model")">模組管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Article")">文章管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("ModelItem","Patent",new { mainid= ViewBag.mainid })">清單</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            類別管理
+        </li>
+    </ul>
+
+</div>
+<!--page bar end-->
+<div class="title_01"> 類別管理設定</div>
+<div class="portlet light bordered">
+    <!--set item start-->
+    <div class="table-toolbar">
+        <div class="col-md-6 col-sm-12 col-xs-12 mobile_left ">
+        </div>
+        <div class="col-md-6 col-sm-12 col-xs-12 mobile_left ">
+            <p class="display_inline ">
+                <button class="btn green-meadow" id='btn_add'>新增 <i class="fa fa-plus"></i></button>
+                <button type="button" class="btn grey-mint" id="btn_return">返回</button>
+            </p>
+        </div>
+    </div>
+    <!--set item end-->
+    <!--table start-->
+    <div class="table-scrollable">
+        <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0" style="width:500px"
+               id="eventtable"
+               data-url="@Url.Action("PagingSubGroup")"
+               data-sort-name='Sort'
+               data-page-size='10'
+               data-filed-id='ID'
+               data-max-pagination='10'>
+            <thead>
+                <tr class="bg-grey_1" filed-class='odd gradeX'>
+                    <th width="80px" class="text-center" filed-type='delcheckbox'>
+                        <label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>
+                            <input type='checkbox' class='checkboxes' id="chk_all" /><span></span>
+                        </label>
+                        <button class="btn red-mint btn-xs" id='btn_del'><i class="glyphicon glyphicon-trash"></i></button>
+                    </th>
+                    <th filed-name='Sort' width="160px" class="text-center" filed-type='numbertextcheck' filed-item-class="sortedit">排序</th>
+                    <th filed-name='customertr' class="text-center" filed-type='function' filed-item-class="editlink">次類別</th>
+                    <th width="80px" filed-name='Enabled' class="text-center" filed-type='checkbox' filed-item-class="chkstatus">上架</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div id="page_number" class="table-toolbar">
+        <div class="col-md-4 col-sm-12 col-xs-12 page_total" id="tableinfo"></div>
+        <div class="col-md-8 col-sm-12 col-xs-12 page_icon">
+            <div class="btn-group" id="pagination">
+            </div>
+        </div>
+    </div>
+    <!--table end-->
+
+</div>
+
+<div class="form-content" style="display:none;" id="div_groupedit">
+    <div class="portlet light form-fit bordered">
+        <div class="portlet-body form">
+            <div class="form-horizontal form-bordered">
+                <div class="form-body">
+                    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("EditSubGroup")' enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <div class="col-md-3 col-sm-12 search_item"><span class="red">*</span> 類別名稱</div>
+                            <div class="col-md-9 col-sm-12 bg-white mobile_white">
+                                <input type="text" class="form-control" id="txt_groupname">
+                                <span class="required" id="groupname-error" style="display:none;" name="Title">類別名稱 必須填寫！</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3 col-sm-12 search_item"><span class="red">*</span> 代表圖示</div>
+                            <div class="col-md-9 col-sm-12 bg-white mobile_white">
+                                <div id="div_oldfile" style="display:none"><a href="#" target="preview" class="fileurl">檢視上傳檔案</a></div>
+                                <input id="file_image" type="file" class="display_inline" name="ImageFile" accept="image/*" />
+                                <span class="required">建議尺寸 320 x 320 px</span><br />
+                                <span class="required" id="ImageFile-error" style="display:none;" name="Title">代表圖示 必須上傳！</span>
+                                <span class="required" id="ImageFile2-error" style="display:none;" name="Title">只能上傳Image檔案！</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--message end-->
+@section scripts {
+    <script>
+        var selvalue = [];
+        var nowid = "-1";
+        var baseurl = '@ViewBag.baseurl';
+        $(document).ready(function () {
+            mytable = $("#eventtable").myDataTable().TableList[0];
+            mytable.settingTdData = myDataTableTr;
+            mytable.settingTableInfo = function (tableinfoId, totalcnt, offsetcnt, nowpagecnt) {
+                var totalclick = mytable.keepcheckid.length;
+                $("#" + tableinfoId).html('總筆數:' + totalcnt + '，顯示' + (totalcnt <= 0 ? 0 : offsetcnt) + "~" + (offsetcnt + nowpagecnt - 1) );
+            };
+            mytable.SearchModelBase.ModelID= '@ViewBag.groupid';
+            mytable.GetData(1);
+            var obj = {};
+            obj.item = "類別";
+            obj.mainid = '@ViewBag.mainid';
+            obj.groupid = '@ViewBag.groupid';
+            RegisterOrder("#eventtable", ".sortedit", '@Url.Action("EditGroupSubSeq")', obj);
+            RegisterClickAll("#chk_all", '#eventtable tbody .chksel', "#selvalue");
+            RegisterDelete("#btn_del", '#eventtable .chksel:checked', '@Url.Action("SetGroupSubDelete")', obj);
+            RegisterClick("#eventtable", ".chkstatus", '@Url.Action("SetGroupSubStatus")', obj);
+            RegisterClicklink("#eventtable", ".manage", '@Url.Action("GroupSubEdit")', { idkey: 'groupid', mainid: obj.mainid });
+            $("#btn_add").click(function () {
+                nowid ="-1";
+                var d = bootbox.confirm({
+                    title: "編輯類別？",
+                    message: $("#div_groupedit").html(),
+                    callback: function (result) {
+                        if (result) {
+                            if ($(".modal-body #txt_groupname").val() == "") {
+                                $(".modal-body #groupname-error").show();
+                                return false;
+                            }
+                            var file = $(".modal-body :file");
+                            var _validFileExtensions = [".jpg", ".png", ".gif", ".jpeg"];
+                            var sFileName = file.val();
+                            if (sFileName.length > 0) {
+                                var blnValid = false;
+                                for (var j = 0; j < _validFileExtensions.length; j++) {
+                                    var sCurExtension = _validFileExtensions[j];
+                                    if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                                        blnValid = true;
+                                        break;
+                                    }
+                                }
+                                if (!blnValid) {
+                                    $(".modal-body #ImageFile2-error").show();
+                                    file.outerHTML = file.outerHTML;
+                                    return false;
+                                }
+                            } else {
+                                $(".modal-body #ImageFile-error").show();
+                                return false;
+                            }
+                        }
+                        if (result) {
+                            $("#editform").submit();
+                        }
+                    }
+                });
+            });
+            $("#btn_return").click(function () {
+                CreatePost('@Url.Action("GroupEdit")', { mainid: '@ViewBag.mainid'});
+            });
+            $("#eventtable").delegate((".edit"), "click", function () {
+
+                nowid = $(this).attr('value');
+                var text = $(this).text();
+                var filename = $(this).attr('filename');
+                var d=bootbox.confirm({
+                    title: "編輯類別？",
+                    message: $("#div_groupedit").html(),
+                    show: false,
+                    callback: function (result) {
+                        if (result) {
+                            if ($(".modal-body #txt_groupname").val() == "") {
+                                $(".modal-body #groupname-error").show();
+                                return false;
+                            }
+                            var file = $(".modal-body :file");
+                            var _validFileExtensions = [".jpg", ".png", ".gif", ".jpeg"];
+                            var sFileName = file.val();
+                            if (sFileName.length > 0) {
+                                var blnValid = false;
+                                for (var j = 0; j < _validFileExtensions.length; j++) {
+                                    var sCurExtension = _validFileExtensions[j];
+                                    if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                                        blnValid = true;
+                                        break;
+                                    }
+                                }
+                                if (!blnValid) {
+                                    $(".modal-body #ImageFile2-error").show();
+                                    file.outerHTML = file.outerHTML;
+                                    return false;
+                                }
+                            }
+                        }
+                        if (result) {
+                            $("#editform").submit();
+                        }
+                    }
+                });
+                d.on("show.bs.modal", function () {
+                    $(".modal-body .fileurl").attr('href', baseurl + filename);
+                    $(".modal-body #div_oldfile").show();
+                    $(".modal-body #txt_groupname").val(text);
+                });
+                d.modal("show");
+            });
+
+            $('#editform').submit(function (event) {
+               var formData = new FormData();
+                var images = $(".modal-body :file").get(0).files;
+                if (images.length > 0) {
+                    formData.append("ImageFile", images[0]);
+                } else {
+                    formData.append("ImageFile", null);
+                }
+                formData.append("name", $(".modal-body #txt_groupname").val());
+                formData.append("id", nowid);
+                formData.append("mainid", '@ViewBag.mainid');
+                formData.append("groupid", '@ViewBag.groupid');
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                        mytable.GetData(1);
+                    }, error: function () {}
+                });
+                return false;
+            });
+        });
+
+        function customertr(row, columnidx, idx, filedname, tableid, type, fileditemclass) {
+            return "<td><a href='#' class='edit' value='" + row["ID"] + "' filename='" + row["ImageFileName"] +"'>" + row["Group_Name"] + "</a></td>";
+        }
+    </script>
+}

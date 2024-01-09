@@ -1,0 +1,122 @@
+﻿<!--page banner start-->
+@{ 
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel);
+}
+@model MessageFrontIndexModel
+<div class="page_banner" style="background: url('@Model.BannerImage');background-position: top center;background-size: cover;">
+    <!--建議尺寸1920*470px-->
+    <div class="container">
+        <div class="page_title" data-sr="enter top over 1.5s">@Model.Title</div>
+    </div>
+</div>
+<!--page banner end-->
+<!--page top start-->
+<div class="page_top">
+    <div class="container">
+        <div class="col-md-12 col-sm-12 col-xs-12" data-sr="enter left over 1.5s">
+            <ul>
+                @Html.Raw(Model.LinkStr)
+            </ul>
+        </div>
+    </div>
+</div>
+<!--page top end-->
+<!--main content start-->
+<div class="page_content">
+    <div class="container">
+        <div class="table-toolbar">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="display_inline" data-sr="enter left over 1.5s">
+                    @if (Model.Hasgroup)
+                    {<label for="" class="class_title">類別</label>
+                        @Html.DropDownList("GroupId", (IEnumerable<SelectListItem>)Model.GroupList, new { @class = "form_02" })
+                    }
+                </div>
+            </div>
+        </div>
+        <!--set item end-->
+        <!--list start-->
+        <div class="news_list" id="news_list">
+           
+
+        </div>
+
+        <div id="page_number" class="table-toolbar">
+            <div class="col-md-4 col-sm-12 col-xs-12 page_total" data-sr="enter left over 1.5s">總筆數：<span id="totalcnt"></span></div><!--英文版 Total：3-->
+            <div class="col-md-8 col-sm-12 col-xs-12 page_icon pc_page">
+                <div class="btn-group" data-sr="enter right over 1.5s">
+                    <button type="button" class="btn_page" title="第一頁" pageindex="1"><i class="fa fa-angle-double-left"></i></button>
+                    <button type="button" class="btn_page" title="上一頁" pageindex="-1"><i class="fa fa-angle-left"></i></button>
+                    <select class="form-control page_list" id="page_list"></select>
+                    <button type="button" class="btn_page" title="下一頁" pageindex="+1"><i class="fa fa-angle-right"></i></button>
+                    <button type="button" class="btn_page" title="最末頁" pageindex="" id="btn_pagemax"><i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section scripts {
+    <script>
+        var searchbase = {};
+        searchbase.Sort = "Sort";
+        searchbase.Search = "Y";
+        searchbase.Offset = "1";
+        searchbase.ModelID = "@Model.MainID";
+        searchbase.MenuId = "@Model.MenuID";  
+        searchbase.Limit = "@Model.MaxTableCount";
+        var maxpage = 1;
+        $(document).ready(function () {
+            GetData(1, true);
+        });
+
+        $("#GroupId").change(function () {
+            GetData(1, true);
+        });
+        $("#page_list").change(function () {
+            GetData($("#page_list").val());
+        });
+        $(".btn_page").click(function () {
+            if (searchbase.Limit != "-1") {
+                var index = $(this).attr('pageindex');
+                if (index == "-1") {
+                    var nowpage = parseInt($("#page_list").val());
+                    if (nowpage != 1) { nowpage -= 1; $("#page_list").val(nowpage); GetData(nowpage); }
+                } else if (index == "+1") {
+                    var nowpage = parseInt($("#page_list").val());
+                    var max = parseInt($("#btn_pagemax").attr('pageindex'));
+                    if (nowpage != max) { nowpage += 1; $("#page_list").val(nowpage); GetData(nowpage); }
+                } else { GetData(index); $("#page_list").val(index) }
+            }
+        });
+        
+        function GetData(page,setpage) {
+            searchbase.GroupId = $('#GroupId').val();
+            var pagesize = searchbase.Limit;
+            searchbase.Offset = ((page - 1) * pagesize);
+            searchbase.NowPage = page;
+            $.post('@Url.Action("PagingItem")', searchbase, function (data) {
+                $("#news_list").empty().append(data[0]);
+                $("#totalcnt").html(data[1]);
+                $(window).scrollTop(0);
+                $("#page_list").blur();
+                
+                if (setpage) {
+                    if (data[1] == "0" || searchbase.Limit == "-1") { $("#page_number").hide(); } else {
+                        $("#page_number").show();
+                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                        maxpage = data[2];
+                        var pagecnt = parseInt(data[2]);
+                        $("#page_list").empty();
+                        var strarr = [];$("#btn_pagemax").attr('pageindex', data[2]);
+                        for (var idx = 1; idx <= pagecnt; idx++) {
+                            strarr.push("<option>" + idx + "</option>");
+                        }
+                        $(strarr.join('')).appendTo($("#page_list")); $("#page_list").val(page);
+                    }
+                }
+            });
+        }
+    </script>
+}
+<!--main content end-->

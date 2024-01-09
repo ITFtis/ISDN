@@ -1,0 +1,108 @@
+﻿@model SEOViewModel
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Home</a>
+            <i class="fa fa-circle"></i>
+            <a href="#">網站地圖</a>
+            <i class="fa fa-circle"></i>
+            <a href="#">SEO設定</a>
+            <i class="fa fa-circle"></i>
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="member_title">@ViewBag.Title</div>
+<div class="table-toolbar">
+    <div class="col-md-6 col-sm-12 col-xs-12">
+    </div>
+</div>
+<form  class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveSEO")' >
+    @Html.HiddenFor(Model => Model.ID)
+    @Html.HiddenFor(Model => Model.TypeID)
+    <div class="portlet light form-fit bordered" id="div_seo">
+        <div class="portlet-body form">
+            <div class="form-horizontal form-bordered">
+                <div class="form-body" id="form-body">
+                    <div class="form-group">
+                        <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">網站標題</div>
+                        <div class="col-md-4 col-sm-4 col-xs-12 bg-white mobile_white">
+                            <div class="input-group input-large">
+                                @Html.EditorFor(model => model.WebsiteTitle, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 hidden-xs bg-white">&nbsp;</div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">網站描述</div>
+                        <div class="col-md-4 col-sm-4 col-xs-12 bg-white mobile_white">
+                            <div class="input-group input-large">
+                                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 hidden-xs bg-white">&nbsp;</div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">網頁內容關鍵字</div>
+                        <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white form-horizontal">
+                            <input id="Keywords_1" type="text" class="form-control  input-small" style="display:inline-block" name="Keywords[0]" value="@Model.Keywords[0]" />
+                            <input id="Keywords_2" type="text" class="form-control  input-small" style="display:inline-block" name="Keywords[1]" value="@Model.Keywords[1]" />
+                            <input id="Keywords_3" type="text" class="form-control  input-small" style="display:inline-block" name="Keywords[2]" value="@Model.Keywords[2]" />
+                            <input id="Keywords_4" type="text" class="form-control  input-small" style="display:inline-block" name="Keywords[3]" value="@Model.Keywords[3]" />
+                            <input id="Keywords_5" type="text" class="form-control  input-small" style="display:inline-block" name="Keywords[4]" value="@Model.Keywords[4]" /><br />
+                            <input id="Keywords_6" type="text" class="form-control  input-small" style="display:inline-block" name="Keywords[5]" value="@Model.Keywords[5]" />
+                            <input id="Keywords_7" type="text" class="form-control  input-small" style="display:inline-block" name="Keywords[6]" value="@Model.Keywords[6]" />
+                            <input id="Keywords_8" type="text" class="form-control  input-small" style="display:inline-block" name="Keywords[7]" value="@Model.Keywords[7]" />
+                            <input id="Keywords_9" type="text" class="form-control  input-small" style="display:inline-block" name="Keywords[8]" value="@Model.Keywords[8]" />
+                            <input id="Keywords_10" type="text" class="form-control  input-small" style="display:inline-block" name="Keywords[9]" value="@Model.Keywords[9]" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+       
+        </div>
+    </div>
+    <div class="text-center search_padding">
+        <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+    </div>
+</form>
+@section scripts {
+    <script>
+        $(function () {
+            $("#btn_return").hide();
+                if ('@ViewBag.IsFromClick' == 'Y') {
+                    $("#btn_return").show();
+            }
+            $("#sel_unit").change(function () {
+              var obj = {};
+              obj.mainid = '@Model.TypeID';
+                if ($("#sel_unit").val() == "1") {
+                    CreatePost('@Url.Action("ModelItem")', obj);
+                }
+            });
+            $('#editform').submit(function (event) {
+                    $.ajax({
+                        url: this.action,
+                        type: this.method,
+                        data: $(this).serialize(),
+                        success: function (result) {
+                            if (result == "") {
+                                alert("儲存成功");
+                                $("#txt_oldpwd").val('');
+                                $("#txt_newpwd").val('');
+                                $("#txt_pwdcpnfirm").val('');
+                            } else {
+                                alert(result);
+                            }
+                        }
+                   });
+                    return false;
+            })
+        });
+    </script>
+
+}
+

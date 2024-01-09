@@ -1,0 +1,178 @@
+﻿<!--page banner start-->
+@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel);
+}
+@model StudentFrontIndexModel
+<script src="@Url.Content("~/Scripts/core.js")"></script>
+<script src="@Url.Content("~/Scripts/charts.js") "></script>
+<script src="@Url.Content("~/Scripts/animated.js") "></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<!--page top start-->
+<div class="page_top page_margin">
+    <div class="container">
+        <div class="col-md-12 col-sm-12 col-xs-12" data-sr="enter left over 1.5s">
+            <ul>
+                <li><a href="@Url.Action("Index","Home")">HOME</a></li>
+                <li><a href="@Url.Action("LoginForm","Home")">系統登入</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--page top end-->
+<!--main content start-->
+<div id="particles-js" style="position:absolute; z-index:-1"></div>
+<div class="page_content">
+    <div class="container">
+        <!--<div class="page_title" data-sr="enter left over 1.5s">公司介紹</div>-->
+        <div class="page_con">
+            <div class="con_font">
+             @if (Model.LoginType == "S")
+            {@Html.Raw(Model.StudentDesc == null ? "" : Model.StudentDesc.Replace("\n", "<br>").Replace("<<br>", "<\n").Replace("><br>", ">\n"))}
+            else if (Model.LoginType == "P")
+            { @Html.Raw(Model.ParentDesc == null ? "" : Model.ParentDesc.Replace("\n", "<br>").Replace("<<br>", "<\n").Replace("><br>", ">\n"))}
+            </div>
+            <br><br><br>
+            <div class="user_con_top">
+                <div class="left">
+                    <div class="user_img">
+                        @if (Model.HeadImage == "")
+                        {
+                            <img src="@Url.Content("~/img/180x180.png")" class="bg_print" align="left" alt="" style="background: url(@Url.Content("~/img/user.png")); background-position:center ;background-size: cover;">
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/img/180x180.png")" class="bg_print" align="left" alt=""
+                                 style="background: url(@Url.Content("~/UploadImage/HeadImage/"+ Model.HeadImage)); background-position:center ;background-size: cover;">
+                        }<!--範例圖為預設圖，建議尺寸180*180px-->
+                    </div>
+                    <div class="btn_box" id="div_head">
+                        <a href="#"><span class="btn_01 @(Model.LoginType == "P"?"hide":"")">編輯</span></a>
+                    </div>
+                </div>
+                <div class="right">
+                    <ul class="grade">
+                        <li>
+                            <div class="title"><i class="fa fa-clock-o"></i>練習時間</div>
+                            <div class="star">
+                                @{
+                                    for (var idx = 1; idx <= 4; idx++)
+                                    {
+                                        if (idx <= Model.ExerciseTime)
+                                        { <i class="fa fa-star"></i> }
+                                        else
+                                        {<i class="fa fa-star-o"></i> }
+                                    } }
+                            </div>
+                        </li>
+                        <li>
+                            <div class="title"><i class="fa fa-edit"></i>練習題數</div>
+                            <div class="star">
+                                @{
+                                    for (var idx = 1; idx <= 4; idx++)
+                                    {
+                                        if (idx <= Model.ExerciseNum)
+                                        { <i class="fa fa-star"></i> }
+                                        else
+                                        {<i class="fa fa-star-o"></i> }
+                                    } }
+                            </div>
+                        </li>
+                        <li>
+                            <div class="title"><i class="fa fa-check-square-o"></i>答對率</div>
+                            <div class="star">
+                                @{
+                                    for (var idx = 1; idx <= 4; idx++)
+                                    {
+                                        if (idx <= Model.ExerciseRate)
+                                        { <i class="fa fa-star"></i> }
+                                        else
+                                        {<i class="fa fa-star-o"></i> }
+                                    } }
+                            </div>
+                        </li>
+                        <li>
+                            <div class="title"><i class="fa fa-line-chart"></i>數學能力表 (80分以上)</div>
+                            <div class="star">
+                                @{
+                                    for (var idx = 1; idx <= 4; idx++)
+                                    {
+                                        if (idx <= Model.ExerciseLevel)
+                                        { <i class="fa fa-star"></i> }
+                                        else
+                                        {<i class="fa fa-star-o"></i> }
+                                    } }
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="chart_con">
+                <div class="left">
+                    <div id="chart-radar"></div>
+                </div>
+                <div class="right">
+                    <div id="chart-line"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.LoginType == "S")
+{
+    <div id='dialogloader'>
+        @Html.Partial("FileUpload")
+    </div>
+}
+
+
+<!--main content end-->
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#div_head").click(function () {
+                $('#uploadModal').modal('show');
+            });
+            am4core.useTheme(am4themes_animated);
+            var chart = am4core.create("chart-radar", am4charts.RadarChart);
+            chart.data = JSON.parse( '@Html.Raw(Model.RadarCursor)');
+            chart.padding(70, 70, 70, 70);
+            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.dataFields.category = "direction";
+            categoryAxis.renderer.minGridDistance = 60;
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            valueAxis.renderer.gridType = "polygons"; //直角；預設圓形
+            var series = chart.series.push(new am4charts.RadarSeries());
+            series.dataFields.categoryX = "direction";
+            series.dataFields.valueY = "value";
+            series.tooltipText = "{valueY.value}"
+            series.fillOpacity = 0.4;
+            valueAxis.max = 100;
+            valueAxis.strictMinMax = true;
+            chart.cursor = new am4charts.RadarCursor();
+
+            var chart2 = am4core.create("chart-line", am4charts.XYChart);
+            chart2.paddingRight = 20;
+            chart2.data =JSON.parse( '@Html.Raw(Model.XYChart)');
+            var dateAxis = chart2.xAxes.push(new am4charts.DateAxis());
+            dateAxis.renderer.grid.template.location = 0;
+            var valueAxis = chart2.yAxes.push(new am4charts.ValueAxis());
+            valueAxis.tooltip.disabled = true;
+            valueAxis.renderer.minWidth = 35;
+            var series = chart2.series.push(new am4charts.LineSeries());
+            series.dataFields.dateX = "date";
+            series.dataFields.valueY = "value";
+            series.tooltipText = "{valueY}";
+            series.tooltip.pointerOrientation = "vertical";
+            series.tooltip.background.fillOpacity = 0.5;
+            chart2.cursor = new am4charts.XYCursor();
+            chart2.cursor.snapToSeries = series;
+            chart2.cursor.xAxis = dateAxis;
+            var scrollbarX = new am4charts.XYChartScrollbar();
+            scrollbarX.series.push(series);
+            chart2.scrollbarX = scrollbarX;
+
+        });
+    </script>
+}
+<!--main content end-->

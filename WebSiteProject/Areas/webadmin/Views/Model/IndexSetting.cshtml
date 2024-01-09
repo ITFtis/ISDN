@@ -1,0 +1,102 @@
+﻿@model PageIndexSettingModel
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>模組設定<i class="fa fa-circle"></i></li>
+        <li>全文檢索管理</li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">全文檢索管理</div>
+<div class="portlet light bordered">
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveIndexSetting")'>
+        @Html.HiddenFor(Model => Model.ID)
+        @Html.HiddenFor(Model => Model.HtmlContentCode)
+        @Html.AntiForgeryToken()
+        <div class="portlet light form-fit bordered" id="div_seo">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body">
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">內容</div>
+                            <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                <textarea cols="80" id="HtmlContent" rows="20">@Model.HtmlContent</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">每頁顯示筆數</div>
+                            <div class="col-md-10 col-sm-4 col-xs-12 bg-white mobile_white">
+                                <select class="form_02" id="ShowCount" name="ShowCount">
+                                    <option value="12">12</option>
+                                    <option value="24">24</option>
+                                    <option value="36">36</option>
+                                    <option value="-1">全部</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group  ">
+                            <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">顯示全文檢索區塊</div>
+                            <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                <div class="display_inline">
+                                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                        @Html.CheckBoxFor(m => m.IsFirstPage, new { @class = "checkboxes" }) 首頁
+                                        <span></span>
+                                    </label>
+
+                                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                        @Html.CheckBoxFor(m => m.IsInPage, new { @class = "checkboxes" }) 內頁
+                                        <input type="checkbox" class="checkboxes" value="" checked />
+                                        <span></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+        </div>
+    </form>
+</div>
+
+    @section scripts {
+        <script>
+        $(function () {
+             $("#ShowCount").val('@Model.ShowCount');
+           var ckedit = CKEDITOR.replace('HtmlContent', {
+                height: 300,
+                filebrowserImageUploadUrl: '@Url.Action("UploadImage")?command=QuickUpload&type=Images'
+            });
+
+            $('#editform').submit(function (event) {
+                $('#HtmlContentCode').val(encodeURIComponent(CKEDITOR.instances.HtmlContent.getData()));
+                    $.ajax({
+                        url: this.action,
+                        type: this.method,
+                        data: $(this).serialize(),
+                        success: function (result) {
+                            if (result == "") {
+                                alert("儲存成功");
+                            } else {
+                                alert(result);
+                            }
+                        }
+                   });
+                    return false;
+            })
+        });
+        </script>
+
+    }
+

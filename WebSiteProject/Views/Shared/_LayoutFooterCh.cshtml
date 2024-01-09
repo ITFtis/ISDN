@@ -1,0 +1,152 @@
+﻿<div class="container">
+    <div class="col-md-4 col-sm-12 col-xs-12">
+        <ul class="footer_menu">
+            <a href="#;return false;" title="下選單區" accesskey="G">:::</a>
+            @Html.Raw(Model.FooterMenu)
+        </ul>
+
+        <div class="search" data-sr="enter botom over 1.5s">
+            <label for="footer_search">
+                <input type="text" id="footer_search" name="footer_search">
+            </label>
+            <button type="button" class="search_icon" title="搜尋" alt="搜尋"  id="btn_mainsearch"><i class="fa fa-search"></i></button>
+            <div class="hotword"  id="hot_keyword">熱門搜尋：@Html.Raw(Model.SearchKey)</div>
+            <!--英文Popular search-->
+        </div>
+
+        <ul class="link">
+            <li data-sr="enter botom over 1.5s">
+                <a href="https://www.facebook.com/%E5%9C%8B%E7%A0%94%E9%99%A2%E5%9C%8B%E7%B6%B2%E4%B8%AD%E5%BF%83-292580541692362/?notify_field=blurb&modal=profile_completion&notif_id=1558930416338465&notif_t=page_profile_blurb" target="_blank" title="facbook(另開新視窗)">
+                    <!--英文 facebook(new window)-->
+                    <span class="fa-stack fa-1g">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
+            </li>
+            <li data-sr="enter botom over 1.5s">
+                <a href="https://www.instagram.com/nchc.tw/?hl=zh-tw" target="_blank" title="instagram(另開新視窗)">
+                    <!--英文 instagram(new window)-->
+                    <span class="fa-stack fa-1g">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
+            </li>
+            <li data-sr="enter botom over 1.5s">
+                <a href="https://www.youtube.com/channel/UCWrzkYUM5cwpZExQ4Et5vSw?view_as=subscriber" target="_blank" title="youtube(另開新視窗)">
+                    <!--英文 youtube(new window)-->
+                    <span class="fa-stack fa-1g">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fab fa-youtube fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="line visible-sm visible-xs"></div>
+
+    <div class="col-md-4 col-sm-6 col-xs-6">
+        <div class="position table">
+            <div class="table-row" data-sr="enter botom over 1.5s">
+                <div class="table-cell img">
+                    <img src="@Url.Content("~/img/footer_pic_01.jpg")" alt="新竹總部"><!--建議尺寸103*77px-->
+                </div>
+                <div class="table-cell con">
+                    <div class="title">新竹總部</div><!--英文Hsinchu Headquarters-->
+                    <div class="con_font">
+                        30076 新竹市科學園區研發六路7號<br>
+                        電話：886-3-5776085<br>
+                        傳真：886-3-5776082
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-row" data-sr="enter botom over 1.5s">
+                <div class="table-cell img">
+                    <img src="@Url.Content("~/img/footer_pic_02.jpg")" alt="台中分部">
+                </div>
+                <div class="table-cell con">
+                    <div class="title">台中分部</div><!--英文Taichung Branch-->
+                    <div class="con_font">
+                        40763 台中市中部科學工業園區科園路22號<br>
+                        電話：886-4-2462-0202、886-4-2465-0818<br>
+                        傳真：886-4-2462-7373
+
+                        <!--英文
+                        Address:  No. 22, Keyuan Rd., Central Taiwan Science Park, Taichung City, Taiwan, R.O.C. 40763<br>
+                        TEL：886-4-2462-0202、886-4-2465-0818<br>
+                        FAX：886-4-2462-7373
+                        -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-row" data-sr="enter botom over 1.5s">
+                <div class="table-cell img">
+                    <img src="@Url.Content("~/img/footer_pic_03.jpg")" alt="台南分部">
+                </div>
+                <div class="table-cell con">
+                    <div class="title">台南分部</div><!--英文Tainan Branch-->
+                    <div class="con_font">
+                        74147 台南市新市區南科三路28號<br>
+                        電話：886-6-5050940<br>
+                        傳真：886-6-5050945
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6 col-xs-6">
+        <div class="contact table">
+
+            <div class="table-row">
+                <div class="table-cell" data-sr="enter botom over 1.5s">
+                    <i class="fas fa-phone-volume"></i>
+                </div>
+                <div class="table-cell con" data-sr="enter botom over 1.5s">
+                    服務時間(週一至週五) 09:00~17:00
+                    <div class="tel">+886-3-5776085</div>
+                    客服專線
+                    <div class="tel">0809-091-365</div>
+                    下班時間及例假日請撥打
+                    <div class="tel">0800-351-510</div>
+                </div>
+            </div>
+
+            <div class="table-row web_mail">
+                <div class="table-cell" data-sr="enter botom over 1.5s">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="table-cell con" data-sr="enter botom over 1.5s">
+                    <div class="title">
+                        網站管理員：<br><!--英文Website Support-->
+                        <a href="mailto:webmaster@narlabs.org.tw" title="webmaster@narlabs.org.tw">webmaster@narlabs.org.tw</a>
+                    </div>
+                    <div class="title">
+                        技術支援服務：<br><!--英文Technical support-->
+                        <a href="mailto:isupport@narlabs.org.tw" title="isupport@narlabs.org.tw">isupport@narlabs.org.tw</a>
+                    </div>
+                    <div class="title">
+                        帳號申請服務：<br><!--英文Account support-->
+                        <a href="mailto:iservice@narlabs.org.tw" title="iservice@narlabs.org.tw">iservice@narlabs.org.tw　</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="copyright">
+    <div class="container">
+        &copy; 財團法人國家實驗研究院國家高速網路與計算中心 <span class="hidden-xs">｜</span><span class="visible-xs"></span> 最佳瀏覽解析度為1366*768以上
+        <a href="#" target="_blank" title="通過AA優先等級無障礙網頁檢測(另開新視窗)">@*<img src="@Url.Content("~/img/accessibility_AA.png")" alt="通過AA優先等級無障礙網頁檢測(另開新視窗)">*@</a>
+
+        <!--英文
+        &copy; National Center for High-performance Computing (NCHC) <span class="hidden-xs">｜</span><span class="visible-xs"></span> The best browsing resolution is 1366*768 or higher
+        <a href="#" target="_blank" title="Passes the AA-level accessibility page detection(new window)"><img src="@Url.Content("~/img/accessibility_AA.png")" alt="Passes the AA-level accessibility page detection(new window)"></a>
+        -->
+    </div>
+</div>

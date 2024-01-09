@@ -1,0 +1,414 @@
+﻿<!DOCTYPE html>
+@{
+    if (Request.IsAuthenticated)
+    {
+        var user = Request.GetOwinContext().Authentication.User;
+        var role = user.FindFirst(System.Security.Claims.ClaimTypes.Role);
+        if (role == null)
+        {
+
+        }
+        else
+        {
+            var index = Request["menuindex"] == null ? "" : Request["menuindex"].ToString();
+            //ViewBag.urlcontroller = this.ViewContext.RouteData.Values["controller"].ToString().ToLower();
+            //ViewBag.urlaction = this.ViewContext.RouteData.Values["action"].ToString().ToLower();
+            if (index != "-1")
+            {
+                if (index == "" && HttpContext.Current.Session["Menuindex"] != null)
+                {
+                    index = HttpContext.Current.Session["Menuindex"].ToString();
+                }
+                else
+                {
+                    HttpContext.Current.Session["Menuindex"] = index;
+                }
+            }
+            else
+            {
+                index = ""; HttpContext.Current.Session["Menuindex"] = "";
+            }
+
+            ViewBag.UserName = Request.GetOwinContext().Authentication.User.Identity.Name;
+            if (role != null) { ViewBag.Role = role.Value; }
+            var langclaim = user.FindFirst("Language");
+            var groupid = user.FindFirst("GroupID");
+            var menutype = Session["menutype"];
+            if (menutype == null) { menutype = "1"; }
+            if (langclaim == null)
+            {
+                Response.Redirect(Url.Action("Login", "Account", new { area = "webadmin" }));
+            }
+            else
+            {
+                var MasterPageManager = new Services.Manager.MasterPageManager(WebSiteProject.Code.Common.connectionStr, langclaim.Value,Common.GetLangDict());
+                ViewBag.langid = langclaim.Value;
+                var menu = MasterPageManager.GetAdminMenuString(langclaim.Value, menutype.ToString(), groupid.Value, role.Value, index);
+                ViewBag.leftmenu = menu;
+                ViewBag.menustr = MasterPageManager.GetLinkString(langclaim.Value, menutype.ToString(), groupid.Value, role.Value, index);
+            }
+        }
+    }
+    else
+    {
+        if (Session["FromAdmin"] == null)
+        {
+            Response.Redirect(Url.Action("Login", "Account", new { area = "webadmin" }));
+            //Response.Redirect(Url.Action("Index", "Home", new { area = "webadmin" }));
+        }
+        else
+        {
+            Response.Redirect(Url.Action("Login", "Account", new { area = "webadmin" }));
+        }
+    }
+
+    ViewBag.PageTitle = WebSiteProject.Code.CacheMapping.PageTitle;
+}
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.PageTitle</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link href="@Url.Content("~/Content/admincss/font-awesome.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/admincss/simple-line-icons.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/admincss/bootstrap.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/admincss/components.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/admincss/layout.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/admincss/darkblue.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/admincss/style.css")" rel="stylesheet" />
+    <link rel="shortcut icon" href="@Url.Content("~/img/favicon.ico")" />
+    <script src="@Url.Content("~/Scripts/jquery-3.5.1.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery-migrate-3.0.0.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.js")"></script>
+    <script src="@Url.Content("~/Scripts/app.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/layout.min.js")"></script>
+
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        var gname = '@ViewBag.Role';
+
+    </script>
+</head>
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
+
+    <!--top menu start-->
+    <div class="page-header navbar navbar-fixed-top">
+        <div class="page-header-inner ">
+
+            <!--logo start-->
+            <div class="page-logo">
+                <a href="@Url.Action("Index","Home")" class="logo-default">產業永續發展整合資訊網</a>
+                <div class="menu-toggler sidebar-toggler">
+                    <span></span>
+                </div>
+            </div>
+            <!--logo end-->
+            <!--mobile menu start-->
+            <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+                <span></span>
+            </a>
+            <!--mobile menu end-->
+            <!--top menu start-->
+            <div class="collapse navbar-collapse top-navbar">
+                @{
+                    var AuthList = (List<SQLModel.Models.AdminFunctionAuth>)ViewBag.AuthList;
+                    <ul class="nav navbar-nav">
+                        @if (ViewBag.Role == "admin")
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="內容總管"><i class="icon-directions"></i> <span class="top_menu_title">內容總管</span> <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a path="@Url.Action("Index", "Home",new { menutype = "1" })" class="topmenu" title="主要選單">主要選單</a></li>
+                                    <li><a path="@Url.Action("Index", "Home",new { menutype = "2" })" class="topmenu" title="上方選單">上方選單</a></li>
+                                    @*<li><a path="@Url.Action("Index", "Home",new { menutype = "3" })" class="topmenu" title="下方選單">下方選單</a></li>*@
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            if (AuthList != null && AuthList.Any(v => v.GID == 1))
+                            {
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="內容總管"><i class="icon-directions"></i> <span class="top_menu_title">內容總管</span> <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        @if (AuthList.Any(v => v.ItemID == 1))
+                                        {
+                                            <li><a path="@Url.Action("Index", "Home",new { menutype = "1" })" class="topmenu" title="主要選單">主要選單</a></li>}
+                                        @if (AuthList.Any(v => v.ItemID == 2))
+                                        {
+                                            <li><a path="@Url.Action("Index", "Home",new { menutype = "2" })" class="topmenu" title="上方選單">上方選單</a></li>}
+                                        @*@if (AuthList.Any(v => v.ItemID == 3))
+                                        {
+                                            <li><a path="@Url.Action("Index", "Home",new { menutype = "3" })" class="topmenu" title="下方選單">下方選單</a></li>}*@
+                                    </ul>
+                                </li>
+                            }
+                        }
+                        @if (ViewBag.Role == "admin")
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="系統管理"><i class="icon-settings"></i> <span class="top_menu_title">系統管理</span> <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a path="@Url.Action("SiteConfig", "Config")" class="topmenu" title="管理介面設定">管理介面設定</a></li>
+                                    <li><a path="@Url.Action("PasswordEdit", "Config")" class="topmenu" title="密碼設定">密碼設定</a></li>
+                                    <li><a path="@Url.Action("UserList", "Config")" class="topmenu" title="權限管理">權限管理</a></li>
+                                    <li><a path="@Url.Action("SystemRecord", "Config")" class="topmenu" title="管理資料查詢">管理資料查詢</a></li>
+                                    <li><a path="@Url.Action("SiteFlow", "Config")" class="topmenu" title="流量分析">流量分析</a></li>
+
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            if (AuthList != null && AuthList.Any(v => v.GID == 2))
+                            {
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="系統管理"><i class="icon-directions"></i> <span class="top_menu_title">系統管理</span> <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        @if (AuthList.Any(v => v.ItemID == 4))
+                                        {
+                                            <li><a path="@Url.Action("SiteConfig", "Config")" class="topmenu" title="管理介面設定">管理介面設定</a></li>}
+                                        @if (AuthList.Any(v => v.ItemID == 5))
+                                        {
+                                            <li><a path="@Url.Action("PasswordEdit", "Config")" class="topmenu" title="密碼設定">密碼設定</a></li>}
+                                        @if (AuthList.Any(v => v.ItemID == 6))
+                                        {
+                                            <li><a path="@Url.Action("UserList", "Config")" class="topmenu" title="權限管理">權限管理</a></li>}
+                                        @if (AuthList.Any(v => v.ItemID == 7))
+                                        {
+                                            <li><a path="@Url.Action("SystemRecord", "Config")" class="topmenu" title="管理資料查詢">管理資料查詢</a></li>}
+                                        @if (AuthList.Any(v => v.ItemID == 8))
+                                        {
+                                            <li><a path="@Url.Action("SiteFlow", "Config")" class="topmenu" title="流量分析">流量分析</a></li>}
+
+                                    </ul>
+                                </li>
+                            }
+                        }
+                        @if (ViewBag.Role == "admin")
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="網站選單"><i class="icon-layers"></i> <span class="top_menu_title">網站選單</span> <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a path="@Url.Action("MainMenu", "Menu",new { menutype = "1" })" class="topmenu" title="主要選單">主要選單</a></li>
+                                    <li><a path="@Url.Action("MainMenu", "Menu",new { menutype = "2" })" class="topmenu" title="上方選單">上方選單</a></li>
+                                    @*<li><a path="@Url.Action("MainMenu", "Menu",new { menutype = "3" })" class="topmenu" title="下方選單">下方選單</a></li>*@
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            if (AuthList != null && AuthList.Any(v => v.GID == 3))
+                            {
+                                <li class="dropdown">
+                                    <a path="#" class="dropdown-toggle" data-toggle="dropdown" title="網站選單"><i class="icon-directions"></i> <span class="top_menu_title">網站選單</span> <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        @if (AuthList.Any(v => v.ItemID == 9))
+                                        {
+                                            <li><a path="@Url.Action("MainMenu", "Menu",new { menutype = "1" })" class="topmenu" title="主要選單">主要選單</a></li>}
+                                        @if (AuthList.Any(v => v.ItemID == 10))
+                                        {
+                                            <li><a path="@Url.Action("MainMenu", "Menu",new { menutype = "2" })" class="topmenu" title="上方選單">上方選單</a></li>}
+                                        @*@if (AuthList.Any(v => v.ItemID == 11))
+                                        {
+                                            <li><a path="@Url.Action("MainMenu", "Menu",new { menutype = "3" })" class="topmenu" title="下方選單">下方選單</a></li>}*@
+
+                                    </ul>
+                                </li>
+                            }
+                        }
+                        @if (ViewBag.Role == "admin")
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="版面設定"><i class="icon-puzzle"></i> <span class="top_menu_title">版面設定</span> <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a path="@Url.Action("SiteLayout", "Site",new { stype = "P" })" class="topmenu" title="網站版面資訊設定">網站版面資訊設定</a></li>
+                                    <li><a path="@Url.Action("PageSeminar", "Site",new { stype="P" })" class="topmenu" title="入口首頁配置">入口首頁配置</a></li>
+                                    <li><a path="@Url.Action("SiteLangText", "Site")" class="topmenu" title="語系通用文字設定">語系通用文字設定</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            if (AuthList != null && AuthList.Any(v => v.GID == 4))
+                            {
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="版面設定"><i class="icon-directions"></i> <span class="top_menu_title">版面設定</span> <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        @if (AuthList.Any(v => v.ItemID == 12))
+                                        {
+                                            <li><a path="@Url.Action("SiteLayout", "Site",new { stype = "P" })" class="topmenu" title="網站版面資訊設定">網站版面資訊設定</a></li>}
+                                        @if (AuthList.Any(v => v.ItemID == 13))
+                                        {
+                                            <li><a path="@Url.Action("PageSeminar", "Site",new { stype="P" })" class="topmenu" title="入口首頁配置">入口首頁配置</a></li>}
+                                        @if (AuthList.Any(v => v.ItemID == 18))
+                                        {
+                                            <li><a path="@Url.Action("SiteLangText", "Site")" class="topmenu" title="語系通用文字設定">語系通用文字設定</a></li>}
+                                    </ul>
+                                </li>
+                            }
+                        }
+                        @if (ViewBag.Role == "admin")
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="模組元件"><i class="icon-social-dropbox"></i> <span class="top_menu_title">模組元件</span> <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a path="@Url.Action("Index", "SEO")" class="topmenu" title="SEO優化設定">SEO優化設定</a></li>
+                                    <li><a path="@Url.Action("Index", "Model")" class="topmenu" title="選單模組管理">選單模組管理</a></li>
+                                    <li><a path="@Url.Action("Index", "EPaper")" class="topmenu" title="電子報管理">電子報管理</a></li>
+                                    <li><a path="@Url.Action("IndexSetting", "Model")" class="topmenu" title="全文檢索管理">全文檢索管理</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            if (AuthList != null && AuthList.Any(v => v.GID == 5))
+                            {
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="模組元件"><i class="icon-directions"></i> <span class="top_menu_title">模組元件</span> <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        @if (AuthList.Any(v => v.ItemID == 14))
+                                        {
+                                            <li><a path="@Url.Action("Index", "SEO")" class="topmenu" title="SEO優化設定">SEO優化設定</a></li>}
+                                        @if (AuthList.Any(v => v.ItemID == 15))
+                                        {
+                                            <li><a path="@Url.Action("Index", "Model")" class="topmenu" title="選單模組管理">選單模組管理</a></li>}
+                                        @if (AuthList.Any(v => v.ItemID == 16))
+                                        {
+                                            <li><a path="@Url.Action("Index", "EPaper")" class="topmenu" title="電子報管理">電子報管理</a></li>}
+                                        @if (AuthList.Any(v => v.ItemID == 17))
+                                        {
+                                            <li><a path="@Url.Action("IndexSetting", "Model")" class="topmenu" title="SEO全文檢索管理">全文檢索管理</a></li>}
+                                    </ul>
+                                </li>
+                            }
+                        }
+
+                    </ul>
+                }
+                <div class="top-menu hidden-sm hidden-xs">
+                    <ul class="nav navbar-nav pull-right">
+                        <li class="dropdown dropdown-quick-sidebar-toggler">
+                            <a href="@Url.Action("Index", "Home", new { area = "" })?langid=@ViewBag.langid" target="_blank" title="瀏覽前台">
+                                <i class="fa fa-television"></i>
+                                <span class="title">瀏覽前台</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Logout", "Account")" title="登出">
+                                <i class="fa fa-sign-out"></i> 登出
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--top menu end-->
+        </div>
+    </div>
+    <!--top menu end-->
+
+    <div class="page-container">
+
+        <!--left menu start-->
+        <div class="page-sidebar-wrapper">
+            <div class="page-sidebar navbar-collapse collapse">
+                <ul class="page-sidebar-menu  page-header-fixed " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" id="menulist">
+
+                    <li class="nav-item start active open">
+                        <a href="@Url.Action("Index","Home")" class="nav-link nav-toggle" title="Home">
+                            <i class="icon-home"></i>
+                            <span class="title">Home</span>
+                        </a>
+                    </li>
+                    @Html.Raw(ViewBag.leftmenu)
+                    <li class="nav-item hidden-lg hidden-md">
+                        <a href="@Url.Content("~/Content/files/操作手冊.pdf")" target="_blank" title="操作手冊">
+                            <i class="fa fa-book"></i>
+                            <span class="title">操作手冊</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item hidden-lg hidden-md">
+                        <a href="@Url.Action("Index","Home")" title="瀏覽前台">
+                            <i class="fa fa-television"></i>
+                            <span class="title">瀏覽前台</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item hidden-lg hidden-md">
+                        <a href="javascript:;" title="登出">
+                            <i class="icon-logout"></i>
+                            <span class="title">登出</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <!--left menu end-->
+        <!--content start-->
+        <div class="page-content-wrapper">
+            <div class="page-content">
+                @RenderBody()
+            </div>
+        </div>
+        <!--content end-->
+
+    </div>
+
+    <!--footer start-->
+    <div class="page-footer">
+        <div class="page-footer-inner">Powered by Laypu Technology</div>
+        <div class="scroll-to-top">
+            <i class="icon-arrow-up"></i>
+        </div>
+    </div>
+    <!--footer end-->
+    <script src="@Url.Content("~/Scripts/custom.js")"></script>
+</body>
+</html>
+<script type="text/javascript">
+       $(function () {
+           $("#menulist").delegate((".title"), "click", function () {
+               var index = $(this).attr('index');
+               $.post('@Url.Action("GotoMenu","Account")', { id: index }, function (data) {
+                   if (data[0] == "3") {
+                       window.open(data[1]);
+                   } else if (data[0] == "2")  {
+                       var obj = {};
+                       obj.menuindex = index;
+                        obj[data[2]] = data[3];
+                        CreatePost( data[1], obj);
+                   }
+                });
+           });
+
+           $(".topmenu").click(function () {
+               var path=$(this).attr('path')
+               CreatePost(path, { menuindex:"-1"});
+           });
+
+           $("#menulist").delegate((".topmenu"), "click", function () {
+               var index = $(this).attr('index');
+               $.post('@Url.Action("GotoMenu","Account")', { id: index }, function (data) {
+
+                   if (data[0] == "3") {
+                       window.open(data[1]);
+                   } else if (data[0] == "2")  {
+                       var obj = {};
+                       obj.menuindex = index;
+                        obj[data[2]] = data[3];
+                        CreatePost( data[1], obj);
+                   }
+                });
+           });
+           $(".langchange").click(function () {
+               var lang = $(this).attr('langid');
+               $.post('@Url.Action("SetLang","Account")', { lang: lang }, function (data) {
+                   document.location.href = '@Url.Action("Index","Home")';
+               });
+           });
+    });
+</script>

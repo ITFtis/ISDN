@@ -1,0 +1,150 @@
+﻿@model PatentFrontViewModel
+@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel, Model.LangId);
+}
+<div id="content" class="page_content">
+    <div class="container">
+        <div class="page_top">
+            <a href="#;return false;" title="@Common.GetLangText("主要內容區")" accesskey="@if(Model.LangId == "1"){@("C") }else{ @("C")}" id="main-content">:::</a>
+            @Html.Raw(Model.LinkStr)
+        </div>
+        <div class="title">
+            <h2 >@Model.Title</h2>
+            <!--header start-->
+            <div class="page_share" data-sr="enter right over 1.5s">
+                @if (Model.LinkUrl != null)
+                {
+                    <a href="@Common.FixLink(Model.LinkUrl)" target="_blank" title="@Common.GetLangText("相關連結")-@(Model.LinkUrlDesc)(@(Common.GetLangText("另開新視窗")))">
+                        <!--英文 link(new window)-->
+                        <span class="fa-stack fa-1g">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fas fa-link fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                }
+                @if (Model.DownloadID != null)
+                {
+                    <a href="@Url.Action("FileDownLoad")?itemid=@Model.DownloadID" target="_blank" title="@Common.GetLangText("檔案下載")-@(Model.DownloadDesc)(@(Common.GetLangText("另開新視窗")))">
+                        <!--英文 download(new window)-->
+                        <span class="fa-stack fa-1g">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fas fa-download fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                }
+                @if (Model.IsPrint)
+                {
+                    <a href="@Url.Action("Print",new { mid=Model.MenuID,id=Model.ItemID})" target="_blank" title="@(Common.GetLangText("友善列印"))(@(Common.GetLangText("另開新視窗")))">
+                        <!--英文 print(new window)-->
+                        <span class="fa-stack fa-1g">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fas fa-print fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                }
+                @if (Model.IsShare)
+                {
+                    <a href="http://www.facebook.com/share.php?u=@(HttpUtility.UrlEncode(Request.Url.AbsoluteUri))" target="_blank" class="share" stype="fb" title="facbook@(Common.GetLangText("分享"))(@(Common.GetLangText("另開新視窗")))" id="a_linkfb">
+                        <!--英文 facebook share(new window)-->
+                        <span class="fa-stack fa-1g">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                }
+            </div>
+        </div>
+        <div class="content_con">
+            <div class="left">
+                <div class="date">
+                    @(Model.LangId=="1"?(Model.Year+" "+  Model.ColumnNameMapping["年度"]):(Model.ColumnNameMapping["年度"]+" "+Model.Year))@if (@Model.GroupName != "")
+                    {<span class="top_class">@Model.GroupName</span>}
+                </div>
+                <ul class="patent_list">
+                    <li>
+                        <h3>@Model.ColumnNameMapping["發明人"]</h3>
+                        <div class="con_font">@Html.Raw(Model.Inventor)</div>
+                    </li>
+                    <li>
+                        <h3>@Model.ColumnNameMapping["領域"]</h3>
+                        <div class="con_font">@Html.Raw(Model.Field)</div>
+                    </li>
+                    <li>
+                        
+                        <h3>@Model.ColumnNameMapping["簡介"]</h3>
+                        <div class="con_font">
+                            @Html.Raw(Model.Content)
+                        </div>
+                    </li>
+                    <li>
+                        <div class="con_font">
+
+                            <!--list start--><!--國別項目後台可無限增加-->
+                            <div class="table-scrollable patent_table">
+                                <table class="table table-hover" summary="@Model.ColumnNameMapping["專利明細列表"]">
+                                    <thead>
+                                        <tr>
+                                            @{
+                                            <th width="130" scope="col">@Model.ColumnNameMapping["國別"]</th>
+                                                foreach (var n in Model.Nation)
+                                                {<th scope="col">@n</th>}}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td scope="row" class="text-center">@Model.ColumnNameMapping["專利證書號"]</td>
+                                            @foreach (var pno in Model.Patentno)
+                                            {<td class="text-center">@pno</td>}
+                                        </tr>
+                                        <tr>
+                                            <td scope="row" class="text-center">@Model.ColumnNameMapping["證書日期"]</td>
+                                            @foreach (var pd in Model.PatentDate)
+                                            {
+                                                <td class="text-center">@pd</td>}
+                                        </tr>
+                                        <tr>
+                                            <td scope="row" class="text-center">@Model.ColumnNameMapping["早期公開日"]</td>
+                                            @foreach (var ed in Model.EarlyPublicDate)
+                                            {
+                                                <td class="text-center">@ed</td>}
+                                        </tr>
+                                        <tr>
+                                            <td scope="row" class="text-center">@Model.ColumnNameMapping["早期公開號"]</td>
+                                            @foreach (var eno in Model.EarlyPublicNo)
+                                            {
+                                                <td class="text-center">@eno</td>}
+                                        </tr>
+                                        <tr>
+                                            <td scope="row" class="text-center">@Model.ColumnNameMapping["專利權限期"]</td>
+                                            @foreach (var dl in Model.Deadline)
+                                            {
+                                                <td class="text-center">@dl</td>}
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--list end-->
+
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btn_box">
+                    <a href="javascript:history.back()" class="btn_01" title='@(Common.GetLangText("回上一頁"))'>
+                        @Common.GetLangText("回上一頁") 
+                    </a>
+                </div>
+            </div>
+            <div class="right">
+                @Html.Raw(Model.LeftMenu)
+            </div>
+        </div>
+
+    </div>
+</div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+        });
+    </script>
+}

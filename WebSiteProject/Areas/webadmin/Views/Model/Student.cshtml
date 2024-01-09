@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewBag.Title = "選單程式模組管理";
+}
+
+<form class="form-horizontal form-bordered" method="Post" id="editform">
+    <input id="hid_isAdd" type="hidden" name="isAdd" value='@ViewBag.IsAdd' />
+    <div class="portlet light form-fit bordered">
+        <div class="portlet-body form">
+            <div class="form-horizontal form-bordered">
+                <div class="form-body" id="form-body">
+
+                    <div class="form-group">
+                        <div class="col-md-3 col-sm-3 col-xs-12 bg-white mobile_white" style="cursor:pointer">
+                            <img src="~/img/System36.gif" class="index" url="@Url.Action("Index", "PageEdit")"/><br />
+                            <span style="margin-left:30px">圖文編輯</span>
+                        </div>
+
+                        <div class="col-md-3 col-sm-3 col-xs-12 bg-white mobile_white" style="cursor:pointer">
+                            <img src="~/img/System29.gif" class="index" url="@Url.Action("Index", "Message")"/><br />
+                            <span style="margin-left:30px">訊息管理</span>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12 bg-white mobile_white" style="cursor:pointer">
+                            <img src="~/img/System40.gif" class="index" url="@Url.Action("Index", "Active")"/><br />
+                            <span style="margin-left:30px">活動花絮</span>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12 bg-white mobile_white" style="cursor:pointer">
+                            <img src="~/img/System28.gif" class="index" url="@Url.Action("Index", "FileDownload")"/><br />
+                            <span style="margin-left:30px">文件下載</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3 col-sm-3 col-xs-12 bg-white mobile_white" style="cursor:pointer">
+                            <img src="~/img/System03.gif" class="index" url="@Url.Action("Index", "WebsiteMap")" /><br />
+                            <span style="margin-left:30px">網站地圖</span>
+                        </div>
+
+                        <div class="col-md-3 col-sm-3 col-xs-12 bg-white mobile_white" style="cursor:pointer">
+                            <img src="~/img/System16.gif" class="index" url="@Url.Action("Index", "Lang")" /><br />
+                            <span style="margin-left:30px">語系切換</span>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12 bg-white mobile_white" style="cursor:pointer">
+                            <img src="~/img/System25.gif" class="index" url="@Url.Action("Index", "Article")" /><br />
+                            <span style="margin-left:30px">文章管理</span>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12 bg-white mobile_white" style="cursor:pointer">
+                            <img src="~/img/System45.gif" class="index" url="@Url.Action("Index", "Knowledge")" /><br />
+                            <span style="margin-left:30px">知識庫</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3 col-sm-3 col-xs-12 bg-white mobile_white" style="cursor:pointer">
+                            <img src="~/img/System45.gif" class="index" url="@Url.Action("Index", "Forum")" /><br />
+                            <span style="margin-left:30px">論壇管理</span>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12 bg-white mobile_white" style="cursor:pointer">
+                            <img src="~/img/System41.gif" class="index" url="@Url.Action("Index", "Industry")" /><br />
+                            <span style="margin-left:30px">產業查詢</span>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12 bg-white mobile_white" style="cursor:pointer">
+                            <img src="~/img/System25.gif" class="index" url="@Url.Action("Index", "Form")" /><br />
+                            <span style="margin-left:30px">表單管理</span>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12 bg-white mobile_white" style="cursor:pointer">
+                            <img src="~/img/System29.gif" class="index" url="@Url.Action("Index", "Course")" /><br />
+                            <span style="margin-left:30px">課程管理</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $(".index").click(function () {
+                var url = $(this).attr('url');
+                window.location.href = url;
+            });
+        });
+
+    </script>
+}

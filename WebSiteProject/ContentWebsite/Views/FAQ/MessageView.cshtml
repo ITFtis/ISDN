@@ -1,0 +1,72 @@
+﻿<!--page banner start-->
+@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel);
+}
+@model MessageFrontViewModel
+<div class="page_banner" style="background: url('@Model.BannerImage');background-position: top center;background-size: cover;">
+    <!--建議尺寸1920*470px-->
+    <div class="container">
+        <div class="page_title" data-sr="enter top over 1.5s">最新消息</div>
+    </div>
+</div>
+<!--page banner end-->
+<!--page top start-->
+<div class="page_top">
+    <div class="container">
+        <div class="col-md-9 col-sm-9 col-xs-12" data-sr="enter left over 1.5s">
+            <ul>
+                @Html.Raw(Model.LinkStr)
+            </ul>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-12" data-sr="enter right over 1.5s">
+            <div class="page_top_right">
+                @if (Model.IsForward)
+                {
+                    <a href="@Url.Action("Forward","Message",new { itemid = Model.ItemID ,mid= Model.MenuID,menutype=Model.MenuType,sitemenuid=Model.SiteMenuID })" title="轉寄好友" target="_blank"><img src="@Url.Content("~/ContentWebsite/image/icon_mail.png")" alt="轉寄好友"></a>
+                }
+                @if (Model.IsPrint)
+                {
+                    <a href="@Url.Action("Print","Message",new { id = Model.ItemID ,mid= Model.MenuID})" title="友善列印" target="_blank"><img src="@Url.Content("~/ContentWebsite/image/icon_print.png")" alt="友善列印"></a>
+                }
+
+                @if (Model.LinkUrl != null)
+                {
+                    <a href="@Model.LinkUrl" title="相關連結" target="_blank"><img src="@Url.Content("~/ContentWebsite/image/icon_link.png")" alt="相關連結"></a>
+                }
+                @if (Model.DownloadID != null)
+                {
+                    <a href="@Url.Action("FileDownLoad")?itemid=@Model.DownloadID" title="@Model.DownloadDesc"><img src="@Url.Content("~/ContentWebsite/image/icon_download.png")" alt="檔案說明"></a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!--page top end-->
+<!--main content start-->
+<div class="page_content">
+    <div class="container">
+        <div class="page_title" data-sr="enter left over 1.5s">@Model.Title</div>
+        <div class="item_info" data-sr="enter left over 1.5s"><span class="item_date">@Model.PublicshDate</span><span class="item_class">@Model.GroupName</span></div>
+        <div class="page_con">
+            @if (string.IsNullOrEmpty(Model.ImageName)==false)
+            {<span>
+                    @if (Model.ImageFileLocation == "1")
+                    {
+                        <img src="@Url.Content("~/UploadImage/MessageItem/")@Model.ImageName" class="img_padding" width="200" alt="@Model.ImageFileDesc" align="left">
+                    }
+                    else if (Model.ImageFileLocation == "2")
+                    {
+                        <div align="center"><img src="@Url.Content("~/UploadImage/MessageItem/")@Model.ImageName" class="img_padding" width="200" alt="@Model.ImageFileDesc"></div>
+                    }
+                    else if (Model.ImageFileLocation == "3")
+                    {
+                        <img src="@Url.Content("~/UploadImage/MessageItem/")@Model.ImageName" class="img_padding" width="200" alt="@Model.ImageFileDesc" align="right">
+                    }
+                </span>
+            }
+            @Html.Raw(Model.Content)
+        </div>
+        <div class="btn_back" data-sr="enter bottom over 1.5s"><a href="@Url.Action("Index",new { itemid=Model.MainID,mid=Model.MenuID })"><span class="btn_01">回上一頁</span></a></div>
+    </div>
+</div>
+<!--main content end-->

@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+@{
+    Layout = null;
+}
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="@Url.Content("~/ContentWebsite/image/favicon.ico")" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/bootstrap.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/font-awesome.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/theme.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/theme-elements.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/style.css")">
+    <script src="@Url.Content("~/Scripts/jquery-3.1.1.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery-migrate-3.0.0.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/main.js")"></script>
+    <!--banner start-->
+    <script src="@Url.Content("~/Scripts/owl.carousel.min.js")"></script>
+    <!--banner end-->
+    <!--右側選單 satrt-->
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.8.17.custom.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/scrollReveal.js")"></script>
+    <title>@ViewBag.Title</title>
+
+</head>
+<body style="max-width:806px; margin:0 auto; ">
+    <div class="con_box">
+        @{
+            var imageurl = string.IsNullOrEmpty(ViewBag.BannerImage) ? @Url.Content("~/img/print_banner.jpg") : ViewBag.BannerImage;
+        }
+        <div class="con_banner"><img src="@Html.Raw(imageurl)" alt="" /></div><!--建議尺寸740*185px-->
+        <div class="page_title">@ViewBag.Title</div>
+        <input id="Url" type="hidden" name="Url" value="@ViewBag.Url" />
+        <!--page content start-->
+        <div class="con_float">
+            <div class="form_con">
+                <div class="table form_box">
+                    <div class="table-row">
+                        <div class="form_q">*寄件者</div>
+                        <div class="form_a">
+                            <input type="text" class="form-control" id="Sender" name="Sender">
+                            <span class="required" id="Sender-error" style="display:none;">寄件者 必須填寫！</span>
+                        </div>
+                    </div>
+                    <div class="table-row">
+                        <div class="form_q">*寄件者Email</div>
+                        <div class="form_a">
+                            <input type="text" class="form-control" id="SenderEMail" name="SenderEMail">
+                            <span class="required" id="SenderEMail-error" style="display:none;">寄件者Email 必須填寫！</span>
+                            <span class="required" id="SenderEMail-check" style="display:none;">寄件者Email 格式錯誤！</span>
+                        </div>
+                    </div>
+                    <div class="table-row">
+                        <div class="form_q">*朋友Email</div>
+                        <div class="form_a">
+                            <input type="text" class="form-control" id="ForwardEMail" name="ForwardEMail">
+                            <div class="remark">多組 Email 間請以 ; 分隔</div>
+                            <span class="required" id="ForwardEMail-error" style="display:none;">朋友Email 必須填寫！</span>
+                            <span class="required" id="ForwardEMail-check" style="display:none;">朋友Email 格式錯誤！</span>
+                        </div>
+                    </div>
+
+                    <div class="table-row">
+                        <div class="form_q">給朋友的訊息</div>
+                        <div class="form_a">
+                            <textarea rows="5" class="form-control" type="text" id="ForwardMessage" name="ForwardMessage"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="submit_btn">
+                <input type="button" class="btn_01" value="送出" id="btn_send">
+                <input type="button" class="btn_01" id="btn_cancel" value="取消">
+            </div>
+        </div>
+        <!--page content end-->
+    </div>
+    <div class="con_footer">@Html.Raw(ViewBag.FooterString)</div>
+</body>
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btn_cancel").click(function () {
+            $("#div_form :input").val('');
+        });
+        $("#btn_send").click(function () {
+            $(".required").hide();
+            var inputval = $("#div_form :input").filter(function () { return $(this).val() == "" && $(this).hasClass('checkitem'); });
+            for (var idx = 0; idx < inputval.length; idx++) {
+                $("#" + inputval[idx].name + "-error").show();
+            }
+            if (inputval.length > 0) { return false; }
+
+            var obj = {};
+            obj.Sender = $("#Sender").val();
+            obj.SenderEMail = $("#SenderEMail").val();
+            obj.ForwardEMail = $("#ForwardEMail").val();
+            obj.ForwardMessage = $("#ForwardMessage").val();
+            obj.Title = '@ViewBag.Title';
+            obj.Url = $("#Url").val();
+            var iscon = true;
+            if (validateEmail(obj.SenderEMail )==false) {
+                $("#SenderEMail-check").show();
+                iscon= false;
+            }
+            var emails = obj.ForwardEMail .split(";");
+            emails.forEach(function (email) {
+                if (validateEmail(email) == false) {
+                    $("#ForwardEMail-check").show();
+                    iscon = false;
+                }
+            });
+            if (iscon == false) { return false;}
+            $.post('@Url.Action("SendMail", "Mail")', obj, function (data) {
+                 if (data == "寄信完成") {
+                    alert('@Common.GetLangText("信件寄發成功")'); $("#div_form :input").val('');
+                }else { alert(data); }
+             });
+          });
+    });
+    function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@@"]+(\.[^<>()\[\]\\.,;:\s@@"]+)*)|(".+"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+</script>

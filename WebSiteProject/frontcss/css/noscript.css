@@ -1,0 +1,62 @@
+.noscript_font {
+    font-size: 0.8em;
+    color: #fff;
+    padding: 0 3%;
+	background:#333;
+	height:100px;
+}
+#header .header-body{
+	position:relative;
+}
+.page_content{
+	margin-top:0;
+}
+.con_box img{
+	max-width:739px;
+	height:auto !important;
+}
+.page_menu .dropdown-menu{
+	display: block;
+    width: 100%;
+    position: relative;
+}
+
+
+/*index_news*/
+.index_news {
+    margin-top: 0;
+}
+
+
+
+
+/*--------------------------------------for 電腦、平版、手機------------------------------------------------*/
+/* 大螢幕 */
+@media (min-width: 1200px) {
+}
+
+ 
+/* 平板電腦、橫向手機和一般桌機解析度 */
+@media (min-width: 992px) and (max-width: 1199px) {
+}
+
+
+/* 電腦、橫向平板電腦解析度 */
+@media (min-width: 768px) and (max-width: 991px) {
+}
+
+
+/* 橫向智慧手機到竪立平板電腦解析度 */
+@media (max-width: 767px) {
+#header {
+    position: relative;
+}
+
+}
+
+ 
+/* 橫向智慧手機及其他更小解析度 */
+@media (max-width: 480px) {
+}
+
+

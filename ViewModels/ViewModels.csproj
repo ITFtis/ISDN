@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{45598C6F-0286-42CE-BB9A-0324AAEA739C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ViewModels</RootNamespace>
+    <AssemblyName>ViewModels</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\TPCA\bin\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="UnitSettingColumn.cs" />
+    <Compile Include="SystemRecordResult.cs" />
+    <Compile Include="SystemRecordSearchModel.cs" />
+    <Compile Include="KnowledgeBaseSearchModel.cs" />
+    <Compile Include="OrderItemResult.cs" />
+    <Compile Include="OrderSearchModel.cs" />
+    <Compile Include="OrderInfo.cs" />
+    <Compile Include="LogisticsSettingEditModel.cs" />
+    <Compile Include="ProductOrderModel.cs" />
+    <Compile Include="Student\StudentCourseResult.cs" />
+    <Compile Include="Student\CouponRecordResult.cs" />
+    <Compile Include="TempProductOrder.cs" />
+    <Compile Include="QuestionnaireReplyModel.cs" />
+    <Compile Include="QuestionnaireCommentResult.cs" />
+    <Compile Include="QuestionnaireResult.cs" />
+    <Compile Include="QuestionnaireEditModel.cs" />
+    <Compile Include="BaseData\BaseDataInputModel.cs" />
+    <Compile Include="BaseData\BaseDataInputResult.cs" />
+    <Compile Include="BaseData\BaseDataItemResult.cs" />
+    <Compile Include="BaseData\BaseDataEditModel.cs" />
+    <Compile Include="BaseData\DataInputSearchModel.cs" />
+    <Compile Include="BaseData\BaseDataUnitSettingModel.cs" />
+    <Compile Include="CarFormEditModel.cs" />
+    <Compile Include="CartUnitSettingModel.cs" />
+    <Compile Include="Product\ProductUnitSettingModel.cs" />
+    <Compile Include="Product\ProductItemResult.cs" />
+    <Compile Include="Product\ProductSearchModel.cs" />
+    <Compile Include="Product\ProductEdit.cs" />
+    <Compile Include="StudentSearchModel.cs" />
+    <Compile Include="StudentResult.cs" />
+    <Compile Include="Course\CourseApplyLetterEdit.cs" />
+    <Compile Include="Course\CourseSignleApplyResult.cs" />
+    <Compile Include="Course\CoursePaymentEdit.cs" />
+    <Compile Include="Course\CourseSignleSearchModel.cs" />
+    <Compile Include="Course\CourseGroupApplyEdit.cs" />
+    <Compile Include="Course\GroupApplyItemEdit.cs" />
+    <Compile Include="Course\SaveSignleApplySaveEdit .cs" />
+    <Compile Include="Course\CourseSingleApplyEdit.cs" />
+    <Compile Include="Course\CourseSigninEdit.cs" />
+    <Compile Include="Course\CourseEditModel.cs" />
+    <Compile Include="Course\CourseBasicColumnEdit.cs" />
+    <Compile Include="Course\CoursePriceEdit.cs" />
+    <Compile Include="Course\CourseFormEdit.cs" />
+    <Compile Include="Course\CourseSingInRangeModel.cs" />
+    <Compile Include="Course\CourseSettingEdit.cs" />
+    <Compile Include="EPaperContentItem.cs" />
+    <Compile Include="EPaperDefaultADModel.cs" />
+    <Compile Include="EPaperUnitSettingModel.cs" />
+    <Compile Include="EPaperItemResult.cs" />
+    <Compile Include="EPaperEditModel.cs" />
+    <Compile Include="AdvanceSearchModel.cs" />
+    <Compile Include="IndustrySearchModel.cs" />
+    <Compile Include="MemberItemResult.cs" />
+    <Compile Include="Course\CourseSearchModel.cs" />
+    <Compile Include="Course\CourseItemResult.cs" />
+    <Compile Include="Course\CourseUnitSettingModel.cs" />
+    <Compile Include="SearchResult.cs" />
+    <Compile Include="FormSettingModel.cs" />
+    <Compile Include="FormUnitSettingModel.cs" />
+    <Compile Include="FormInputResult.cs" />
+    <Compile Include="KnowledgeListResult.cs" />
+    <Compile Include="AdminFunctionModel.cs" />
+    <Compile Include="SiteLangTextModel.cs" />
+    <Compile Include="KnowledgeSearchModel.cs" />
+    <Compile Include="MailInputModel.cs" />
+    <Compile Include="MailSearchModel.cs" />
+    <Compile Include="FirstPageModel.cs" />
+    <Compile Include="FormItemSettingModel.cs" />
+    <Compile Include="PageLayoutModel.cs" />
+    <Compile Include="SiteLayoutModel.cs" />
+    <Compile Include="MenuEditModel.cs" />
+    <Compile Include="IndustryUnitSettingModel.cs" />
+    <Compile Include="ForumSubjectResult.cs" />
+    <Compile Include="ForumSearchModel.cs" />
+    <Compile Include="ForumUnitSettingModel.cs" />
+    <Compile Include="ForumGroupEditModel.cs" />
+    <Compile Include="KnowledgeModelColumnSetting.cs" />
+    <Compile Include="KnowledgeUnitSettingModel.cs" />
+    <Compile Include="FileDownloadEditModel.cs" />
+    <Compile Include="FileDownloadItemResult.cs" />
+    <Compile Include="FileDownloadSearchModel .cs" />
+    <Compile Include="ArticleSearchModel.cs" />
+    <Compile Include="ArticleItemResult.cs" />
+    <Compile Include="ArticleEditModel.cs" />
+    <Compile Include="ActiveEditModel.cs" />
+    <Compile Include="ActiveItemResult.cs" />
+    <Compile Include="FileDownloadUnitSettingModel.cs" />
+    <Compile Include="ArticleUnitSettingModel.cs" />
+    <Compile Include="MessageItemResult.cs" />
+    <Compile Include="MessageEditModel.cs" />
+    <Compile Include="ActiveSearchModel.cs" />
+    <Compile Include="MessageSearchModel.cs" />
+    <Compile Include="ActiveUnitSettingModel.cs" />
+    <Compile Include="PageIndexSettingModel.cs" />
+    <Compile Include="PageEditItemModel.cs" />
+    <Compile Include="MessageUnitSettingModel.cs" />
+    <Compile Include="AddPhotoModel.cs" />
+    <Compile Include="SEOViewModel.cs" />
+    <Compile Include="KnowledgeBaseResult.cs" />
+    <Compile Include="KnowledgeBaseEditModel.cs" />
+    <Compile Include="ADListResult.cs" />
+    <Compile Include="ADEditModel.cs" />
+    <Compile Include="EmptySearchModel.cs" />
+    <Compile Include="ADSearchModel.cs" />
+    <Compile Include="SiteConfigModel.cs" />
+    <Compile Include="SiteLangModel.cs" />
+    <Compile Include="KnowledgeColumnSetting.cs" />
+    <Compile Include="Student\StudentEdit.cs" />
+    <Compile Include="Student\UnitSetting.cs" />
+    <Compile Include="Student\FormSettingEdit.cs" />
+    <Compile Include="UserGroupListResult.cs" />
+    <Compile Include="PageUnitSettingModel.cs" />
+    <Compile Include="AdminMemberModel.cs" />
+    <Compile Include="AdminMemberListResult.cs" />
+    <Compile Include="AuthoritySearchModel.cs" />
+    <Compile Include="LogInViewModel.cs" />
+    <Compile Include="Paging.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchModelBase.cs" />
+    <Compile Include="WrappedJsonResult.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ResourceLibrary\ResourceLibrary.csproj">
+      <Project>{f54c1c17-61a5-4fd0-86ba-7f2288f77dbb}</Project>
+      <Name>ResourceLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SQLModel\SQLModel.csproj">
+      <Project>{B9127546-557F-4865-9783-A67C098ABA91}</Project>
+      <Name>SQLModel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
