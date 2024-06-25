@@ -1,0 +1,260 @@
+﻿@model MessageUnitSettingModel
+<script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Model")">模組管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Message")">訊息管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            單元設定
+        </li>
+    </ul>
+
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">@ViewBag.Title</div>
+
+<div class="portlet light bordered">
+    <!--management item start-->
+    <div class="table-toolbar">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="display_inline">
+                <p class="class_title">管理項目</p>
+                <select class="form-control_1" onChange="window.location.href=this.value">
+                    <option value="@Url.Action("ModelItem",new { mainid=Model.MainID})" selected>訊息管理</option>
+                    <option value="#" selected>單元設定</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <!--management item end-->
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveUnit")'>
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body">
+                        @Html.HiddenFor(Model => Model.MainID)
+                        @Html.HiddenFor(Model => Model.ID)
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">前台列表顯示設定</div>
+                            <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0" id="table_Column">
+                                    <thead>
+                                        <tr class="bg-grey_1" filed-class='odd gradeX'>
+                                            <th filed-name='Sort' width="120px" class="text-center" filed-type='numbertextcheck' filed-item-class="sortedit">排序</th>
+                                            <th filed-name='ColumnName' class="text-center">名稱</th>
+                                            <th width="80px" filed-name='Show' class="text-center" filed-type='checkbox' filed-item-class="chkstatus">顯示</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            for (var idx = 0; idx < Model.UnitSettingColumnList.Count(); idx++)
+                                            {
+                                                <tr class="odd gradeX" id="tr_@idx" seqidx="@(idx+1)">
+                                                    <td class="text-center delete_th">
+                                                        <button type="button" class="btn btn-default btn-xs seq_list" value="0"><i class="fa fa-angle-double-up"></i></button>
+                                                        <button type="button" class="btn btn-default btn-xs seq_list" value="-1"><i class="fa fa-angle-up"></i></button>
+                                                        <button type="button" class="btn btn-default btn-xs seq_list" value="+1"><i class="fa fa-angle-down"></i></button>
+                                                        <button type="button" class="btn btn-default btn-xs seq_list" value="max"><i class="fa fa-angle-double-down"></i></button>
+                                                    </td>
+                                                    <td class="text-center columnname">@Model.UnitSettingColumnList[idx].Name</td>
+                                                    <td class="text-center">
+                                                        <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                            <input class="chkstatus" type="checkbox" @(Model.UnitSettingColumnList[idx].Sellected == 1 ? "checked='checked'" : "")><span></span>
+                                                        </label>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">功能提供</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    @Html.CheckBoxFor(m => m.IsPrint, new { @class = "checkboxes" })友善列印
+                                    <span></span>
+                                </label>
+
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    @Html.CheckBoxFor(m => m.IsShare, new { @class = "checkboxes" })轉寄好友
+                                    <span></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">每頁顯示筆數</div>
+                            <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                <select class="form-control w-auto" id="ShowCount" name="ShowCount">
+                                    <option value="12">12</option>
+                                    <option value="24">24</option>
+                                    <option value="36">36</option>
+                                    <option value="-1">全部</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">表格摘要</div>
+                            <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                <textarea cols="80" id="Summary" rows="3" name="Summary" class="form-control" maxlength="500">@Model.Summary</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">基本語系設定</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <div class="col-md-12">
+                                    <label class="col-md-2">序號</label>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Column1, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">發佈日期</label>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Column2, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">標題</label>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Column3, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">類別</label>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Column4, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">相關連結</label>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Column5, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">檔案下載</label>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Column6, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+        </div>
+    </form>
+</div>
+@section scripts {
+<script>
+        $(function () {
+            $("#table_Column").delegate((".seq_list"), "click", function () {
+                var alltr = $("#table_Column tbody tr");
+                var nowtridx = $(this).parents('tr').attr('seqidx');
+                var sval = $(this).val();
+                var newtridx = 0;
+
+                if (sval == "+1") {
+                    newtridx = parseInt(nowtridx) + 1;
+                } else if (sval == "-1") {
+                    newtridx = parseInt(nowtridx) - 1;
+                } else if (sval == "max") {
+                    newtridx = alltr.length;
+                }
+                if (newtridx == "0") { newtridx = "1"; }
+                if (newtridx == "" || newtridx == nowtridx) {
+                    return false;
+                }
+                if (newtridx > alltr.length) { newtridx = alltr.length; }
+                if (nowtridx == newtridx.toString()) {
+                    return false;
+                }
+
+                var nowidxhtml = $(this).parents('tr')[0];
+                var addarr = [];
+                for (var idx = 1; idx <= alltr.length; idx++) {
+                    var nowtr = alltr[idx - 1];
+                    if (idx.toString() != nowtridx) {
+                        if ((newtridx > nowtridx)) {
+                            addarr.push($(nowtr));
+                            if (idx == newtridx) {
+                                addarr.push($(nowidxhtml));
+                            }
+                        } else {
+                            if (idx == newtridx) {
+                                addarr.push($(nowidxhtml));
+                            }
+                            addarr.push($(nowtr));
+                        }
+                    }
+                }
+                $("#table_Column tbody").empty();
+
+                for (var idx = 0; idx < addarr.length; idx++) {
+                    $(addarr[idx]).attr("id", "tr_" + idx).attr('seqidx', (idx + 1));
+                    $("#table_Column tbody").append(addarr[idx]);
+                }
+            });
+            $("#ShowCount").val('@Model.ShowCount');
+             $('#editform').submit(function (event) {
+               var formData = new FormData();
+                var array = $('#editform').serializeArray();
+                $.each(array, function () {
+                    formData.append(this.name, this.value);
+                });
+                var alltr = $("#table_Column tbody tr");
+                for (var idx = 0; idx < alltr.length; idx++) {
+                    var columnname = $(alltr[idx]).find('.columnname').text();
+                    formData.append("ColumnName[" + idx + "]", columnname);
+                    var click = $(alltr[idx]).find('.chkstatus')[0].checked;
+                    formData.append("ColumnUse[" + idx + "]", click == true ? 1 : 0);
+                 }
+                 formData.append("Summary", encodeURIComponent($('#Summary').val()));
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data == "") {
+                            alert("儲存成功");
+                        } else {
+                            alert(data);
+                            var obj = {}; obj.mainid = '@Model.MainID'
+                            CreatePost('@Url.Action("UnitSetting")', obj);
+                        }
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+            })
+        });
+
+</script>
+
+}
+

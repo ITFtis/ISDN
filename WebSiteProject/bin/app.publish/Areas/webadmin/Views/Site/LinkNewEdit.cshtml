@@ -1,0 +1,158 @@
+﻿@model LinkEditModel
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+<script src="~/Scripts/clipboard.min.js"></script>
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>版面設定<i class="fa fa-circle"></i></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">活動訊息</div>
+<div class="portlet light bordered">
+
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveItem")' enctype="multipart/form-data">
+        @Html.HiddenFor(Model => Model.ItemID)
+        @Html.HiddenFor(Model => Model.ImageFileName)
+        @Html.AntiForgeryToken()
+        <input id="Type" type="hidden" value="News" name="Type" />
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body2">
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item"><span class="red">*</span>發佈日期</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <div class="date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                    @Html.EditorFor(model => model.PublicshStr, new { htmlAttributes = new { @class = "form-control checkitem input-small", placeholder = "發佈日期" } })
+                                    <span class="required" id="PublicshStr-error" style="display:none;">發佈日期 必須填寫！</span>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item">顯示日期</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <div class="input-group input-large" style="float:left">
+                                    <div class="date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                        @Html.EditorFor(model => model.StDateStr, new { htmlAttributes = new { @class = "form-control", placeholder = "開始日期" } })
+                                    </div>
+                                    <span class="input-group-addon"> to </span>
+                                    <div class="date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                        @Html.EditorFor(model => model.EdDateStr, new { htmlAttributes = new { @class = "form-control", placeholder = "結束日期" } })
+                                    </div>
+                                </div>
+                                <div class="" style="float:left; padding-left:5px;">
+                                    <button type="button" class="btn blue" id="btn_clear">清空</button>
+                                </div>
+                            </div>
+                        </div>*@
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item"><span class="red">*</span>標題</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <input id="Title" type="text" class="form-control checkitem" name="Title" />
+                                <span class="required" id="Title-error" style="display:none;">標題 必須填寫！</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item"><span class="red">*</span>連結路徑</div>
+                            <div class="col-md-10  col-sm-12 col-xs-12 bg-white mobile_white">
+                                <div class="col-md-12">
+                                    <div class="col-md-12">
+                                        @Html.EditorFor(model => model.LinkUrl, new { htmlAttributes = new { @class = "form-control checkitem" } })
+                                        <span class="required" id="LinkUrl-error" style="display:none;">連結路徑 必須填寫！</span>
+                                    </div>
+                                </div>
+                                @*<div class="col-md-12">
+                                    <label class="col-md-2">連結說明</label>
+                                    <div class="col-md-10 margin_bottom">
+                                        @Html.EditorFor(model => model.LinkUrlDesc, new { htmlAttributes = new { @class = "form-control" } })
+                                        <span class="required" id="LinkUrlDesc-error" style="display:none;">連結說明 必須填寫！</span>
+                                    </div>
+                                </div>*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">開啟格式設定</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white table_font">
+                                @Html.RadioButtonFor(model => model.Link_Mode, 1, new { style = "margin-left :0px", @checked = "checked" }) 原視窗
+                                @Html.RadioButtonFor(model => model.Link_Mode, 2, new { style = "margin-left :40px" }) 新視窗
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+            <button type="button" class="btn grey-mint" id="btn_return" onclick="location.href='@Url.Action("PageNewsEdit")'">返回列表</button>
+        </div>
+    </form>
+
+</div>
+@section scripts {
+    <script>
+        $(function () {
+            $('#btn_clear').click(function () {
+                $('#StDateStr').val('');
+                $('#EdDateStr').val('');
+            });
+            var title = "@Html.Raw(Model.Title.Replace("\"","'"))";
+            $('#Title').val(title);
+           if ('@Model.ItemID'>0 && '@Model.ImageFileName'!='') {
+                $('#div_oldfile').show();
+            }
+            $('#delimage').click(function () {
+                $('#div_oldfile').hide();
+                $('#ImageFileName').val('');
+            });
+            $('#editform').submit(function (event) {
+
+               $(".required").hide();
+                var inputval = $("#editform :input").filter(function () { return $(this).val() == "" && $(this).hasClass('checkitem'); });
+                for (var idx = 0; idx < inputval.length; idx++) {
+                    $("#" + inputval[idx].name + "-error").show();
+                }
+                if (inputval.length > 0) { return false; }
+               var formData = new FormData();
+               var array = $('#editform').serializeArray();
+               $.each(array, function () {
+                   formData.append(this.name, this.value);
+               });
+                formData.append("Title", encodeURIComponent($('#Title').val()));
+                var iscon = true;
+                if ($('#LinkUrl').val() != "" && $('#LinkUrlDesc').val() == "") {
+                    $('#LinkUrlDesc-error').show();
+                    iscon = false;
+                }
+                if (iscon == false) { return false;}
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                        location.href='@Url.Action("PageNewsEdit")'
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+            });
+        });
+
+    </script>
+
+}

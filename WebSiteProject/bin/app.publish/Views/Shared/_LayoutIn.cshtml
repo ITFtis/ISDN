@@ -1,0 +1,341 @@
+﻿@model  ViewModels.MasterPageModel
+@{
+    Layout = null;
+    ViewBag.SEOScript = WebSiteProject.Code.CacheMapping.SEOScript;
+}
+<!DOCTYPE html>
+<html lang="@(Model.LangId=="1"?"Zh-hant":"en")" xml:lang="@(Model.LangId=="1"?"Zh-hant":"en")">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="@Url.Content("~/img/favicon.ico")" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/bootstrap.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/theme.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/theme-elements.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/settings.css")" media="screen">
+
+    <!--fontawesome start-->
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/font-awesome.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/fontawesome.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/brands.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/solid.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/regular.min.css")">
+    <!--fontawesome end-->
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/style.css")">
+    <script src="@Url.Content("~/js/jquery.js")"></script>
+    <script src="@Url.Content("~/js/main.js")"></script>
+    <script src="@Url.Content("~/Scripts/custom.js")"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120661325-6"></script>
+    @if (Model.SEOScript != null)
+    {
+        if (Model.SEOScript.Length > 3) { Model.SEOTitleOrg = Model.SEOScript[3]; }
+        else { Model.SEOTitleOrg = Model.SEOTitle;  }
+
+        if (string.IsNullOrEmpty(Model.SEOScript[2]) == false)
+        {
+            Model.SEOTitle = Model.SEOScript[2];
+            <title>@Model.SEOScript[2]</title>
+        }
+        else
+        {
+            <title>@(ViewBag.title == null ? "" : ViewBag.title)</title>
+        }
+        if (Model.SEOScript[1] != "")
+        {
+            @Html.Raw(Model.SEOScript[1])
+        }
+        if (Model.SEOScript[0] != "")
+        {
+            <meta name="description" content="@Model.SEOScript[0]" />
+        }
+    }
+    else
+    {
+        Model.SEOTitleOrg= Model.SEOTitle;
+        <title>@Model.SEOTitle</title>
+    }
+    @*@if (ViewBag.SEOScript == "")
+    {
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', 'UA-120661325-6');
+        </script>
+    }
+    else
+    {
+        @Html.Raw(@ViewBag.SEOScript)
+    }*@
+    <meta property="og:url" content="@Request.Url.AbsoluteUri" />
+    <meta property="og:image" content="@Model.FBImage" />
+    <meta property="og:title" content="@Model.SEOTitle" />
+    <meta property="og:description" content="@Model.FBTitle" />
+    <meta property="og:type" content="website" />
+    <noscript>
+        <link rel="stylesheet" href="@Url.Content("~/frontcss/css/noscript.css")">
+    </noscript>
+
+</head>
+<body>
+    <!--header start-->
+    <noscript>
+        <div class="noscript_font">
+            <img src="@Url.Action("noJavascript","Home")" style="display:none;" alt="noJavascriptImg">
+            @Common.GetLangText("NoJavascript")
+        </div>
+    </noscript>
+    <!--header start-->
+    <header id="header" class="white" data-plugin-options='{"stickyEnabled": true, "stickyEnableOnBoxed": true, "stickyEnableOnMobile": false, "stickyStartAt": 0, "stickySetTop": "0", "stickyChangeLogo": false}'>
+        <div class="header-body">
+            <!--topmenu start-->
+            <div class="header-container container">
+                <div class="header-row">
+                    <div class="header-column">
+
+                        <div class="header-logo">
+                            <a href="#main-content" class="sr-only  sr-only-focusable" title="@Common.GetLangText("跳到主要內容區塊")">
+                                @Common.GetLangText("跳到主要內容區塊")
+                            </a><!-- 英文版 <a href="#main-content" class="sr-only" title="" tabindex="1">Jump to the main content area</a>  -->
+                            <h1>
+                                <a href="@Url.Action("Index","Home")" title="@Model.SEOTitleOrg">
+                                    <img alt="@Model.SEOTitleOrg" width="340" data-sticky-width="330"
+                                         data-sticky-top="0" src="@Model.InnerLogoUrl"><!--英文版 ；建議尺寸360*70px-->
+                                </a>
+                            </h1>
+                        </div>
+                        <button class="btn header-btn-collapse-nav float_right" data-toggle="collapse" data-target=".header-nav-main">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </div>
+                    <div class="header-column">
+                        <div class="header-row hidden-xs">
+                            <nav class="header-nav-top">
+                                <ul class="nav nav-pills">
+                                    <li>
+                                        <a href="#;return false;" title="@Common.GetLangText("上方選單區")" accesskey="U" class="accesskey">:::</a><!--英文<a href="#;return false;" title="" accesskey="U" class="accesskey">:::</a>-->
+                                    </li>
+                                    @Html.Raw(Model.TopMenu)
+                                    @if (Model.LangId == "1")
+                                    {
+                                        <li><a href='@Url.Action("ChangeLang","Home",new { lang=2})' class='' langid='2' title='EN'>EN</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li><a href='@Url.Action("ChangeLang","Home",new { lang=1})' class='' langid='1' title='中文'>中文</a></li>
+                                    }
+                                    <li class="font_size hidden-xs">
+                                        <a href="#" class="size_s" id="font_s" onClick="size_set('font_s')" onkeypress="size_set('font_s')" title="@Common.GetLangText("小字級")">A-</a><!--英文 S-->
+                                        <a href="#" class="size_m" id="font_m" onClick="size_set('font_m')" onkeypress="size_set('font_m')" title="@Common.GetLangText("中字級")">A</a><!--英文 M-->
+                                        <a href="#" class="size_l" id="font_l" onClick="size_set('font_l')" onkeypress="size_set('font_l')" title="@Common.GetLangText("大字級")">A+</a><!--英文 L-->
+                                    </li>
+                                    <li class="share_icon">
+                                        <a href="https://www.facebook.com/%E5%9C%8B%E7%A0%94%E9%99%A2%E5%9C%8B%E7%B6%B2%E4%B8%AD%E5%BF%83-292580541692362/?notify_field=blurb&modal=profile_completion&notif_id=1558930416338465&notif_t=page_profile_blurb" target="_blank" title="facbook(@Common.GetLangText("另開新視窗"))">
+                                            <!--英文 facebook(new window)-->
+                                            <span class="fa-stack fa-xs">
+                                                <i class="fa fa-square fa-stack-2x" style="color: #345db7;"></i>
+                                                <i class="fab fa-facebook-f fa-stack-1x" style="color: #fff;"></i>
+                                            </span>
+                                        </a>
+                                        <a href="https://www.youtube.com/channel/UCWrzkYUM5cwpZExQ4Et5vSw?view_as=subscriber" target="_blank" title="youtube(@Common.GetLangText("另開新視窗"))">
+                                            <!--英文 youtube(new window)-->
+                                            <span class="fa-stack fa-xs">
+                                                <i class="fa fa-square fa-stack-2x" style="color: #e50012;"></i>
+                                                <i class="fab fa-youtube fa-stack-1x" style="color: #fff;"></i>
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+
+                        <div class="header-row">
+                            <div class="header-nav">
+                                <!--<button class="btn header-btn-collapse-nav-search" data-toggle="collapse" data-target=".header-nav-search">
+                                    <i class="fa fa-bars"></i>
+                                </button>
+
+                                <div class="header-nav-search header-nav-main-effect-1 header-nav-main-sub-effect-1 collapse">
+                                    <nav>
+                                        <ul class="nav nav-pills">
+
+                                            <li class="search_box">
+                                                <input id="txt_search2" type="text" class="search_input" placeholder="Search...">
+                                                <button type="button" class="search_icon" id="btn_search2"><i class="fa fa-search"></i></button>
+                                            </li>
+
+                                        </ul>
+                                    </nav>
+                                </div>-->
+
+                                <div class="header-nav-main header-nav-main-effect-1 header-nav-main-sub-effect-1 collapse">
+                                    <nav>
+                                        <ul class="nav nav-pills" id="mainNav">
+                                            @Html.Raw(Model.MainMenu)
+                                        </ul>
+                                        <ul class="nav nav-top visible-xs">
+                                            @Html.Raw(Model.TopMobileMenu)
+                                            @if (Model.LangId == "1")
+                                            {
+                                                <li><a href='@Url.Action("ChangeLang","Home",new { lang=2})' class='' langid='2' title='EN'><i class="fa fa-language"></i>EN</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li><a href='@Url.Action("ChangeLang","Home",new { lang=1})' class='' langid='1' title='中文'><i class="fa fa-language"></i>中文</a></li>
+                                            }
+                                            <li>
+                                                <a href="https://www.facebook.com/%E5%9C%8B%E7%A0%94%E9%99%A2%E5%9C%8B%E7%B6%B2%E4%B8%AD%E5%BF%83-292580541692362/?notify_field=blurb&modal=profile_completion&notif_id=1558930416338465&notif_t=page_profile_blurb" target="_blank" title="facbook(@Common.GetLangText("另開新視窗"))">
+                                                    <!--英文 facebook(new window)-->
+                                                    <i class="fab fa-facebook-f"></i> facebook
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="https://www.youtube.com/channel/UCWrzkYUM5cwpZExQ4Et5vSw?view_as=subscriber" target="_blank" title="youtube(@Common.GetLangText("另開新視窗"))">
+                                                    <!--英文 youtube(new window)-->
+                                                    <i class="fab fa-youtube"></i> youtube
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--topmenu end-->
+
+        </div>
+    </header>
+    <!--header end-->
+    <!--header end-->
+    <!--content start-->
+    @RenderBody()
+    <!--content end-->
+    <!--footer start-->
+    <footer id="footer">
+        <div class="container">
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <form action="@Url.Action("Search","Search")" method="post" id="searchform">
+                    <ul class="footer_menu">
+                        <a href="#;return false;" title="@Common.GetLangText("下選單區")" accesskey="G">:::</a>
+                        @Html.Raw(Model.FooterMenu)
+                    </ul>
+                    <div class="search" data-sr="enter botom over 1.5s">
+                        <label for="footer_search">
+                            <input type="text" id="footer_search" name="key">
+                        </label>
+                        <button type="submit" form="searchform" class="search_icon" title="@Common.GetLangText("搜尋")" alt="@Common.GetLangText("搜尋")" id="btn_mainsearch"><i class="fa fa-search"></i></button>
+                        <div class="hotword" id="hot_keyword">@Common.GetLangText("熱門搜尋")：@Html.Raw(Model.SearchKey)</div>
+                        <!--英文Popular search-->
+                    </div>
+
+                </form>
+
+                <ul class="link">
+                    <li data-sr="enter botom over 1.5s">
+                        <a href="https://www.facebook.com/%E5%9C%8B%E7%A0%94%E9%99%A2%E5%9C%8B%E7%B6%B2%E4%B8%AD%E5%BF%83-292580541692362/?notify_field=blurb&modal=profile_completion&notif_id=1558930416338465&notif_t=page_profile_blurb" target="_blank" title="facbook(另開新視窗)">
+                            <!--英文 facebook(new window)-->
+                            <span class="fa-stack fa-1g">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li data-sr="enter botom over 1.5s">
+                        <a href="https://www.instagram.com/nchc.tw/?hl=zh-tw" target="_blank" title="instagram(@Common.GetLangText("另開新視窗"))">
+                            <!--英文 instagram(new window)-->
+                            <span class="fa-stack fa-1g">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li data-sr="enter botom over 1.5s">
+                        <a href="https://www.youtube.com/channel/UCWrzkYUM5cwpZExQ4Et5vSw?view_as=subscriber" target="_blank" title="youtube(@Common.GetLangText("另開新視窗"))">
+                            <!--英文 youtube(new window)-->
+                            <span class="fa-stack fa-1g">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-youtube fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="line visible-sm visible-xs"></div>
+            @Html.Raw(Model.FooterString)
+        </div>
+        <div class="copyright">
+            <div class="container">
+                @Html.Raw(Model.PublishContent)
+            </div>
+        </div>
+    </footer>
+    <!--footer end-->
+
+    <script src="@Url.Content("~/js/bootstrap.js")"></script>
+    <script src="@Url.Content("~/js/theme.js")"></script>
+    <script src="@Url.Content("~/js/theme.init.js")"></script>
+
+    <!--date start-->
+    <link href="@Url.Content("~/frontcss/css/bootstrap-datepicker3.min.css")" rel="stylesheet" id="style_components" type="text/css" />
+    <script src="@Url.Content("~/js/app.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/js/components-date-time-pickers.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/js/bootstrap-datepicker.min.js")" type="text/javascript"></script>
+    <!--date end-->
+    <!--滾動效果 start-->
+    <script src="@Url.Content("~/js/scrollReveal.js")"></script>
+    <!--滾動效果 end-->
+
+
+</body>
+</html>
+<script type="text/javascript">
+    $(function () {
+        size_set('@Model.Fontsize');
+        $(".size_s,.size_m,.size_l").click(function () { $.post('@Url.Action("SetFontSize","Home")', { size: $(this).attr("id") }, function (data) {}); });
+        $("body").delegate((".newopen"), "click", function () {
+            var width = $(this).attr('owidth');
+            var height = $(this).attr('oheight');
+            var path = $(this).attr('path');
+            var constr = [];
+            if (width !== undefined) { constr.push("width=" + width); }
+            if (height !== undefined) { constr.push("height=" + height); }
+            if (constr.length > 0) {
+                window.open(path, "", config = constr.join(','));
+            } else {
+                document.location.href = path;
+            }
+        });
+        var nowlangid = '@Model.LangId';
+        if (nowlangid == "1") {
+            $("#link_lang").attr('langid', "2");
+        } else {
+            $("#link_lang").attr('langid', "1");
+        }
+       $('#searchform').submit(function (event) {
+            var key = $("#footer_search").val();
+              if (key == "") { alert('@Common.GetLangText("請確實輸入搜尋關鍵字")'); return false; }
+        });
+        $("#btn_mainsearch").click(function () {
+            var key = $("#footer_search").val();
+            if (key == "") { alert('@Common.GetLangText("請確實輸入搜尋關鍵字")'); return false; }
+            CreatePost('@Url.Action("Search", "Search")', { 'key': key});
+        });
+
+          $(".sellang").val('@ViewBag.langid');
+       @*$(".langchange").click(function () {
+              var lang = $(this).attr('langid');
+                $.post('@Url.Action("SetLang","Home")', { lang: lang }, function (data) {
+                    document.location.href = '@Url.Action("Index","Home")';
+                });
+           });*@
+           if ('@ViewBag.showmessage' == "Y") {
+               showauth();
+           }
+    });
+</script>
+@RenderSection("scripts", required: false)

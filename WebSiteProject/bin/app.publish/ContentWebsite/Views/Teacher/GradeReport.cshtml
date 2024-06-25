@@ -1,0 +1,198 @@
+﻿<!--page top start-->
+@model StudentFrontIGradeReport
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<div class="page_top page_margin">
+    <div class="container">
+        <div class="col-md-12 col-sm-12 col-xs-12" data-sr="enter left over 1.5s">
+            <ul>
+                <li><a href="@Url.Action("Index","Home")">HOME</a></li>
+                <li><a href="@Url.Action("LoginForm","Home")">系統登入</a></li>
+                <li><a href="#">題庫系統</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--page top end-->
+<!--main content start-->
+<div id="particles-js" style="position:absolute; z-index:-1"></div>
+<div class="page_content">
+    <div class="container">
+
+        <div class="page_title" data-sr="enter left over 1.5s">@Model.ChapterName</div>
+        <div class="top_back" data-sr="enter right over 2.5s"><a href="@Url.Action("StudentAnalystReport",
+                                                                      new {studentid=Model.StudentId,classid=Model.ClassId,teacherid=Model.TeacherId })"><button class="btn_01">回上一層</button></a></div>
+        <div class="page_con">
+
+            <!--page content start-->
+            <div class="system_con total_con">
+                <div class="table">
+
+                    <div class="table-row th">
+                        <div class="table-cell">花費時間</div>
+                        <div class="table-cell">
+                            <span class="fa-stack">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-check fa-stack-1x text-success"></i>
+                            </span>
+                        </div>
+                        <div class="table-cell">
+                            <span class="fa-stack">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-remove fa-stack-1x text-danger"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="table-row td">
+                        <div class="table-cell text-center">@Model.TotalTime</div>
+                        <div class="table-cell text-center">@Model.TotalComplete</div>
+                        <div class="table-cell text-center">@Model.TotalFailed</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <br>
+
+            <div class="table-scrollable">
+                <table class="table table-bordered" border="0" cellspacing="0" cellpadding="0" id="edittable">
+                    <thead>
+                        <tr>
+                            <th width="60" class="text-center">序號</th>
+                            <th class="text-center" style="min-width:100px">題目</th>
+                            <th width="100" class="text-center">答題結果</th>
+                            <th width="10%" class="text-center">訂正</th>
+                            <th width="10%" class="text-center">花費時間</th>
+                            <th width="10%" class="text-center">解題</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <!--page content end-->
+            <!--解題bootbox start-->
+            <div class="form_answer" style="display:none">
+                <div style="height:300px;background:url(''); background-repeat:no-repeat;width:100%" id="img_show">
+                    <i class="fa fa-remove text-danger" style="font-size:30px;position:absolute;top:0px;right:20px; display:none"  id="lbl_error"></i>
+                    <i class="fa fa-check text-success" style="font-size:30px;position:absolute;top:265px;right:20px; display:none" id="lbl_success"></i>
+                </div>
+            </div>
+
+            @*<div class="form_answer" style="display:none;"><img id="img_show" src="" alt="" /></div>*@
+            <!--解題bootbox end-->
+            <!--page number start-->
+            <div id="page_number" class="table-toolbar">
+                <div class="col-md-4 col-sm-12 col-xs-12 page_total" data-sr="enter left over 1.5s">總筆數：@Model.TotalCount<span id="totalcnt"></span></div><!--英文版 Total：3-->
+                <div class="col-md-8 col-sm-12 col-xs-12 page_icon pc_page">
+                    <div class="btn-group" data-sr="enter right over 1.5s">
+                        <button type="button" class="btn_page" title="第一頁" pageindex="1"><i class="fa fa-angle-double-left"></i></button>
+                        <button type="button" class="btn_page" title="上一頁" pageindex="-1"><i class="fa fa-angle-left"></i></button>
+                        <select class="form-control page_list" id="page_list"></select>
+                        <button type="button" class="btn_page" title="下一頁" pageindex="+1"><i class="fa fa-angle-right"></i></button>
+                        <button type="button" class="btn_page" title="最末頁" pageindex="" id="btn_pagemax"><i class="fa fa-angle-double-right"></i></button>
+                    </div>
+                </div>
+            </div>
+            <!--page number end-->
+
+        </div>
+
+    </div>
+</div>
+@section scripts {
+<script>
+        var searchbase = {};
+        var TotalCount=@Model.TotalCount;
+       searchbase.Sort = "CreateDateTime";
+        searchbase.Search = "Y";
+        searchbase.Offset = "1";
+        searchbase.Limit = 10;
+        var maxpage = 1;
+    var pagecnt = Math.ceil(TotalCount / searchbase.Limit);
+        $(document).ready(function () {
+            if (pagecnt == 0 || searchbase.Limit == "-1") {
+                $("#page_number").hide();
+            } else {
+                $("#page_number").show();
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                maxpage = pagecnt;
+                $("#page_list").empty();
+                var strarr = []; $("#btn_pagemax").attr('pageindex', pagecnt);
+                for (var idx = 1; idx <= pagecnt; idx++) {
+                    strarr.push("<option>" + idx + "</option>");
+                }
+                $(strarr.join('')).appendTo($("#page_list"));
+            }
+            GetData(1);
+            $("#edittable").delegate((".bootbox_quest"), "click", function () {
+                var _itemid = $(this).attr('itemid');
+                var _type = $(this).attr('qtype');
+                $("#lbl_success").hide();
+                $("#lbl_error").css("top", 0).hide();
+                $.post('@Url.Action("GetQuestImage")', { itemid: _itemid, qtype: _type}, function (data) {
+                    //$("#img_show").attr('src', data);
+                    $("#img_show").css("background-image", "url(" + data[0] + ")");
+                    if (data[1] == "-1") {
+                        $("#lbl_success").show();
+                    } else if(data[1] != ""){
+                        var toppx = (parseInt(data[1]) - 1) * 60+30;
+                        $("#lbl_error").css("top", toppx).show();
+                    }
+                    bootbox.alert({
+                        message: $(".form_answer").html(),
+                        size:"large"
+                    });
+                 });
+            });
+
+            $("#edittable").delegate((".bootbox_update"), "click", function () {
+                var _itemid = $(this).attr('itemid');
+                var _type = $(this).attr('qtype');
+                bootbox.confirm({
+                    size: "small",
+                    title: "確定要報錯嗎？",
+                    message: "我的答題應該是對的，<br>但系統說我答錯，<br>我要通報系統管理人員。",
+                    callback: function (result) {
+                        if (result) {
+                           $.post('@Url.Action("SendMistakeNotice")', { itemid: _itemid, qtype: _type}, function (data) {
+                              bootbox.alert('報錯已送出');
+                           });
+                        }
+                    }
+                });
+            });
+
+        });
+        $("#page_list").change(function () {
+           GetData($("#page_list").val());
+        });
+        $(".btn_page").click(function () {
+            if (searchbase.Limit != "-1") {
+                var index = $(this).attr('pageindex');
+                if (index == "-1") {
+                    var nowpage = parseInt($("#page_list").val());
+                    if (nowpage != 1) { nowpage -= 1; $("#page_list").val(nowpage); GetData(nowpage); }
+                } else if (index == "+1") {
+                    var nowpage = parseInt($("#page_list").val());
+                    var max = parseInt($("#btn_pagemax").attr('pageindex'));
+                    if (nowpage != max) { nowpage += 1; $("#page_list").val(nowpage); GetData(nowpage); }
+                } else { GetData(index); $("#page_list").val(index) }
+            }
+        });
+
+        function GetData(page) {
+            var pagesize = searchbase.Limit;
+            searchbase.Offset = ((page - 1) * pagesize);
+            searchbase.NowPage = page;
+            searchbase.Chapterid = '@Model.ChapterId';
+            searchbase.Studentid = '@Model.StudentId';
+            searchbase.ClassId = '@Model.ClassId';
+            $.post('@Url.Action("PagingGradeReport")', searchbase, function (data) {
+                $("#edittable tbody").empty();
+                $(data).appendTo("#edittable tbody");
+                
+            });
+        }
+</script>
+}
+<!--main content end-->

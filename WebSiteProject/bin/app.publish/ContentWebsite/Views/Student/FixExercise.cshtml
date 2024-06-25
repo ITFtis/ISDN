@@ -1,0 +1,462 @@
+﻿@model StudentFrontExercise
+@{
+    Layout = null;
+    var user = Request.GetOwinContext().Authentication.User;
+    ViewBag.LoginName = user.FindFirst("LoginName") == null ? "" : user.FindFirst("LoginName").Value;
+    Model.LoginType = user.FindFirst("LoginType") == null ? "" : user.FindFirst("LoginType").Value;
+    if (Model.LoginType == "T" && this.ViewContext.RouteData.Values["action"].ToString().ToLower() != "password")
+    {
+        var ischangepw = user.FindFirst("ChangePW") == null ? "" : user.FindFirst("ChangePW").Value;
+        if (ischangepw == "") { Response.Redirect(Url.Action("Password", "Teacher")); }
+    }
+    else if (Model.LoginType == "S" && this.ViewContext.RouteData.Values["action"].ToString().ToLower() != "password")
+    {
+        var ischangepw = user.FindFirst("ChangePW") == null ? "" : user.FindFirst("ChangePW").Value;
+        if (ischangepw == "") { Response.Redirect(Url.Action("Password", "Student")); }
+    }
+    else if (Model.LoginType == "P" && this.ViewContext.RouteData.Values["action"].ToString().ToLower() != "password")
+    {
+        var ischangepw = user.FindFirst("ParentsChangePW") == null ? "" : user.FindFirst("ParentsChangePW").Value;
+        if (ischangepw == "") { Response.Redirect(Url.Action("Password", "Student")); }
+    }
+}
+<!DOCTYPE html>
+<html lang="Zh-hant" xml:lang="Zh-hant">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>學科學教育科技 Learn Science Education</title>
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/bootstrap.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/font-awesome.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/theme.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/theme-elements.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/style.css")">
+    <script src="@Url.Content("~/Scripts/jquery-3.3.1.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/main.js")"></script>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC:700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/earlyaccess/cwtexyen.css" rel="stylesheet">
+    <!--banner start-->
+    <link rel="stylesheet" href="@Url.Content("~/css/owl.carousel.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/owl.theme.default.min.css")">
+    <script src="@Url.Content("~/Scripts/owl.carousel.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/particles.js")"></script>
+    <script src="@Url.Content("~/Scripts/custom.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+</head>
+<body ondragstart="return false;" ondrop="return false;">
+    <div id="particles-js" style="position:absolute; z-index:-1"></div>
+    <div class="page_content ipad_con" >
+        <div class="container" style="padding:0px">
+            <div class="top_back" data-sr="" style=""><a href="@Url.Action("ExerciseInfo", new { chapterid = Model.ChapterId, gradeid = Model.GradeId , classid = Model.ClassId})"><button class="btn_01">回上一層</button></a></div>
+            <div class="top_back" data-sr="" style="margin-right:5px"> <button type="button" class="btn_01 bg_gray" id="btn_grade">成績</button></div>
+            <div class="top_back" data-sr="" style="margin-right:5px"> <button type="button" class="btn_01  bg_gray" id="btn_answer" disabled="disabled">解題</button></div>
+            <div class="top_back" data-sr="" style="margin-right:5px"> <button type="button" class="btn_01 bg_gray" id="btn_complete" disabled="disabled">完成</button></div>
+            <div class="page_title top_back_padding" data-sr="">
+                @Model.ChapterName
+
+            </div>
+
+            <div class="page_con">
+                <!--page content start-->
+                <ul class="question_list" id="ul_question_list" style="margin-bottom:0px">
+                    @{
+                        for (var idx = 0; idx < Model.ExerciseNum; idx++)
+                        {
+                            <a href="#" id="ex_@idx" class="exerciseindex" exindex="@idx"><li>題目@(idx + 1)</li></a>
+                        }
+                    }
+                    @*<a href="#"><li class="wrong">題目2</li></a><!--已完成題目(答錯)-->
+            <a href="#"><li class="action">題目3</li></a><!--目前出題題目-->
+            <a href="#"><li>題目4</li></a>
+            <a href="#"><li>題目5</li></a>
+            <a href="#"><li>題目6</li></a>*@
+                </ul>
+                <div class="question_con" id="div_question" style=" padding:0px; margin:0px;height:150px">
+                    <img src="" alt="" id="img_question" style="float:left; max-height:140px;display:block" />
+                    <div id="span_getsubject" style="display:none;" class="loading_font">出題中</div>
+                </div>
+                <div class="answer_con">
+                    <div class="tool">
+                        <div class="spend_time">
+                            花費時間 <span class="time" id="span_time">00:00</span>
+                        </div>
+                        <div class="main_btn">
+                            <button type="button" class="btn" id="btn_startexercise">出題</button>
+                            <button type="button" class="btn" id="btn_check" style="display:none">訂正</button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn" id="btn_clear"><i class="fa fa-trash"></i> 清空</button>
+                            <button type="button" class="btn" id="btn_eraser"><i class="fa fa-eraser"></i> 橡皮擦</button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn" id="btn_pencil"><i class="fa fa-pencil"></i> 鉛筆</button>
+                            <span type="button" class="btn pen_border">
+                                筆畫
+                                <select class="form-control w-auto" id="sel_Width">
+                                    <option selected value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+                            </span>
+                            <button type="button" class="btn color">顏色 <input type="color" id="txt_color"></button>
+                        </div>
+                    </div>
+
+                    <div class="edit" id="div_canvas" style="position:relative;z-index:200" >
+                        <span style="position:absolute; top:0px;left:10px;font-size:20px;color:red;display:none;z-index:200" id="span_errornum"><i class="fa fa-remove"></i></span>
+                        <span style="position:absolute; top:270px;right:10px;font-size:20px;color:green;display:block;z-index:200" id="span_current"><i class="fa fa-check"></i></span>
+                        <canvas style=" float:left;z-index:500;" id="canvas" disabled="disabled" width="1012" ></canvas>
+                    </div>
+                    <div style="padding:0px" id="div_answer" class="answer_input">
+                        <div class="title">答</div>
+                        <canvas class="" id="canvas_answer" height="60" disabled="disabled"></canvas>
+                    </div>
+                </div>
+                <br>
+                <!--page content end-->
+                <!--正確bootbox start-->
+                <div class="form_correct" style="display:none;">
+                    <span class="fa-stack fa-lg">
+                        <i class="fa fa-circle fa-stack-2x text-success"></i>
+                        <i class="fa fa-check fa-stack-1x fa-inverse"></i>
+                    </span>
+                    完成！答題正確！
+                </div>
+                <!--正確bootbox end-->
+                <!--錯誤bootbox start-->
+                <div class="form_wrong" style="display:none;">
+                    <span class="fa-stack fa-lg">
+                        <i class="fa fa-circle fa-stack-2x text-danger"></i>
+                        <i class="fa fa-remove fa-stack-1x fa-inverse"></i>
+                    </span>
+                    完成！答題錯誤！
+                </div>
+                <!--錯誤bootbox end-->
+                <!--解題bootbox start-->
+                <div class="form_answer" style="display:none;"><img src="" alt="" id="img_answer" /></div>
+                <!--解題bootbox end-->
+            </div>
+
+        </div>
+    </div>
+    <!--map end-->
+    <script src="@Url.Content("~/Scripts/bootstrap.js")"></script>
+    <script src="@Url.Content("~/Scripts/theme.js")"></script>
+    <script src="@Url.Content("~/Scripts/theme.init.js")"></script>
+    <script src="@Url.Content("~/Scripts/scrollReveal.js")"></script>
+
+    <script>
+    $("#header").removeAttr("style");
+    $(".header-logo").removeAttr("style");
+        var maincanvas = document.getElementById("canvas");
+        var divcanvas = document.getElementById("div_canvas"); 
+    maincanvas.width = $("#div_canvas").width();
+    maincanvas.height = $("#div_canvas").height();
+
+    var answercanvas = document.getElementById("canvas_answer");
+    answercanvas.width = maincanvas.width-42;
+    var mainctx = maincanvas.getContext("2d");
+    var maincanvasOffset = $("#canvas").offset();
+    var answerctx = answercanvas.getContext("2d");
+    var answercanvasOffset = $("#canvas_answer").offset();
+    var maindrawing = false;
+    var answerdrawing = false;
+    var drawtype = 'pencil';
+    var startTime = 0;
+    var intervalId;
+    var timecounting = false;
+    var answeroffsest = $("#div_answer").offset();
+    var exerciseTime = 0;
+    var isdoexercise = 0;
+    var ExerciseObject = [];
+    var ExerciseResult = [];
+    var nowexerciseindex = -1;
+    var maxexerciseindex = -1;
+    var isanswerfirsttouch = false;
+    var isallcorrect = false;
+    var exerciseNum = @Model.ExerciseNum
+        $.extend($.support, { touch: "ontouchend" in document });
+    var istouch = false;
+    $(document).ready(function () {
+        ClearDraw();
+        if ($.support.touch) {
+            istouch = true;
+        }
+        var color = $("#txt_color").val();
+        if (istouch) {
+            document.body.addEventListener('touchmove', function (event) {
+                //event.stopPropagation();
+                event.preventDefault();
+            }, { passive: false });
+            maincanvas.addEventListener("touchstart", function (e) { if (e.touches.length > 0) { StartDrawing(e.touches[0], divcanvas, mainctx, 'main'); }; });
+            maincanvas.addEventListener("touchmove", function (e) { if (e.touches.length > 0) { MoveDrawing(e.touches[0], divcanvas, mainctx, 'main'); };});
+            maincanvas.addEventListener("touchend", function (e) { MoveUpDrawing(e, divcanvas, mainctx);  });
+            maincanvas.addEventListener("touchleave", function (e) { MoveUpDrawing(e, divcanvas, mainctx); });
+
+            answercanvas.addEventListener("touchstart", function (e) { if (e.touches.length > 0) { StartDrawing(e.touches[0], answercanvas, answerctx, 'answer'); }; });
+            answercanvas.addEventListener("touchmove", function (e) { if (e.touches.length > 0) { MoveDrawing(e.touches[0], answercanvas, answerctx, 'answer'); }; });
+            answercanvas.addEventListener("touchend", function (e) { MoveUpDrawing(e, answercanvas, answerctx); });
+            answercanvas.addEventListener("touchleave", function (e) { MoveUpDrawing(e, answercanvas, answerctx); });
+            window.addEventListener("orientationchange", function () {
+                maincanvas.width = $("#div_canvas").width();
+                maincanvas.height = $("#div_canvas").height();
+                ClearDraw();
+            }, { passive: false });
+        } else {
+            $('#canvas').mousedown(function (e) { StartDrawing(e, divcanvas, mainctx, 'main'); });
+            $('#canvas').mousemove(function (e) { MoveDrawing(e, divcanvas, mainctx, 'main'); });
+            $('#canvas').mouseup(function (e) { MoveUpDrawing(e, divcanvas, mainctx); });
+            $('#canvas').mouseleave(function (e) { LeaveDrawing(e, divcanvas, mainctx); });
+
+            $('#canvas_answer').mousedown(function (e) { StartDrawing(e, answercanvas, answerctx, 'answer'); });
+            $('#canvas_answer').mousemove(function (e) { MoveDrawing(e, answercanvas, answerctx, 'answer'); });
+            $('#canvas_answer').mouseup(function (e) { MoveUpDrawing(e, answercanvas, answerctx); });
+            $('#canvas_answer').mouseleave(function (e) { LeaveDrawing(e, answercanvas, answerctx); });
+        }
+
+
+            $('#btn_pencil').click(function () { drawtype = 'pencil'; });
+            $('#btn_eraser').click(function () { drawtype = 'eraser'; });
+            $('#btn_clear').click(function () {
+                mainctx.setTransform(1, 0, 0, 1, 0, 0);
+                mainctx.clearRect(0, 0, canvas.width, canvas.height);
+                mainctx.restore();
+                answerctx.setTransform(1, 0, 0, 1, 0, 0);
+                answerctx.clearRect(0, 0, canvas.width, canvas.height);
+                answerctx.restore();
+            });
+            $('#btn_answer').click(function () {
+                bootbox.alert({
+                    message: $(".form_answer").html(),
+                });
+            });
+            $('#btn_grade').click(function () {
+               CreatePost('@Url.Action("GradeReport")', { chapterid: '@Model.ChapterId', studentid: '@Model.StudentId', classid: '@Model.ClassId'});
+            });
+
+            $('#btn_check').click(function () {
+                if (isallcorrect) { return false; }
+                ClearDraw();
+                $('#btn_check').attr('disabled', 'disabled');
+                $('.exerciseindex').find('li').removeClass('action')
+                mainctx.setTransform(1, 0, 0, 1, 0, 0);
+                mainctx.clearRect(0, 0, canvas.width, canvas.height);
+                mainctx.restore();
+                answerctx.setTransform(1, 0, 0, 1, 0, 0);
+                answerctx.clearRect(0, 0, canvas.width, canvas.height);
+                answerctx.restore();
+                if (nowexerciseindex == exerciseNum - 1) { nowexerciseindex = -1; }//代表要重頭開始判斷
+                isallcorrect = true;
+                for (var idx = 0; idx < ExerciseResult.length; idx++) {
+                    if (ExerciseResult[idx].IsComplete == "N") {
+                        if (idx != nowexerciseindex && idx > nowexerciseindex) {
+                            nowexerciseindex = idx;
+                            $('#ex_' + nowexerciseindex).find('li').removeClass('wrong').addClass('action');
+                            $('#span_errornum').hide().css('top','0');
+                            isallcorrect = false;
+                            var myImage = new Image();
+                            myImage.src = ExerciseResult[nowexerciseindex].Image_url;
+                            mainctx.drawImage(myImage, 0, 0);
+                            isdoexercise = true;
+                            isanswerfirsttouch = false;
+                            var edata = ExerciseObject[nowexerciseindex];
+                            $('#img_question').attr('src', edata.QuesImageName).show();
+                            $('#img_answer').attr('src', edata.AnswermageName);
+                            $('#btn_answer').attr('disabled', 'disabled').addClass('bg_gray');
+                            startTime = Date.now();
+                            intervalId = setInterval(updateCounter, 100);
+                            isdoexercise = 1;
+                            break;
+                        }
+                    }
+                }
+                if (isallcorrect) {
+                      CreatePost('@Url.Action("GradeReport")', { chapterid: '@Model.ChapterId', studentid: '@Model.StudentId', classid: '@Model.ClassId'});
+                }
+            });
+
+            //按下出題
+            $('#btn_startexercise').click(function () {
+                if (isdoexercise == 1) { bootbox.alert('目前有題目正在做答中'); return false; }
+                var licnt = $('#ul_question_list').find('a');
+                if (ExerciseObject.length >= exerciseNum ) { bootbox.alert('已經達成此次練習題數'); return false; }
+                ClearDraw();
+                $('#btn_answer').attr('disabled', 'disabled').addClass('bg_gray');
+                $('#span_getsubject').text('出題中...').show();
+                $.post('@Url.Action("GetExercise")', {
+                    chapterid: '@Model.ChapterId', studentid: '@Model.StudentId',
+                    classid: '@Model.ClassId', exerciseid:'@Model.ExerciseID'
+                }, function (data) {
+                    $('#span_getsubject').hide();
+                    if (data != null) {
+                        if (data.Error == "") {
+                            maxexerciseindex += 1;
+                            nowexerciseindex = maxexerciseindex;
+                            $('#ex_' + maxexerciseindex).find('li').addClass('action');
+                            exerciseTime = 0;
+                            $('#img_question').attr('src', data.QuesImageName).show();
+                            $('#img_answer').attr('src', data.AnswermageName);
+                           // $('#div_question').show();
+                            $('#canvas').removeAttr('disabled');
+                            $('#canvas_answer').removeAttr('disabled');
+                            $('#btn_complete').removeAttr('disabled').removeClass('bg_gray');
+                            startTime = Date.now();
+                            intervalId = setInterval(updateCounter, 100);
+                            timecounting = true;
+                            isdoexercise = 1;
+                            isanswerfirsttouch = false;
+                            ExerciseObject[nowexerciseindex] = data;
+                            $('#btn_startexercise').attr('disabled','disabled');
+                        } else {
+                            bootbox.alert(data.Error);
+                        }
+
+                    }
+                });
+            });
+
+            $("#btn_complete").click(function () {
+                if (isdoexercise == 0) {
+                    bootbox.alert('請先取得新題目');
+                    return false;
+                }
+                clearInterval(intervalId);
+                if (isanswerfirsttouch == false) { bootbox.alert('您尚未做答'); return false;}
+                isdoexercise = 0;
+                //var econtent = canvas.toDataURL("image/jpeg");
+                //var eanswer = answercanvas.toDataURL("image/jpeg");
+                var econtent = canvas.toDataURL();
+                var eanswer = answercanvas.toDataURL();
+                $('#btn_complete').hide();
+                $('#img_question').hide(); 
+                $('#span_getsubject').text('答題已送出').show();
+                $.post('@Url.Action("ExceciseComplete")', {
+                    content: econtent, answer: eanswer, questname: ExerciseObject[nowexerciseindex].Ques_Name,
+                    second: exerciseTime, seq: ExerciseObject[nowexerciseindex].Seq, exerciseid: '@Model.ExerciseID',
+                    studentaccount: '@Model.StudentAccount', teacheraccount:'@Model.TeacherAccount'
+                }, function (data) {
+                    $('#span_getsubject').text('答題已送出').hide();
+                    $('#img_question').show(); 
+                    $('#btn_complete').show();
+                    if (data.Error != "") {
+                        bootbox.alert(data.Error);
+                        isdoexercise = 1;
+                        return false;
+                    }
+                    ExerciseResult[nowexerciseindex] = data;
+                    $('#btn_startexercise').removeAttr('disabled');
+                    $('#btn_check').removeAttr('disabled');
+                    if (data.IsComplete == "N") {
+                        if (data.Cross != 0) {
+                            var crosstop =  (data.Cross - 1) * 60;
+                            if (isNaN(crosstop) == false) {
+                                $('#span_errornum').css("top", crosstop);
+                                $('#span_errornum').show();
+                                $('#ex_' + nowexerciseindex).find('li').removeClass('action').addClass('wrong');
+                            }
+                        }
+                     } else {
+                            ExerciseObject[nowexerciseindex].IsCorrect = 1;
+                            $('#ex_' + nowexerciseindex).find('li').removeClass('action');
+                            $('#btn_answer').removeAttr('disabled').removeClass('bg_gray');
+                            $('#span_current').show();
+                    }
+                    if (data.IsComplete == "Y") {
+                        bootbox.alert('您答對了');
+                    } else {
+                        bootbox.alert('您答錯了');
+                    }
+                    if (ExerciseResult.length >= exerciseNum) {
+                        $('#btn_startexercise').hide();
+                        $('#btn_check').show();
+                        var istoresult = true;
+                        for (var idx = 0; idx < ExerciseResult.length; idx++) {
+                            if (ExerciseResult[idx].IsComplete != "Y") {
+                                istoresult = false;
+                            }
+                        }
+                        if (istoresult) {
+                             CreatePost('@Url.Action("GradeReport")', { chapterid: '@Model.ChapterId', studentid: '@Model.StudentId', classid: '@Model.ClassId'});
+                        }
+                    }
+               });
+          });
+    });
+
+    function updateCounter() {
+        let currentTime = Date.now();
+        let msecond = ("0" + (currentTime - startTime) % 1000).substr(-3, 3);
+        let counter = Math.floor((currentTime - startTime) / 1000);//總秒數
+        let hour = ("0" + Math.floor(counter / 3600)).substr(-2, 2);
+        //  let minute = ("0" + Math.floor((counter % 3600) / 60)).substr(-2, 2); 60進制
+        let minute = ("0" + Math.floor(counter / 60)).substr(-2, 2);
+        let second = ("0" + Math.floor(counter % 60)).substr(-2, 2);
+        exerciseTime = counter;
+        $("#span_time").text(minute + ":" + second);
+    }
+
+    function ClearDraw() {
+        mainctx.setTransform(1, 0, 0, 1, 0, 0);
+        mainctx.clearRect(0, 0, canvas.width, canvas.height);
+        mainctx.restore();
+        answerctx.setTransform(1, 0, 0, 1, 0, 0);
+        answerctx.clearRect(0, 0, canvas.width, canvas.height);
+        answerctx.restore(); $('#span_errornum').hide();
+        $('#span_current').hide();
+        $('#img_question').attr('src', '').hide(); 
+        answerctx.fillStyle = "#fff";
+        answerctx.fillRect(0, 0, maincanvas.width, maincanvas.height);
+        var myImage = new Image();
+        myImage.src = '@Url.Content("~/img/test_bg_01.jpg")';
+        mainctx.drawImage(myImage, 0, 0);
+    }
+
+        function StartDrawing(ev, _usecanvas, _usectx, type) {
+            if (isdoexercise == 0) { return false; }
+            var x = ev.pageX - _usecanvas.offsetLeft;
+            var y = ev.pageY - _usecanvas.offsetTop;
+            _usectx.beginPath();
+            if ($("#txt_color").val() != "") { _usectx.strokeStyle = $("#txt_color").val() ;}
+            _usectx.lineJoin = "round";
+            if (drawtype == "eraser") { _usectx.globalCompositeOperation = 'destination-out'; _usectx.lineWidth = "9";}
+            else {_usectx.globalCompositeOperation = 'source-over'; _usectx.lineWidth = $('#sel_Width').val();}
+        _usectx.moveTo(x, y);
+
+            if (type == "main") { maindrawing = true; } else if (type == "answer") { answerdrawing = true; isanswerfirsttouch = true;}
+        }
+
+        function MoveDrawing(ev, _usecanvas, _usectx, type) {
+            if (isdoexercise == 0) { return false; }
+        if (maindrawing && type != "main" || maindrawing==false && type == "main") {
+               maindrawing = false; return false;
+        } else if (answerdrawing && type != "answer" || answerdrawing == false && type == "answer") {
+            maindrawing = false; return false;
+        }
+        var x = ev.pageX - _usecanvas.offsetLeft;
+        var y = ev.pageY - _usecanvas.offsetTop;
+        _usectx.lineTo(x, y);
+        _usectx.stroke();
+      }
+
+        function MoveUpDrawing(ev, _usecanvas, _usectx) {
+            maindrawing = false; answerdrawing = false;
+        }
+
+        function LeaveDrawing(ev, _usecanvas, _usectx) {
+            maindrawing = false; answerdrawing = false;
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+

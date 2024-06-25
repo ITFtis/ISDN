@@ -1,0 +1,134 @@
+﻿<!--page banner start-->
+@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel, Model.LangId);
+}
+@model FileDownloadFrontIndexModel
+<div id="content" class="page_content">
+    <div class="container">
+
+        <div class="content_con">
+
+            <div class="right">
+                @Html.Raw(Model.LeftMenu)
+            </div>
+
+            <div class="left">
+
+                <div class="page_top" data-sr="enter top over 1.5s">
+                    <a href="#;return false;" title="主要內容區" accesskey="C" id="main-content">:::</a> <!--英文<a href="#;return false;" title="Main content area" accesskey="C">:::</a>-->
+                    @Html.Raw(Model.LinkStr)
+                </div>
+
+                <!--page_top start-->
+                <!--page_top end-->
+
+                <h2 >@Model.Title</h2>
+
+                <!--page_search start-->
+                <div class="page_search">
+                    <ul>
+                        <form action="@Url.Action("IndexNoJs")" method="post" id="searchform">
+                            <input id="itemid" type="hidden" name="itemid" value="@Model.MainID" />
+                            <input id="mid" type="hidden" name="mid" value="@Model.MenuID" />
+                            <input id="pagetype" type="hidden" name="pagetype" value="@ViewBag.pagetype" />
+                            @Html.AntiForgeryToken()
+                            @if (Model.Hasgroup)
+                            {
+                                <li >
+                                    <label for='GroupId'>
+                                        <div class='item_title'>@Common.GetLangText("類別")</div>
+                                        <select id="GroupId" name="GroupId" class="form-control w-auto" title="群組清單">
+                                            @foreach (var item in (IEnumerable<SelectListItem>)Model.GroupList)
+                                            {
+                                                if (item.Value == ViewBag.GroupId)
+                                                {
+                                                    <option value="@item.Value" selected>@item.Text</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }
+                                            }
+                                        </select>
+                                    </label>
+                                    <button class="btn" type="submit" id="btn_search" title="@Common.GetLangText("送出")" form="searchform" name="btntype" value="search">@Common.GetLangText("送出")</button><!--英文GO-->
+                                </li>
+                            }
+
+                            <li data-sr="enter right over 1.5s" class="float_right">
+                                <div class="list_icon">
+                                    <input id="itemid" type="hidden" name="itemid" value="@Model.MainID" />
+                                    <input id="mid" type="hidden" name="mid" value="@Model.MenuID" />
+                                    <input id="page_list" type="hidden" name="page_list" value="@ViewBag.nowpage" />
+                                    <button class="btn" id="btn_textview" title="@Common.GetLangText("圖文顯示")" type="submit" form="searchform" name="btntype" value="news_list"><i class="fas fa-th-large" aria-hidden="true"></i><span class="sr-only">@Common.GetLangText("圖文顯示")</span></button><!--英文Grid-->
+                                </div>
+                                <div class="list_icon">
+                                    <input id="itemid" type="hidden" name="itemid" value="@Model.MainID" />
+                                    <input id="mid" type="hidden" name="mid" value="@Model.MenuID" />
+                                    <input id="page_list" type="hidden" name="page_list" value="@ViewBag.nowpage" />
+                                    <button class="btn" id="btn_listview" title="@Common.GetLangText("列表顯示")" type="submit" form="searchform" name="btntype" value="news_list_02"><i class="fas fa-th-list" aria-hidden="true"></i><span class="sr-only">@Common.GetLangText("列表顯示")</span></button><!--英文List-->
+                                </div>
+                            </li>
+
+                        </form>
+                    </ul>
+                </div>
+                <!--page_search end-->
+                <!--list start-->
+                <div class="@ViewBag.pagetype" id="div_messagelist">
+                    @Html.Raw(ViewBag.Html)
+                </div>
+                <!--list end-->
+                <!--頁碼 start-->
+                @if (ViewBag.showpagenum != "N")
+                {
+                <form action="@Url.Action("IndexNoJs")" method="post" id="nojsform2">
+                    @Html.AntiForgeryToken()
+                    <input id="itemid" type="hidden" name="itemid" value="@Model.MainID" />
+                    <input id="mid" type="hidden" name="mid" value="@Model.MenuID" />
+                    <input id="maxpage" type="hidden" name="maxpage" value="@ViewBag.maxpage" />
+                    <div id="page_number" class="table-toolbar">
+                        <div class="col-md-4 col-sm-12 col-xs-12 page_total" >@Common.GetLangText("總筆數") ：<span id="totalcnt">@ViewBag.TotalCntStr </span></div>
+                        <div class="col-md-8 col-sm-12 col-xs-12 page_icon" data-sr="enter right over 1.5s">
+                            @if (ViewBag.maxpage > 1)
+                            {
+                                <div class="btn-group">
+                                    <a href="@Url.Action("IndexNoJs",new { itemid=Model.MainID,mid=Model.MenuID, pindex="1",nowpage=ViewBag.nowpage,maxpage=ViewBag.maxpage })" class="btn_page accesskey btn_index" title="@Common.GetLangText("第一頁")" value="1"><i class="fa fa-angle-double-left" aria-hidden="true"></i><span class="sr-only">@Common.GetLangText("第一頁")</span></a>
+                                    <a href="@Url.Action("IndexNoJs",new { itemid=Model.MainID,mid=Model.MenuID, pindex="-1" ,nowpage=ViewBag.nowpage,maxpage=ViewBag.maxpage})" class="btn_page accesskey btn_index" title="@Common.GetLangText("上一頁")" value="-1"><i class="fa fa-angle-left" aria-hidden="true"></i><span class="sr-only">@Common.GetLangText("上一頁")</span></a>
+                                    <select class="form-control page_list accesskey" id="page_list" name="page_list" title="頁面清單">
+                                        @{
+                                            for (var idx = 1; idx <= (int)ViewBag.maxpage; idx++)
+                                            {
+                                                if (idx == ViewBag.nowpage)
+                                                {
+                                                    <option value="@idx" selected>@idx</option>}
+                                                else
+                                                {
+                                                    <option value="@idx">@idx</option> }
+                                            }
+                                        }
+                                    </select>
+                                    <button type="submit" form="nojsform2" class="btn_page accesskey" title="@Common.GetLangText("跳頁")" id="btn_goto">@Common.GetLangText("跳頁")</button>
+                                    <a href="@Url.Action("IndexNoJs",new { itemid=Model.MainID,mid=Model.MenuID, pindex="+1",nowpage=ViewBag.nowpage,maxpage=ViewBag.maxpage })" class="btn_page accesskey btn_index" title="@Common.GetLangText("下一頁")" value="+1"><i class="fa fa-angle-right" aria-hidden="true"></i><span class="sr-only">@Common.GetLangText("下一頁")</span></a>
+                                    <a href="@Url.Action("IndexNoJs",new { itemid=Model.MainID,mid=Model.MenuID, pindex=ViewBag.maxpage,nowpage=ViewBag.nowpage,maxpage=ViewBag.maxpage })" class="btn_page accesskey btn_index" title="@Common.GetLangText("最末頁")" value="@ViewBag.maxpage" id="btn_pagemax"><i class="fa fa-angle-double-right" aria-hidden="true"></i><span class="sr-only">@Common.GetLangText("最末頁")</span></a>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </form>
+                }
+                <!--頁碼 end-->
+
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+@section scripts {
+    <script>
+
+    </script>
+}

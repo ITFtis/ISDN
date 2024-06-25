@@ -1,0 +1,223 @@
+﻿@model MailSearchModel
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Model")">模組管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Form")">表單管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">信件管理</a>
+        </li>
+    </ul>
+</div>
+
+<!--page bar end-->
+<div class="title_01">@ViewBag.mainname</div>
+<div class="portlet light bordered">
+    <!--set item start-->
+    <div class="table-toolbar">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="display_inline">
+                <p class="class_title">管理項目</p>
+                <select class="form-control_1" id="sel_unit" onChange="window.location.href=this.value">
+                    <option value="#" selected>信件管理</option>
+                    <option value="@Url.Action("FormManager", new { mainid = ViewBag.mainid })">表單管理</option>
+                    <option value="@Url.Action("FormSetting", new { mainid = ViewBag.mainid })">表單設定</option>
+                    <!--<option value="@Url.Action("UnitSetting", new { mainid = ViewBag.mainid })">單元設定</option>-->
+                </select>
+            </div> 
+        </div>
+    </div>
+    <hr>
+    <div class="table-toolbar">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="display_inline"></div>
+        </div>
+
+        <div class="col-md-6 col-sm-12 col-xs-12 mobile_left">
+            <p class="display_inline">
+                <button class="btn blue search_icon">搜尋 <i class="fa fa-search"></i></button>
+                <button type="button" class="btn grey-cascade" id='btn_export'>匯出</button>
+                <button type="button" class="btn grey-mint" id="btn_return" onclick="document.location.href='@Url.Action("Index")'">返回</button>
+            </p>
+        </div>
+    </div>
+    <!--set item end-->
+    <!--search item start-->
+    <div class="search_menu" style="display: none" id="searchForm">
+        <div class="portlet light form-fit bordered" id="searchForm">
+            <div class="portlet-body form">
+                <form class="form-horizontal form-bordered">
+                    @Html.AntiForgeryToken()
+                    <div class="form-body" id="searchForm">
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 search_item">填表時間</div>
+                            <div class="col-md-10 bg-white">
+                                <div class="input-group input-large">
+                                    <div class="date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                        @Html.EditorFor(model => model.InputDateFrom, new { htmlAttributes = new { @class = "form-control", placeholder = "開始日期" } })
+                                    </div>
+                                    <span class="input-group-addon"> to </span>
+                                    <div class="date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                        @Html.EditorFor(model => model.InputDateTo, new { htmlAttributes = new { @class = "form-control", placeholder = "結束日期" } })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 search_item">姓名</div>
+                            <div class="col-md-10 bg-white">
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 search_item">EMail</div>
+                            <div class="col-md-10 bg-white">
+                                @Html.EditorFor(model => model.EMail, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 search_item">關鍵字</div>
+                            <div class="col-md-10 bg-white">
+                                @Html.EditorFor(model => model.KeyWord, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 search_item">處理狀態</div>
+                            <div class="col-md-10 bg-white">
+                                <select class="form_02" id='Process'>
+                                    <option value="">不拘</option>
+                                    <option value="0">未處理</option>
+                                    <option value="1">處理中</option>
+                                    <option value="100">已完成</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 search_item">回覆狀態</div>
+                            <div class="col-md-10 bg-white">
+                                <select class="form_02" id='Reply'>
+                                    <option value="">不拘</option>
+                                    <option value="1">未回覆</option>
+                                    <option value="2">已回覆</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="text-center search_padding">
+            <button type="button" class="btn blue" id="btn_search">搜尋 <i class="fa fa-search"></i></button>
+            <button type="button" class="btn blue-hoki" id="btn_searchrefresh">清除搜尋<i class="fa fa-refresh"></i></button>
+        </div>
+    </div>
+    <!--search item end-->
+    <!--table start-->
+    <div class="table-scrollable">
+        <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0"
+               id="eventtable"
+               data-url="@Url.Action("PagingMailItem")"
+               data-sort-name='CreateDatetime desc'
+               data-page-size='10'
+               data-filed-id='ID'
+               data-max-pagination='10'>
+            <thead>
+                <tr class="bg-grey_1" filed-class='odd gradeX'>
+                    <th width="80" class="text-center delete_th" filed-type='delcheckbox'>
+                        <label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>
+                            <input type='checkbox' class='checkboxes' id="chk_all" /><span></span>
+                        </label>
+                        <button class="btn red-mint btn-xs" id='btn_del'><i class="glyphicon glyphicon-trash"></i></button>
+                    </th>
+                    <th filed-name='CreateDatetime' width="180px" class="text-center">填表時間</th>
+                    <th filed-name='Name' class="text-center">姓名</th>
+                    <th filed-name='信件處理' width="80px" class="text-center" filed-type='button' filed-item-class="btn grey-mint mailprocess">信件處理</th>
+                    <th filed-name='Progress' width="100px" class="text-center">處理進度</th>
+                    <th filed-name='ReplyNote' width="80px" class="text-center">回覆狀態</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="page_number" class="table-toolbar">
+        <div class="col-md-4 col-sm-12 col-xs-12 page_total" id="tableinfo"></div>
+        <div class="col-md-8 col-sm-12 col-xs-12 page_icon">
+            <div class="btn-group" id="pagination">
+            </div>
+        </div>
+    </div>
+    <!--table end-->
+
+</div>
+
+<!--message end-->
+@section scripts {
+    <script>
+
+        $(document).ready(function () {
+            RegisterSearchItem();
+            $("#btn_searchrefresh").click(function () {
+                $("#searchForm :input").val('');
+                mytable.GetData();
+            });
+           mytable = $("#eventtable").myDataTable().TableList[0];
+            mytable.settingTdData = myDataTableTr;
+            mytable.settingTableInfo = function (tableinfoId, totalcnt, offsetcnt, nowpagecnt) {
+                var totalclick = mytable.keepcheckid.length;
+                $("#" + tableinfoId).html('總筆數:' + totalcnt + '，顯示' + (totalcnt <= 0 ? 0 : offsetcnt) + "~" + (offsetcnt + nowpagecnt - 1));
+            };
+            var SearchModelBase = mytable.SearchModelBase;
+            SearchModelBase.ModelID = '@ViewBag.mainid';
+            mytable.GetData(1);
+            $("#eventtable").delegate((".mailprocess"), "click", function () {
+                var idx = $(this).attr('value');
+                var tempopj = {};
+                tempopj.itemid = idx;
+                CreatePost('@Url.Action("MailProcess")', tempopj);
+            });
+            RegisterDelete("#btn_del", '#eventtable .chksel:checked', '@Url.Action("SetMailDelete")', {});
+            RegisterClickAll("#chk_all", '#eventtable tbody .chksel', "#selvalue");
+            $("#btn_search").click(function () {
+                var SearchModelBase = mytable.SearchModelBase;
+                SearchModelBase.InputDateFrom = $('#@Html.IdFor(m => m.InputDateFrom)').val();
+                SearchModelBase.InputDateTo = $('#@Html.IdFor(m => m.InputDateTo)').val();
+                SearchModelBase.Name = $('#@Html.IdFor(m => m.Name)').val();
+                SearchModelBase.EMail = $('#@Html.IdFor(m => m.EMail)').val();
+                SearchModelBase.KeyWord =  $('#@Html.IdFor(m => m.KeyWord)').val();
+                SearchModelBase.Process = $("#Process").val();
+                SearchModelBase.Reply = $("#Reply").val();
+                SearchModelBase.Search = "Y";
+                mytable.GetData();
+            });
+
+            $("#btn_export").click(function () {
+                var SearchModelBase = mytable.SearchModelBase;
+                SearchModelBase.InputDateFrom = $('#@Html.IdFor(m => m.InputDateFrom)').val();
+                SearchModelBase.InputDateTo = $('#@Html.IdFor(m => m.InputDateTo)').val();
+                SearchModelBase.Name = $('#@Html.IdFor(m => m.Name)').val();
+                SearchModelBase.EMail = $('#@Html.IdFor(m => m.EMail)').val();
+                SearchModelBase.KeyWord =  $('#@Html.IdFor(m => m.KeyWord)').val();
+                SearchModelBase.Process = $("#Process").val();
+                SearchModelBase.Reply = $("#Reply").val();
+                SearchModelBase.Search = "Y";
+                CreatePost('@Url.Action("Export")', SearchModelBase);
+            });
+        });
+    </script>
+}

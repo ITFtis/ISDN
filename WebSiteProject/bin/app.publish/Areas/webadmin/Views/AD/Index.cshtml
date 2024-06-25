@@ -1,0 +1,119 @@
+﻿@model AuthoritySearchModel
+@Html.AntiForgeryToken()
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<script src="~/Scripts/custom.js"></script>
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>模組元件<i class="fa fa-circle"></i></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+</div>
+<!--page bar end-->
+<div class="title_01">@ViewBag.Title</div>
+<div class="portlet light bordered">
+    <!--set item start-->
+    <div class="table-toolbar">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <p class="display_inline">
+                <label>前台最多顯示</label>
+                <input id="txt_ShowCount" type="text" class="form-control input-xsmall" style="display:inline" value="@ViewBag.MaxNum" />
+                <label>則</label>
+                <button class="btn blue" id="btn_changeMaxNum" onclick="changeMaxNum()">確定 </button>
+            </p>
+        </div>
+        <div class="col-md-6 col-sm-12 col-xs-12 mobile_left">
+            <p class="display_inline">
+                <button class="btn green-meadow" id='btn_add'>新增 <i class="fa fa-plus"></i></button>
+            </p>
+        </div>
+    </div>
+    <div class="table-scrollable">
+        <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0"
+               id="eventtable"
+               data-url="@Url.Action("Paging")"
+               data-sort-name='Sort'
+               data-page-size='10'
+               data-filed-id='ID'
+               data-max-pagination='10'>
+            <thead>
+                <tr class="bg-grey_1" filed-class='odd gradeX'>
+                    <th width="80" class="text-center" filed-type='delcheckbox'>
+                        <label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>
+                            <input type='checkbox' class='checkboxes' id="chk_all" /><span></span>
+                        </label>
+                        <button class="btn red-mint btn-xs" id='btn_del'><i class="glyphicon glyphicon-trash"></i></button>
+                    </th>
+                    <th filed-name='Sort' width="160px" class="text-center" filed-type='numbertextcheck' filed-item-class="sortedit">排序</th>
+                    <th filed-name='AD_Name' class="text-center" filed-type='link'>廣告名稱</th>
+                    <th filed-name='IsRange' width="80px" class="text-center" filed-item-class='text-center'>是否在顯示區間</th>
+                    <th filed-name='Enabled' width="80px" class="text-center" filed-type='checkbox' filed-item-class="checkboxes chkstatus">顯示</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="page_number" class="table-toolbar">
+        <div class="col-md-4 col-sm-12 col-xs-12 page_total" id="tableinfo"></div>
+        <div class="col-md-8 col-sm-12 col-xs-12 page_icon">
+            <div class="btn-group" id="pagination">
+            </div>
+        </div>
+    </div>
+    <!--table end-->
+
+</div>
+
+<!--message end-->
+@section scripts {
+    <script>
+        var langtype = '@ViewBag.type'
+          var stype='@ViewBag.stype'
+        $(document).ready(function () {
+            mytable = $("#eventtable").myDataTable().TableList[0];
+            mytable.settingTdData = myDataTableTr;
+            mytable.settingTableInfo = function (tableinfoId, totalcnt, offsetcnt, nowpagecnt) {
+                var totalclick = mytable.keepcheckid.length;
+                $("#" + tableinfoId).html('總筆數:' + totalcnt + '，顯示' + (totalcnt <= 0 ? 0 : offsetcnt) + "~" + (offsetcnt + nowpagecnt - 1));
+            };
+            var SearchModelBase = mytable.SearchModelBase;
+            SearchModelBase.ADType = '@ViewBag.Type';
+            SearchModelBase.SType = stype;
+            mytable.GetData(1);
+            var obj = {};
+            obj.type = langtype;
+            obj.stype = stype;
+            RegisterOrder("#eventtable", ".sortedit", '@Url.Action("EditADSeq")', obj);
+            RegisterClickAll("#chk_all", '#eventtable tbody .chksel', "#selvalue");
+            RegisterDelete("#btn_del", '#eventtable .chksel:checked', '@Url.Action("SetADDelete")', obj);
+            RegisterClicklink("#eventtable", ".edit", '@Url.Action("ADEdit")', obj);
+
+            RegisterClick("#eventtable", ".chkstatus", '@Url.Action("SetStatus")', obj);
+            RegisterClick("#eventtable", ".chkfixed", '@Url.Action("SetFixed")', obj);
+            $("#btn_add").click(function () {
+                CreatePost('@Url.Action("ADEdit")', obj);
+            });
+        });
+        function changeMaxNum() {
+            var tvalue = $("#txt_ShowCount").val().match(/^[0-9]+$/g);
+            if (tvalue == null) {
+                alert('最多顯示個數必須為整數！');
+                return false;
+            }
+            $.post('@Url.Action("SetMaxValue")', { maxnum: $("#txt_ShowCount").val(), type: langtype, stype: stype}, function (data) {
+                    if (data == "") {
+                        alert("儲存成功");
+                    } else {
+                        alert(data);
+                    }
+             });
+        }
+    </script>
+}

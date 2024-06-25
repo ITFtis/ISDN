@@ -1,0 +1,272 @@
+﻿<!--page banner start-->
+@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel, Model.LangId);
+}
+@model MapFrontIndexModel
+<div id="content" class="page_content">
+    <div class="container">
+
+        <div class="page_top">
+            <a href="#;return false;" title="@Common.GetLangText("主要內容區")" accesskey="@if(Model.LangId == "1"){@("C") }else{ @("C")}" id="main-content">:::</a>
+            @*@Html.Raw(Model.LinkStr)*@
+            <a title="首頁" href="@Url.Content("~/")">
+                <i class="fas fa-home" aria-hidden="true"></i>
+                <span class="sr-only">回首頁</span>
+            </a>
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+            <span class="active">網站導覽</span>
+        </div>
+
+        <div class="title">
+            <h2>@Common.GetLangText("網站導覽")</h2>
+        </div>
+
+        <div class="content_con">
+            <div class="con_one">
+                <!--後台可編輯 start-->
+                <div class="con_font">@Html.Raw(Model.EditInfo.HtmlContent)</div>
+                <div class="table-scrollable">
+                    <table class="table table-bordered table-hover sitemap_table" cellspacing="0" cellpadding="0" border="0" summary="@Common.GetLangText("無障礙說明列表")">
+                        <!--英文accessibility list-->
+                        <tbody>
+                            <tr>
+                                <th scope="col" class="col-md-3 col-xs-3 text-center">@Common.GetLangText("區塊名稱")</th>
+                                <th scope="col" class="col-md-2 col-xs-2 text-center">@Common.GetLangText("快速鍵")</th><!--英文-->
+                                <th scope="col" class="text-center">@Common.GetLangText("區塊介紹")</th><!--英文Intro.-->
+                            </tr>
+                            @if (Model.EditInfo.AreaName != null)
+                            {
+                                for (var idx = 0; idx < Model.EditInfo.AreaName.Length; idx++)
+                                {
+                                    <tr>
+                                        <td scope="row" class="text-center">@Model.EditInfo.AreaName[idx]</td>
+                                        <td class="text-center">@Model.EditInfo.HotKey[idx]</td>
+                                        <td class="text-center">@Model.EditInfo.Intro[idx]</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!--後台可編輯 end-->
+
+                <br /><br />
+                @{
+                    var level1idx = 0;
+                    var level2idx = 0;
+                    var level3idx = 0;
+                }
+                <!--上方選單 start-->
+                <h3>@Common.GetLangText("上方選單")</h3>
+                <ul class="sitemap_list">
+                    @{
+                        level1idx = 0;
+                        foreach (var menu in Model.UpMenulist.Where(v => v.MenuLevel == 1))
+                        {
+                            level1idx += 1;
+                            <li class="sitemap_item">
+                                @if ((menu.MenuUrl == "#" || string.IsNullOrEmpty(menu.MenuUrl)) && menu.ModelID != 6)
+                                {
+                                    @*<div class="sitemap_no">@level1idx.</div><div class="sitemap_font">@(string.IsNullOrEmpty(menu.DisplayName) ? menu.MenuName : menu.DisplayName )</div>*@
+                                    <a href="javascript:void(0);" class="accesskey @(menu.ModelID!=6?"":"langchange")" title="@level1idx.@(string.IsNullOrEmpty(menu.DisplayName) ? menu.MenuName : menu.DisplayName )">
+                                        <div class="sitemap_no">@level1idx.</div>
+                                        <div class="sitemap_font">@(string.IsNullOrEmpty(menu.DisplayName) ? menu.MenuName : menu.DisplayName )</div>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="@menu.MenuUrl" class="accesskey @(menu.ModelID!=6?"":"langchange")" title="@level1idx.@(string.IsNullOrEmpty(menu.DisplayName) ? menu.MenuName : menu.DisplayName )">
+                                        <div class="sitemap_no">@level1idx.</div>
+                                        <div class="sitemap_font">@(string.IsNullOrEmpty(menu.DisplayName) ? menu.MenuName : menu.DisplayName )</div>
+                                    </a>
+                                }
+                                @{
+                                    var l2menulist = Model.UpMenulist.Where(v => v.ParentID == menu.ID);
+                                    level2idx = 0;
+                                    if (l2menulist.Count() > 0)
+                                    {
+                                        <ul class="sitemap_list_1">
+                                            @foreach (var l2menu in l2menulist)
+                                            {
+                                                level2idx += 1;
+                                                <li class="sitemap_item_1">
+                                                    @if (l2menu.MenuUrl == "#" || string.IsNullOrEmpty(l2menu.MenuUrl))
+                                                    {
+                                                        @*<div class="sitemap_no">@level1idx.@level2idx</div><div class="sitemap_font">@(string.IsNullOrEmpty(l2menu.DisplayName) ? l2menu.MenuName : l2menu.DisplayName )</div>*@
+                                                        <a href="javascript:void(0);" class="accesskey" title="@level1idx.@level2idx.@(string.IsNullOrEmpty(l2menu.DisplayName) ? l2menu.MenuName : l2menu.DisplayName )">
+                                                            <div class="sitemap_no">@level1idx.@level2idx</div>
+                                                            <div class="sitemap_font">@(string.IsNullOrEmpty(l2menu.DisplayName) ? l2menu.MenuName : l2menu.DisplayName )</div>
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="@l2menu.MenuUrl" class="accesskey" title="@level1idx.@level2idx.@(string.IsNullOrEmpty(l2menu.DisplayName) ? l2menu.MenuName : l2menu.DisplayName )">
+                                                            <div class="sitemap_no">@level1idx.@level2idx</div>
+                                                            <div class="sitemap_font">@(string.IsNullOrEmpty(l2menu.DisplayName) ? l2menu.MenuName : l2menu.DisplayName )</div>
+                                                        </a>
+                                                    }
+                                                    @{
+                                                        var l3menulist = Model.UpMenulist.Where(v => v.ParentID == l2menu.ID);
+                                                        level3idx = 0;
+                                                        if (l3menulist.Count() > 0)
+                                                        {
+                                                            <ul class="sitemap_list_2">
+                                                                @foreach (var l3menu in l3menulist)
+                                                                {
+                                                                    level3idx += 1;
+                                                                    <li class="sitemap_item_2">
+                                                                        @if (l3menu.MenuUrl == "#" || string.IsNullOrEmpty(l3menu.MenuUrl))
+                                                                        {
+                                                                            @*<div class="sitemap_no">@level1idx.@level2idx.@level3idx</div><div class="sitemap_font">@(string.IsNullOrEmpty(l3menu.DisplayName) ? l3menu.MenuName : l3menu.DisplayName )</div>*@
+                                                                            <a href="javascript:void(0);" class="accesskey" title="@level1idx.@level2idx.@level3idx.@(string.IsNullOrEmpty(l3menu.DisplayName) ? l3menu.MenuName : l3menu.DisplayName )">
+                                                                                <div class="sitemap_no">@level1idx.@level2idx.@level3idx</div>
+                                                                                <div class="sitemap_font">@(string.IsNullOrEmpty(l3menu.DisplayName) ? l3menu.MenuName : l3menu.DisplayName )</div>
+                                                                            </a>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="@l3menu.MenuUrl" class="accesskey" title="@level1idx.@level2idx.@level3idx.@(string.IsNullOrEmpty(l3menu.DisplayName) ? l3menu.MenuName : l3menu.DisplayName )">
+                                                                                <div class="sitemap_no">@level1idx.@level2idx.@level3idx</div>
+                                                                                <div class="sitemap_font">@(string.IsNullOrEmpty(l3menu.DisplayName) ? l3menu.MenuName : l3menu.DisplayName )</div>
+                                                                            </a>
+                                                                        }
+                                                                    </li>
+                                                                }
+
+                                                            </ul>
+                                                        }
+                                                    }
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                }
+                            </li>
+                        }
+                        @*<li class="sitemap_item">
+                            @if (Model.LangId == "1")
+                            {
+                                <a href="@Url.Action("ChangeLang","Home",new { lang=2})" class="accesskey" title="@(level1idx + 1).EN">
+                                    <div class="sitemap_no">@(level1idx + 1).</div>
+                                    <div class="sitemap_font">EN</div>
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("ChangeLang","Home",new { lang=1})" class="accesskey" title="@(level1idx + 1).中文">
+                                    <div class="sitemap_no">@(level1idx + 1).</div>
+                                    <div class="sitemap_font">中文</div>
+                                </a>
+                            }
+                        </li>*@
+                    }
+                </ul>
+                <!--上方選單 end-->
+
+                <br />
+                <!--主要選單 start-->
+                <h3>@Common.GetLangText("主要選單")</h3>
+                <ul class="sitemap_list">
+                    @{
+                        level1idx = 0;
+                        foreach (var menu in Model.MainMenulist.Where(v => v.MenuLevel == 1))
+                        {
+                            level1idx += 1;
+                            <li class="sitemap_item">
+                                @if (menu.MenuUrl == "#" || string.IsNullOrEmpty(menu.MenuUrl))
+                                {
+                                    @*<div class="sitemap_no">@level1idx.</div><div class="sitemap_font">@menu.MenuName</div>*@
+                                    <a href="javascript:void(0);" class="accesskey" title="@level1idx.@menu.MenuName">
+                                        <div class="sitemap_no">@level1idx.</div>
+                                        <div class="sitemap_font">@menu.MenuName</div>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="@menu.MenuUrl" class="accesskey" title="@level1idx.@menu.MenuName">
+                                        <div class="sitemap_no">@level1idx.</div>
+                                        <div class="sitemap_font">@menu.MenuName</div>
+                                    </a>
+                                }
+
+                                @{
+                                    var l2menulist = Model.MainMenulist.Where(v => v.ParentID == menu.ID);
+                                    level2idx = 0;
+                                    if (l2menulist.Count() > 0)
+                                    {
+                                        <ul class="sitemap_list_1">
+                                            @foreach (var l2menu in l2menulist)
+                                            {
+                                                level2idx += 1;
+                                                <li class="sitemap_item_1">
+                                                    @if (l2menu.MenuUrl == "#" || string.IsNullOrEmpty(l2menu.MenuUrl))
+                                                    {
+                                                        @*<div class="sitemap_no">@level1idx.@level2idx</div><div class="sitemap_font">@l2menu.MenuName</div>*@
+                                                        <a href="javascript:void(0);" class="accesskey" title="@level1idx.@level2idx.@l2menu.MenuName">
+                                                            <div class="sitemap_no">@level1idx.@level2idx</div>
+                                                            <div class="sitemap_font">@l2menu.MenuName</div>
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="@l2menu.MenuUrl" class="accesskey" title="@level1idx.@level2idx.@l2menu.MenuName">
+                                                            <div class="sitemap_no">@level1idx.@level2idx</div>
+                                                            <div class="sitemap_font">@l2menu.MenuName</div>
+                                                        </a>
+                                                    }
+                                                    @{
+                                                        var l3menulist = Model.MainMenulist.Where(v => v.ParentID == l2menu.ID);
+                                                        level3idx = 0;
+                                                        if (l3menulist.Count() > 0)
+                                                        {
+                                                            <ul class="sitemap_list_2">
+                                                                @foreach (var l3menu in l3menulist)
+                                                                {
+                                                                    level3idx += 1;
+                                                                    <li class="sitemap_item_2">
+                                                                        @if (l3menu.MenuUrl == "#" || string.IsNullOrEmpty(l3menu.MenuUrl))
+                                                                        {
+                                                                            @*<div class="sitemap_no">@level1idx.@level2idx.@level3idx</div><div class="sitemap_font">@l3menu.MenuName</div>*@
+                                                                            <a href="javascript:void(0);" class="accesskey" title="@level1idx.@level2idx.@level3idx.@l3menu.MenuName">
+                                                                                <div class="sitemap_no">@level1idx.@level2idx.@level3idx</div>
+                                                                                <div class="sitemap_font">@l3menu.MenuName</div>
+                                                                            </a>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a href="@l3menu.MenuUrl" class="accesskey" title="@level1idx.@level2idx.@level3idx.@l3menu.MenuName">
+                                                                                <div class="sitemap_no">@level1idx.@level2idx.@level3idx</div>
+                                                                                <div class="sitemap_font">@l3menu.MenuName</div>
+                                                                            </a>
+                                                                        }
+                                                                    </li>
+                                                                }
+
+                                                            </ul>
+                                                        }
+                                                    }
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                }
+                            </li>
+                        }
+                    }
+                </ul>
+                <!--主要選單 end-->
+
+                <br />
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+@section scripts {
+    <script>
+
+    </script>
+}
+<!--main content end-->

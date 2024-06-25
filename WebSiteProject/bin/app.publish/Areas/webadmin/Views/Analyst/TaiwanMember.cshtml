@@ -1,0 +1,201 @@
+﻿
+<script src="@Url.Content("~/Scripts/ammap/ammap.js")"></script>
+<script src="@Url.Content("~/Scripts/ammap/plugins/export/export.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ammap/themes/light.js")"></script>
+<script src="@Url.Content("~/Scripts/taiwanHigharea.js")"></script>
+<style>
+    #chartdiv {
+        width: 100%;
+        height: 500px;
+        font-size: 11px;
+    }
+</style>
+
+	<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <span href="#">Home</span>
+            <i class="fa fa-circle"></i>
+            <span href="#">資料分析</span>
+            <i class="fa fa-circle"></i>
+            <span href="#">會員台灣地區分布</span>
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="member_title">會員台灣地區分布</div>
+
+<div class="portlet light bordered">
+
+    <!--set item start-->
+    <div class="table-toolbar">
+        <div class="col-md-6 col-sm-12 col-xs-12"></div>
+
+        <div class="col-md-6 col-sm-12 col-xs-12 mobile_left">
+            <button class="btn blue-hoki alert_box"  id="btn_download">下載 <i class="fa fa-file-photo-o"></i></button>
+            <button class="btn blue-hoki alert_box" id="btn_save">儲存 <i class="fa fa-download"></i></button>
+            <button class="btn blue-hoki alert_box" id="btn_print">列印 <i class="fa fa-print"></i></button>
+        </div>
+    </div>
+    <!--set item end-->
+    <!--content start-->
+    <div style="width: 100%; background-color:#EEEEEE; padding:5%">
+        <div id="mapdiv" style="width: 100%; background-color:#EEEEEE; height: 400px;"></div>
+    </div>
+    <br>
+    <div align="center">
+        <table  border="1" cellspacing="0" cellpadding="0" style="border:solid #ccc 1px;margin:10px; max-width:300px;width:90%" id="info_table">
+            <tbody>
+                <tr id="TR-NORTH">
+                    <td class="text-center padding_4" width="100">北區</td>
+                    <td class="text-center">@ViewBag.northcount</td>
+                </tr>
+                <tr id="TR-TAO">
+                    <td class="text-center padding_4" width="100">桃園</td>
+                    <td class="text-center">@ViewBag.taocount</td>
+                </tr>
+                <tr id="TR-CENTER">
+                    <td class="text-center padding_4">中區</td>
+                    <td class="text-center">@ViewBag.centercount</td>
+                </tr>
+                <tr  id="TR-SOUTH">
+                    <td class="text-center padding_4">南區</td>
+                    <td class="text-center">@ViewBag.southcountcount</td>
+                </tr>
+                <tr id="TR-OTHER">
+                    <td class="text-center padding_4">其他</td>
+                    <td class="text-center">@ViewBag.othercount</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--content end-->
+
+</div>
+<!--message end-->
+@section scripts {
+    <script>
+        var selvalue = [];
+        var map = null;
+        $(document).ready(function () {
+            map = AmCharts.makeChart("mapdiv", {
+                "type": "map",
+                "theme": "light",
+                "colorSteps": 10,
+                "dataProvider": {
+                    mapVar: AmCharts.maps.taiwanHigharea,
+                    areas: [
+                    {
+                        id: "TW-NORTH",//北區
+                        value: '@ViewBag.northcount',
+                        color: "#67b7dc"
+                    }, {
+                        id: "TW-TAO",//桃園
+                        value: '@ViewBag.taocount',
+                        color: "#B0DE09"
+                    },
+                    {
+                        id: "TW-CENTER",//中區
+                        value: '@ViewBag.centercount',
+                        color: "#ebdb8b"
+                    },
+                    {
+                        id: "TW-SOUTH",//南區
+                        value: '@ViewBag.southcountcount',
+                        color: "#83c2ba"
+                    },
+                    {
+                        id: "TW-OTHER",//其他
+                        value: '@ViewBag.othercount',
+                        color: "#db8383"
+                    }]
+                },
+                "areasSettings": {
+                    "autoZoom": false,
+                    "balloonText": "[[title]] 會員數 [[value]]"
+                }, "legend": {
+                    "width": "100%",
+                    "marginRight": 27,
+                    "marginLeft": 27,
+                    "equalWidths": false,
+                    "backgroundAlpha": 0.5,
+                    "backgroundColor": "transparent",
+                    "borderColor": "transparent",
+                    "borderAlpha": 1,
+                    "top": 0,
+                    "left": 0,
+                    "horizontalGap": 10,
+                    "data": [{
+                        "title": "北區(" + '@ViewBag.northcount' + ")",
+                        "color": "#67b7dc"
+                    }, {
+                        "title": "桃園(" + '@ViewBag.taocount' + ")",
+                        "color": "#B0DE09"
+                    }, {
+                        "title": "中區(" + '@ViewBag.centercount' + ")",
+                        "color": "#ebdb8b"
+                    }, {
+                        "title": "南區(" + '@ViewBag.southcountcount' + ")",
+                        "color": "#83c2ba"
+                    }, {
+                        "title": "其他(" + '@ViewBag.othercount' + ")",
+                        "color": "#db8383"
+                    }]
+                },
+                "zoomControl": {
+                    "panControlEnabled": false,
+                    "zoomControlEnabled": false,
+                    "homeButtonEnabled": false
+                }, "export": {
+                    "enabled": true,
+                    "menu": []
+                },
+                "doDoubleClickZoom": false,
+                "dragMap": false
+            });
+
+            $("#mapdiv").delegate((".amcharts-map-area"), "mouseover", function () {
+                var thisclass = $(this).attr('class');
+                $("#info_table tr").css('background-color', 'white');
+                if (thisclass.indexOf('NORTH') > 0) {
+                    $("#TR-NORTH").css('background-color', '#ECCBF1');
+                } else if (thisclass.indexOf('CENTER') > 0) {
+                    $("#TR-CENTER").css('background-color', '#ECCBF1');
+                } else if (thisclass.indexOf('SOUTH') > 0) {
+                    $("#TR-SOUTH").css('background-color', '#ECCBF1');
+                } else if (thisclass.indexOf('OTHER') > 0) {
+                    $("#TR-OTHER").css('background-color', '#ECCBF1');
+                } else if (thisclass.indexOf('TAO') > 0) {
+                    $("#TR-TAO").css('background-color', '#ECCBF1');
+                }
+            });
+            $("#mapdiv").delegate((".amcharts-map-area"), "mouseout", function () {
+                $("#info_table tr").css('background-color', 'white');
+            });
+            $("#btn_download").click(function () {
+                map["export"].capture({}, function () {
+                    this.toPNG({}, function (base64) {
+                        var tempopj = {};
+                        tempopj.save = base64;
+                        this.download(base64, this.defaults.formats.PNG.mimeType, "會員台灣地區分布.png");
+                    });
+                });
+            });
+
+            $("#btn_print").click(function () {
+                map.export.capture({}, function () {
+                    this.toPRINT();
+                });
+            });
+
+            $("#btn_save").click(function () {
+                map.export.toXLSX({}, function (data) {
+                    this.download(data, this.defaults.formats.XLSX.mimeType, "會員台灣地區分布.xlsx");
+                });
+            });
+
+        });
+    </script>
+}

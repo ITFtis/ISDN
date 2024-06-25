@@ -1,0 +1,117 @@
+﻿@model HomeViewModel
+<!--index_new start-->
+<div class="index_news">
+    <div class="container">
+        <div class="left">
+            @if (string.IsNullOrEmpty(Model.PageSeminarModel.Title) == false)
+            {
+                <a href="#;return false;" title="主要內容區" accesskey="C" id="main-content">:::</a>
+                <div class="box" style="background:url(@Model.PageSeminarModel.StyleUploadFileUrl ); background-size:cover;" >
+                    <!--後台提供meeting_bg_01~03.jpg ，共3種背景圖供客戶選用，後台可自行上傳圖片，建議尺寸800*850px-->
+                    <div class="con">
+                        <div class="month"><span class="big">@Model.PageSeminarModel.ActiveMonth</span>月</div>
+                        <div class="title">@Model.PageSeminarModel.Title</div>
+                        <div class="con_font">@Model.PageSeminarModel.Introduction</div><!--簡述限制100字內-->
+                        <div class="more"><a href="@Common.FixLink(Model.PageSeminarModel.Link)" title="@Model.PageSeminarModel.Title" class="btn_01">more</a></div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="right">
+
+            <h2 data-sr="enter top over 1.5s">
+                <div class="big">@Model.PageLayoutModel1.Name</div>
+                <sub class="small">@Model.PageLayoutModel1.NameEng</sub>
+            </h2>
+
+            <ul class="index_news_list">
+                <!--顯示"新聞動態"top8-->
+                @for (var idx = 0; idx < @Model.NewsLinkItems.Count(); idx++)
+                {
+                <li data-sr="enter bottom over 1.5s">
+                    <div class="date">@Model.NewsLinkItems[idx].PublicshDate</div>
+                    <div class="con_font">
+                        <a href="@Common.FixLink(Model.NewsLinkItems[idx].LinkUrl)" title="@Model.NewsLinkItems[idx].Title">
+                            @Model.NewsLinkItems[idx].Title@*@if (Model.PageLayoutModel1.IsNew[idx]){<span class="new_icon">new</span>}*@
+                        </a>
+                    </div>
+                </li>
+                }
+            </ul>
+
+            <div class="btn_box" data-sr="enter bottom over 1.5s">
+                <a href="@Model.PageLayoutModel1.MoreLink" title="更多 @Model.PageLayoutModel1.Name" class="btn_01">more</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--index_new end-->
+<!--index_activity start-->
+<div class="index_activity">
+    <div class="container">
+        <h2 data-sr="enter top over 1.5s">
+            <div class="big">@Model.PageLayoutModel2.Name</div>
+            <sub class="small">@Model.PageLayoutModel2.NameEng</sub>
+        </h2>
+        <ul class="list">
+            <!--顯示"活動訊息"top4-->
+            @for (var idx = 0; idx < @Model.ActiveLinkItems.Count(); idx++)
+            {
+            <a href="@Common.FixLink(Model.ActiveLinkItems[idx].LinkUrl)" title="@Model.ActiveLinkItems[idx].Title">
+                <li data-sr="enter bottom over 1.5s">
+
+                    @if (Model.ActiveLinkItems[idx].ImageFileName.IsNullorEmpty() == false)
+                    {
+                        <div class="img imh_opacity">
+                            <img src="@Url.Content("~/UploadImage/LinkItem/"+Model.ActiveLinkItems[idx].ImageFileName)"
+                                 alt="" />
+                        </div><!--建議尺寸800*600px-->
+                    }
+                    @if (Model.ActiveLinkItems[idx].PublicshDate.IsNullorEmpty() == false)
+                    {
+                        <div class="date">@Model.ActiveLinkItems[idx].PublicshDate</div>
+                    }
+                    <div class="title">
+                        @Model.ActiveLinkItems[idx].Title
+                    </div><!--後台提供new icon勾選顯示 + 顯示區間-->
+
+                </li>
+            </a>
+            }
+        </ul>
+        <div class="btn_box" data-sr="enter bottom over 1.5s">
+            <a href="@Model.PageLayoutModel2.MoreLink" title="更多 @Model.PageLayoutModel2.Name" class="btn_01">more</a>
+        </div>
+    </div>
+</div>
+<!--index_activity end-->
+<!--index_book start-->
+<div class="index_book">
+    <div class="container">
+        <h2 data-sr="enter top over 1.5s">
+            <div class="big">@Model.PageLayoutModel3.Name</div>
+            <sub class="small">@Model.PageLayoutModel3.NameEng</sub>
+        </h2>
+        <ul class="list">
+            @for (var idx = 0; idx < @Model.PageLayoutModel3.Title.Count(); idx++)
+            {
+            <a href="@Common.FixLink(Model.PageLayoutModel3.LinkUrl[idx])" title="@Model.PageLayoutModel3.Title[idx]">
+                <li data-sr="enter bottom over 1.5s">
+
+                    <div class="img imh_opacity"><img src="@Model.PageLayoutModel3.LinkImageSrc[idx]" alt="" /></div><!--建議尺寸600x840px-->
+                    <div class="con">
+                        <div class="title">@Model.PageLayoutModel3.Title[idx]</div>
+                        <div class="con_font">@Model.PageLayoutModel3.HtmlContent[idx]</div><!--100字內-->
+                        <div class="more">...more</div>
+                    </div>
+
+                </li>
+            </a>
+            }
+        </ul>
+        <div class="btn_box" data-sr="enter bottom over 1.5s">
+            <a href="@Model.PageLayoutModel3.MoreLink" title="更多 @Model.PageLayoutModel3.Name" class="btn_01">more</a>
+        </div>
+    </div>
+</div>
+<!--index_book end-->

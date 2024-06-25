@@ -1,0 +1,75 @@
+﻿@model ViewModels.LogInViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.LoginTitle</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" href="@Url.Content("~/img/favicon.ico")" />
+    @Styles.Render("~/Content/admincss/logincss")
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+</head>
+
+<body>
+    <div class="login">
+        <div class="right">
+            <div class="logo"><img src="@Url.Content( ViewBag.LogoFileUrl)" alt="" /></div>
+            <div class="font_con">
+                @Html.Raw(ViewBag.Content)
+            </div>
+        </div>
+        <div class="left">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <div class="title">網站管理登入</div>
+                <div class="input_box">
+                    <div class="input-group">
+                        <span class="input-group-addon input-circle-left">
+                            <i class="fa fa-user"></i>
+                        </span>
+                        @Html.EditorFor(model => model.Account, new { htmlAttributes = new { @class = "form-control input-circle-right", placeholder = "ID" } })
+                        @Html.ValidationMessageFor(model => model.Account, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon input-circle-left">
+                            <i class="fa fa-key"></i>
+                        </span>
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control input-circle-right", placeholder = "Password" } })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="g-recaptcha" data-sitekey="@ViewBag.v2htmlkey"></div>
+
+                </div>
+                <div class="forget" style="display:none">
+                    <a href="#">忘記密碼？</a>
+                </div>
+                <button type="submit" class="btn blue" style="margin-top:20px">登入</button>
+            }
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="@Url.Content("~/Scripts/jquery-3.5.1.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery-migrate-3.0.0.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<script type="text/javascript">
+    $(window).load(function () {
+      var message = '@Model.Message';
+        if (message !== '') {
+            bootbox.alert({
+                message: message,
+                size: 'small', callback: function () {
+                    window.location.href = '@Url.Action("Login","Account", new { area = "webadmin" })';
+               }
+            });
+        }
+    });
+</script>

@@ -1,0 +1,74 @@
+﻿<!--page top start-->
+<!--page top start-->
+@model StudentStudentClass
+<script src="@Url.Content("~/Scripts/core.js")"></script>
+<script src="@Url.Content("~/Scripts/charts.js") "></script>
+<script src="@Url.Content("~/Scripts/animated.js") "></script>
+<div class="page_top page_margin">
+    <div class="container">
+        <div class="col-md-12 col-sm-12 col-xs-12" data-sr="enter left over 1.5s">
+            <ul>
+                <li><a href="@Url.Action("Index", "Home")">HOME</a></li>
+                <li><a href="@Url.Action("LoginForm", "Home")">系統登入</a></li>
+                <li><a href="#">統計報表</a></li>
+            </ul>
+        </div>
+        <!--<div class="col-md-3 col-sm-4 col-xs-12" data-sr="enter right over 1.5s">
+            <script>$.include("blocks/page_top_right.html");</script>
+        </div>-->
+    </div>
+</div>
+<!--page top end-->
+<!--main content start-->
+<div id="particles-js" style="position:absolute; z-index:-1"></div>
+<div class="page_content">
+    <div class="container">
+        <div class="top_back" data-sr="enter right over 2.5s"><a href="@Url.Action("AnalystList")"><button class="btn_01">回上一層</button></a></div>
+        <div class="page_title" data-sr="enter left over 1.5s">@(Model.StudentClassArr.Length>0? Model.StudentClassArr[0].ClassName:"")</div>
+        <div class="page_con">
+            <!--page content start-->
+            <ul class="table_info_top">
+                <li><span class="title">學生</span>@ViewBag.LoginName</li>
+                <li><span class="title">學年度</span>@(Model.StudentClassArr.Length > 0 ? Model.StudentClassArr[0].ClassYear.ToString() : "")</li>
+                <li><span class="title">年級</span>@(Model.StudentClassArr.Length > 0 ? Common.GetGradeName(Model.StudentClassArr[0].GradeID.ToString()) : "")</li>
+                <li>
+                    <span class="title">章節</span>
+                    <select class="form-control" id="sel_chapter">
+                        @{
+                            foreach (var _ch in Model.ChapterList)
+                            {
+                                <option value="@_ch.ChapterID">@_ch.ChapterName</option>
+                            }
+                        }
+                    </select>
+                </li>
+            </ul>
+            <!--等級 start-->
+            <div id="div_reportContent">
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--main content end-->
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            resetpage();
+            $("#sel_chapter").change(function () {
+                resetpage();
+            });
+        });
+
+        function resetpage() {
+            var _chapterid = $("#sel_chapter").val();
+            $.post('@Url.Action("AnalystReportView")', { chapterid: _chapterid, studentid: '@ViewBag.sid' ,classid:'@ViewBag.classid'}, function (data) {
+                    $("#div_reportContent").empty();
+                   $(data).appendTo("#div_reportContent");
+            });
+        }
+    </script>
+
+}

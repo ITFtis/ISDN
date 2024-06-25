@@ -1,0 +1,72 @@
+﻿@model EventListFrontViewModel
+@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel,Model.LangId);
+}
+<div id="content" class="page_content">
+    <div class="container">
+        <div class="page_top">
+            <a href="#;return false;" title="@Common.GetLangText("主要內容區")" accesskey="@if(Model.LangId == "1"){@("C") }else{ @("C")}" id="main-content">:::</a>
+            @Html.Raw(Model.LinkStr)
+        </div>
+        <div class="title">
+            <h2 >@Model.Title</h2>
+            <!--header start-->
+            <div class="page_share" data-sr="enter right over 1.5s">
+                @if (Model.LinkUrl != null)
+                {
+                    <a href="@Common.FixLink(Model.LinkUrl)" target="_blank" title="@Common.GetLangText("相關連結")-@(Model.LinkUrlDesc)(@(Common.GetLangText("另開新視窗")))">
+                        <!--英文 link(new window)-->
+                        <span class="fa-stack fa-1g">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fas fa-link fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                }
+                @if (Model.DownloadID != null)
+                {
+                    <a href="@Url.Action("FileDownLoad")?itemid=@Model.DownloadID" target="_blank" title="@Common.GetLangText("檔案下載")-@(Model.DownloadDesc)(@(Common.GetLangText("另開新視窗")))">
+                        <!--英文 download(new window)-->
+                        <span class="fa-stack fa-1g">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fas fa-download fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                }
+            </div>
+        </div>
+        <div class="content_con">
+            <div class="left">
+                <div class="date">@Model.PublicshDate</div>
+                @if (Model.ImageName != "")
+                {
+                    <span>
+                        <!--圖片置左-->
+                        @if (Model.ImageFileLocation == "1")
+                        {
+                            <img src="@Url.Content("~/UploadImage/EventListItem/")@Model.ImageName" class="img_padding" alt="" align="left">
+                        }
+                        else if (Model.ImageFileLocation == "2")
+                        {
+                            <div align="center"><p class="text_center"><img src="@Url.Content("~/UploadImage/EventListItem/")@Model.ImageName" class="img_padding" alt=""></p></div>
+                        }
+                        else if (Model.ImageFileLocation == "3")
+                        {
+                            <img src="@Url.Content("~/UploadImage/EventListItem/")@Model.ImageName" class="img_padding" alt="" align="right">
+                        }
+                    </span>
+                }
+                @Html.Raw(Model.Content)
+                <div class="btn_box">
+
+                    <a href="javascript:history.back()" class="btn_01" title='@Common.GetLangText("回上一頁")' '>
+                        @Common.GetLangText("回上一頁")
+                    </a><!--英文 Go Back-->
+                </div>
+            </div>
+            <div class="right">
+                @Html.Raw(Model.LeftMenu)
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,255 @@
+﻿<!--page banner start-->
+@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel);
+}
+@model StudentFrontIndexModel
+<script src="@Url.Content("~/Scripts/core.js")"></script>
+<script src="@Url.Content("~/Scripts/charts.js") "></script>
+<script src="@Url.Content("~/Scripts/animated.js") "></script>
+<!--page top start-->
+<div class="page_top page_margin">
+    <div class="container">
+        <div class="col-md-12 col-sm-12 col-xs-12" data-sr="enter left over 1.5s">
+            <ul>
+                <li><a href="@Url.Action("Index")">HOME</a></li>
+                <li><a href="@Url.Action("LoginForm", "Home")">系統登入</a></li>
+                <li><a href="#">成就</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--page top end-->
+<!--main content start-->
+<div id="particles-js" style="position:absolute; z-index:-1"></div>
+<div class="page_content">
+    <div class="container">
+
+        <div class="page_title" data-sr="enter left over 1.5s">成就</div>
+
+        <div class="page_con">
+
+            <!--page content start-->
+            <div class="featured-boxes featured-boxes-flat">
+
+                <div class="col-md-6 col-sm-6">
+                    <div class="featured-box featured-box-primary featured-box-effect-2">
+                        <div class="box-content">
+                            <i class="icon-featured fa fa-clock-o"></i>
+                            <h4>練習時間</h4>
+                            <div class="portlet-body">
+                                <div class="mt-element-step">
+                                    <div class="row step-line">
+                                        <div class="col-md-3 col-sm-6 mt-step-col first done">
+                                            <div class="mt-step-number">
+                                                @if (Model.ExerciseTime >= 1)
+                                                {<i class="fa fa-star"></i> }
+                                                else
+                                                {<i class="fa fa-star-o"></i>}
+                                        </div>
+                                        <div class="mt-step-title uppercase font-grey-cascade">300分</div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 mt-step-col done">
+                                        <div class="mt-step-number bg-white">
+                                            @if (Model.ExerciseTime >= 2)
+                                            {<i class="fa fa-star"></i> }
+                                            else
+                                            {<i class="fa fa-star-o"></i>}
+                                        </div>
+                                        <div class="mt-step-title uppercase font-grey-cascade">1000分</div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 mt-step-col done">
+                                        <div class="mt-step-number bg-white">
+                                            @if (Model.ExerciseTime >= 3)
+                                            {<i class="fa fa-star"></i> }
+                                            else
+                                            {<i class="fa fa-star-o"></i>}
+                                        </div>
+                                        <div class="mt-step-title uppercase font-grey-cascade">2500分</div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 mt-step-col last done">
+                                        <div class="mt-step-number bg-white">
+                                            @if (Model.ExerciseTime > 3)
+                                            {<i class="fa fa-star"></i> }
+                                            else
+                                            {<i class="fa fa-star-o"></i>}
+                                        </div>
+                                        <div class="mt-step-title uppercase font-grey-cascade">5000分</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-6">
+                <div class="featured-box featured-box-primary featured-box-effect-2">
+                    <div class="box-content">
+                        <i class="icon-featured fa fa-edit"></i>
+                        <h4>練習題數</h4>
+
+                        <div class="portlet-body">
+                            <div class="mt-element-step">
+                                <div class="row step-line">
+                                    <div class="col-md-3 col-sm-6 mt-step-col first done">
+                                        <div class="mt-step-number">
+                                            @if (Model.ExerciseNum >= 1)
+                                            {<i class="fa fa-star"></i> }
+                                            else
+                                            {<i class="fa fa-star-o"></i>}
+                                        </div>
+                                        <div class="mt-step-title uppercase font-grey-cascade">100題</div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 mt-step-col done">
+                                        <div class="mt-step-number bg-white">
+                                            @if (Model.ExerciseNum >= 2)
+                                            {<i class="fa fa-star"></i> }
+                                            else
+                                            {<i class="fa fa-star-o"></i>}
+                                    </div>
+                                    <div class="mt-step-title uppercase font-grey-cascade">500題</div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 mt-step-col done">
+                                    <div class="mt-step-number bg-white">
+                                        @if (Model.ExerciseNum >= 3)
+                                        {<i class="fa fa-star"></i> }
+                                        else
+                                        {<i class="fa fa-star-o"></i>}
+                                </div>
+                                <div class="mt-step-title uppercase font-grey-cascade">1500題</div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 mt-step-col last done">
+                                <div class="mt-step-number bg-white">
+                                    @if (Model.ExerciseNum > 3)
+                                    {<i class="fa fa-star"></i> }
+                                    else
+                                    {<i class="fa fa-star-o"></i>}
+                            </div>
+                            <div class="mt-step-title uppercase font-grey-cascade">3000題</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="col-md-6 col-sm-6">
+    <div class="featured-box featured-box-primary featured-box-effect-2">
+        <div class="box-content">
+            <i class="icon-featured fa fa-check-square-o"></i>
+            <h4>答對率</h4>
+
+            <div class="portlet-body">
+                <div class="mt-element-step">
+                    <div class="row step-line">
+                        <div class="col-md-3 mt-step-col first done">
+                            <div class="mt-step-number">
+                                @if (Model.ExerciseRate >= 1)
+                                {<i class="fa fa-star"></i> }
+                                else
+                                {<i class="fa fa-star-o"></i>}
+                        </div>
+                        <div class="mt-step-title uppercase font-grey-cascade">60%</div>
+                    </div>
+                    <div class="col-md-3 mt-step-col done">
+                        <div class="mt-step-number bg-white">
+                            @if (Model.ExerciseRate >= 2)
+                            {<i class="fa fa-star"></i> }
+                            else
+                            {<i class="fa fa-star-o"></i>}
+                        </div>
+                        <div class="mt-step-title uppercase font-grey-cascade">70%</div>
+                    </div>
+                    <div class="col-md-3 mt-step-col done">
+                        <div class="mt-step-number bg-white">
+                            @if (Model.ExerciseRate >= 3)
+                            {<i class="fa fa-star"></i> }
+                            else
+                            {<i class="fa fa-star-o"></i>}
+                        </div>
+                        <div class="mt-step-title uppercase font-grey-cascade">80%</div>
+                    </div>
+                    <div class="col-md-3 mt-step-col last done">
+                        <div class="mt-step-number bg-white">
+                            @if (Model.ExerciseRate > 3)
+                            {<i class="fa fa-star"></i> }
+                            else
+                            {<i class="fa fa-star-o"></i>}
+                        </div>
+                        <div class="mt-step-title uppercase font-grey-cascade">90%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+
+<div class="col-md-6 col-sm-6">
+    <div class="featured-box featured-box-primary featured-box-effect-2">
+        <div class="box-content">
+            <i class="icon-featured fa fa-line-chart"></i>
+            <h4>數學能力表 (80分以上)</h4>
+
+            <div class="portlet-body">
+                <div class="mt-element-step">
+                    <div class="row step-line">
+                        <div class="col-md-3 col-sm-6 mt-step-col first done">
+                            <div class="mt-step-number">
+                                @if (Model.ExerciseLevel >= 1)
+                                {<i class="fa fa-star"></i> }
+                                else
+                                {<i class="fa fa-star-o"></i>}
+                            </div>
+                            <div class="mt-step-title uppercase font-grey-cascade">1項</div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mt-step-col done">
+                            <div class="mt-step-number bg-white">
+                                @if (Model.ExerciseLevel >= 2)
+                                {<i class="fa fa-star"></i> }
+                                else
+                                {<i class="fa fa-star-o"></i>}
+                            </div>
+                            <div class="mt-step-title uppercase font-grey-cascade">2項</div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mt-step-col done">
+                            <div class="mt-step-number bg-white">
+                                @if (Model.ExerciseLevel >= 3)
+                                {<i class="fa fa-star"></i> }
+                                else
+                                {<i class="fa fa-star-o"></i>}
+                            </div>
+                            <div class="mt-step-title uppercase font-grey-cascade">3項</div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mt-step-col last done">
+                            <div class="mt-step-number bg-white">
+                                @if (Model.ExerciseLevel > 3)
+                                {<i class="fa fa-star"></i> }
+                                else
+                                {<i class="fa fa-star-o"></i>}
+                            </div>
+                            <div class="mt-step-title uppercase font-grey-cascade">5項</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</div>
+<!--page content end-->
+
+</div>
+
+</div>
+</div>
+<!--main content end-->
+@section scripts {
+
+}
+<!--main content end-->

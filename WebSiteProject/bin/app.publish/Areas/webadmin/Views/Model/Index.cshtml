@@ -1,0 +1,105 @@
+﻿@Html.AntiForgeryToken()
+@{
+    ViewBag.Title = "選單程式模組管理";
+}
+
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>模組元件<i class="fa fa-circle"></i></li>
+    </ul>
+
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">選單程式模組管理</div>
+
+<div class="mod_list">
+    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
+        <div class="mt-widget-3">
+            <div class="mt-head" onclick="location.href='@Url.Action("Index", "PageEdit")'">
+                <div class="mt-head-icon">
+                    <i class="icon-picture"></i>
+                </div>
+                <div class="mt-head-desc">圖文編輯</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
+        <div class="mt-widget-3">
+            <div class="mt-head" onclick="location.href='@Url.Action("Index", "Message")'">
+                <div class="mt-head-icon">
+                    <i class="icon-speech"></i>
+                </div>
+                <div class="mt-head-desc">訊息管理</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
+        <div class="mt-widget-3">
+            <div class="mt-head" onclick="location.href='@Url.Action("Index", "Active")'">
+                <div class="mt-head-icon">
+                    <i class="icon-bell"></i>
+                </div>
+                <div class="mt-head-desc">活動管理</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
+        <div class="mt-widget-3">
+            <div class="mt-head" onclick="location.href='@Url.Action("Index", "FileDownload")'">
+                <div class="mt-head-icon">
+                    <i class="fa fa-download"></i>
+                </div>
+                <div class="mt-head-desc">文件下載</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
+        <div class="mt-widget-3">
+            <div class="mt-head" onclick="location.href='@Url.Action("Index", "Article")'">
+                <div class="mt-head-icon">
+                    <i class="icon-envelope-letter"></i>
+                </div>
+                <div class="mt-head-desc">文章管理</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
+        <div class="mt-widget-3">
+            <div class="mt-head" onclick="location.href='@Url.Action("Index", "Form")'">
+                <div class="mt-head-icon">
+                    <i class="icon-camcorder"></i>
+                </div>
+                <div class="mt-head-desc">表單管理</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
+        <div class="mt-widget-3">
+            <div class="mt-head" onclick="location.href='@Url.Action("Index", "WebsiteMap")'">
+                <div class="mt-head-icon">
+                    <i class="icon-pointer"></i>
+                </div>
+                <div class="mt-head-desc">網站導覽</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--message end-->
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $(".index").click(function () {
+                var url = $(this).attr('url');
+                window.location.href = url;
+            });
+        });
+
+    </script>
+}

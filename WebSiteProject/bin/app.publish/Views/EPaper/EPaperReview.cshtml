@@ -1,0 +1,69 @@
+﻿@{
+    Layout = null;
+}
+@model EPaperEditModel
+<!DOCTYPE html>
+<html lang="Zh-hant" xml:lang="Zh-hant">
+<!--英文版<html lang="en" xml:lang="en">-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>產業永續電子報-@Model.Title</title><!--英文 Industrial Sustainable Development Clearinghouse-->
+    <link rel="icon" href="@Url.Content("~/img/favicon.ico")" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/bootstrap.min.css")">
+</head>
+<body style="max-width:806px; margin:0 auto; font-family: 微軟正黑體, open-sans, Times New Roman , sans-serif;background: url(@Url.Content("~/img/page_bg.jpg"));background-attachment: fixed; background-size: cover;">
+    @Html.AntiForgeryToken()
+    <div style="padding: 2%; margin: 2%;border: solid 1px #ccc;float: left;border-radius: 10px;box-shadow: 0px 0px 6px 4px rgba(20%,20%,20%,0.1);background: #fff;">
+        @if (string.IsNullOrEmpty(Model.TopBannerImgName) == false)
+        {
+            <div style="margin-bottom: 10px;">
+                <img class="banner-img" src="@Model.TopBannerImgUrl" alt="" width="100%" style="border-radius: 10px;box-shadow: 0px 0px 6px 2px rgba(20%,20%,20%,0.1);border: solid 1px #fff;" />
+            </div><!--建議尺寸740*185px；後台未上傳圖片時show預設圖print_banner.jpg -->
+        }
+        else
+        {
+            <div style="margin-bottom: 10px;">
+                <img class="banner-img" src="@Url.Content("~/img/print_banner.jpg")" alt="" width="100%" style="border-radius: 10px;box-shadow: 0px 0px 6px 2px rgba(20%,20%,20%,0.1);border: solid 1px #fff;" />
+            </div><!--建議尺寸740*185px；後台未上傳圖片時show預設圖print_banner.jpg -->
+        }
+        <div style="color: #2b79a6;padding: 5px 0;font-size: 0.8em;">《發佈日期：@Model.PublicshStr》</div>
+        <h1 class="banner-title" style="padding: 12px 15px 12px 20px;background: #f2f2f2;color: #013e78;font-size: 1.4em;font-weight: bold;line-height: 130%;border-radius:5px;">@Model.Title</h1>
+        @if (Model.PaperMode == 1)
+        {
+            @Html.Raw(Model.EPaperContent)
+        }
+        else
+        {
+            if (Model.EPaperItemEdit != null)
+            {
+                foreach (var items in Model.EPaperItemEdit)
+                {
+                    <div style="margin: 10px 0 0 0;background:#2b79a6;border-radius:5px;float:left;width:100%;border:solid #2b79a6 5px;">
+                        <div style="padding:5px 10px;font-weight:bold;font-size:1.2em;color:#fff;">@items.Name</div>
+                        <ul style="list-style:square;padding:0 20px 0 30px;background:#fff;border-radius:5px;float:left;width:100%;margin:0;">
+                            @for (var idx = 0; idx < items.ItemName.Count(); idx++)
+                            {
+                                <li style="border-bottom: dotted #ddd 1px;padding:5px 0;line-height:170%;"><a href='@Common.FixLink(items.ItemUrl[idx])' target="_blank" title="@Html.Raw(items.ItemName[idx]) (@Common.GetLangText(".pdf(另開新視窗)"))">@Html.Raw(items.ItemName[idx])</a></li>
+                            }
+                        </ul>
+                    </div>
+                }
+            }
+        }
+        <div style="text-align:center;font-size:0.8em;line-height:150%;border-top:double #fff 5px;float:left;width:100%;margin-top:10px;padding:10px;background:#f5f5f5;">@Html.Raw(Model.PageEndHtmlContent)</div>
+    </div>
+    <style>
+        .banner-img {
+            margin: 0;
+        }
+
+        .banner-title {
+            margin: 0;
+            font-size: 1em;
+        }
+    </style>
+</body>
+</html>

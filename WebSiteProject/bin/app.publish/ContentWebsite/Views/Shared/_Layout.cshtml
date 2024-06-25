@@ -1,0 +1,217 @@
+﻿@model  ViewModels.MasterPageModel
+@{
+    Layout = null;
+    var user = Request.GetOwinContext().Authentication.User;
+    ViewBag.LoginName = user.FindFirst("LoginName")==null?"": user.FindFirst("LoginName").Value;
+    Model.LoginType = user.FindFirst("LoginType") == null ? "" : user.FindFirst("LoginType").Value;
+    //ViewBag.urlcontroller = this.ViewContext.RouteData.Values["controller"].ToString().ToLower();
+    //ViewBag.urlaction = this.ViewContext.RouteData.Values["action"].ToString().ToLower();
+    if (Model.LoginType == "T" && this.ViewContext.RouteData.Values["action"].ToString().ToLower()!="password")
+    {
+        var ischangepw = user.FindFirst("ChangePW") == null ? "" : user.FindFirst("ChangePW").Value;
+        if (ischangepw == "") { Response.Redirect(Url.Action("Password", "Teacher")); }
+    }else if (Model.LoginType == "S" && this.ViewContext.RouteData.Values["action"].ToString().ToLower() != "password")
+    {
+        var ischangepw = user.FindFirst("ChangePW") == null ? "" : user.FindFirst("ChangePW").Value;
+        if (ischangepw == "") { Response.Redirect(Url.Action("Password", "Student")); }
+    }
+    else if (Model.LoginType == "P" && this.ViewContext.RouteData.Values["action"].ToString().ToLower() != "password")
+    {
+        var ischangepw = user.FindFirst("ParentsChangePW") == null ? "" : user.FindFirst("ParentsChangePW").Value;
+        if (ischangepw == "") { Response.Redirect(Url.Action("Password", "Student")); }
+    }
+    if (Request.IsAuthenticated && HttpContext.Current.Application[ViewBag.LoginName] !=null) {
+        if (HttpContext.Current.Application[ViewBag.LoginName] != Session.SessionID) {
+            Response.Redirect(Url.Action("Logout", "Home"));
+        }
+    }
+
+}
+<!DOCTYPE html>
+<html lang="Zh-hant" xml:lang="Zh-hant">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="icon" href="@Url.Content("~/ContentWebsite/image/favicon.ico")" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/bootstrap.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/font-awesome.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/theme.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/theme-elements.css")">
+    <link rel="stylesheet" href="@Url.Content("~/ContentWebsite/style.css")">
+    <script src="@Url.Content("~/Scripts/jquery-3.3.1.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/main.js")"></script>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC:700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/earlyaccess/cwtexyen.css" rel="stylesheet">
+    <!--banner start-->
+    <link rel="stylesheet" href="@Url.Content("~/css/owl.carousel.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/owl.theme.default.min.css")">
+    <script src="@Url.Content("~/Scripts/owl.carousel.min.js")"></script>
+
+    <!--banner end-->
+    @if (Model.SEOScript != null)
+    {
+        if (string.IsNullOrEmpty(Model.SEOScript[2]) == false)
+        {
+            <title>@Model.SEOScript[2]</title>
+        }
+        else
+        {
+            <title>@(ViewBag.title == null ? "" : ViewBag.title)</title>
+        }
+        if (Model.SEOScript[1] != "")
+        {
+            @Html.Raw(Model.SEOScript[1])
+        }
+        if (Model.SEOScript[0] != "")
+        {
+            <meta name="description" content="@Model.SEOScript[0]" />
+        }
+    }
+
+</head>
+<body ondragstart="return false;" ondrop="return false;">
+
+    <!--header start-->
+    <header id="header" class="header-narrow" data-plugin-options='{"stickyEnabled": true, "stickyEnableOnBoxed": true, "stickyEnableOnMobile": false, "stickyStartAt": 0, "stickySetTop": "0", "stickyChangeLogo": false}'>
+        <div class="header-body">
+            <div class="header-top header-top-tertiary header-top-style-3">
+                <div class="container">
+                    <p class="pull-left mr-xs hidden-xs"></p>
+                    <nav class="pull-right header-nav-top">
+                        <ul class="nav nav-pills">
+                            @Html.Raw(Model.TopMenu)
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="header-container container">
+                <div class="header-row">
+                    <div class="header-column">
+                        <div class="header-logo">
+                            <a href="@Url.Action("Index","Home")">
+                                <img alt="學科學教育科技 Learn Science Education" width="330" data-sticky-width="310" data-sticky-top="0" src="@Url.Content("~/img/logo.png")">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="header-column">
+                        <div class="header-row">
+                            <div class="header-nav">
+                                <button class="btn header-btn-collapse-nav navbar-toggle pull-rihgt" data-toggle="collapse-side" data-target-sidebar=".side-collapse-right" data-target-content=".side-collapse-container-right">
+                                    <i class="fa fa-bars"></i>
+                                </button>
+                                @if (string.IsNullOrEmpty(Model.LoginType))
+                                {
+                                    <div class="header-nav-main header-nav-main-effect-1 header-nav-main-sub-effect-1  side-collapse-right in">
+                                        <nav>
+                                            <ul class="nav nav-pills" id="mainNav">
+                                                <div class="login_box_m visible-xs">
+                                                    <img src="@Url.Content("~/img/40x40.png")" class="bg_print" align="left" alt="" style="background: url(@Url.Content("~/img/user.png")); background-position:center ;background-size: cover;">
+                                                    <a href="@Url.Action("LoginForm", "Home")"><span class="btn_01">*系統登入</span></a>
+                                                </div>
+                                                @Html.Raw(Model.MainMenu)
+                                                <div class="login_box hidden-xs"><a href="@Url.Action("LoginForm", "Home")" class="btn_free">系統登入</a></div>
+                                            </ul>
+                                            <ul class="nav visible-xs top_link_mobile">
+                                                @Html.Raw(Model.TopMenu)
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                }
+                                else
+                                {
+                 
+                                    <div class="header-nav-main header-nav-main-effect-1 header-nav-main-sub-effect-1 side-collapse-right in" id="mainNav">
+                                        <nav>
+                                            <!--系統登入選單 start-->
+                                            <ul class="nav nav-pills user_set">
+                                                <li class="dropdown">
+                                                    <a class="dropdown-toggle hidden-xs" href="#">
+                                                        <img src="@Url.Content("~/img/40x40.png")" class="bg_print" align="left" alt="" style="background: url(@Url.Content("~/img/user.png")); background-position:center ;background-size: cover;"><!--範例圖為預設圖，建議尺寸180*180px，與列表圖相同-->
+                                                    </a>
+                                                    <ul class="dropdown-menu">
+                                                        <div class="top">
+                                                            @if (Model.LoginType == "S" || Model.LoginType == "P")
+                                                            {
+                                                                <a href="@Url.Action("Index","Student")">
+                                                                    <div class="left"><img src="@Url.Content("~/img/40x40.png")" class="bg_print" align="left" alt="" style="background: url(@Url.Content("~/img/user.png")); background-position:center ;background-size: cover;"></div>
+                                                                    <div class="right">@ViewBag.LoginName</div>
+                                                                </a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a href="@Url.Action("Index","Teacher")">
+                                                                    <div class="left"><img src="@Url.Content("~/img/40x40.png")" class="bg_print" align="left" alt="" style="background: url(@Url.Content("~/img/user.png")); background-position:center ;background-size: cover;"></div>
+                                                                    <div class="right">@ViewBag.LoginName</div>
+                                                                </a>
+                                                            }
+                                                        </div>
+                                                        @if (Model.LoginType == "S")
+                                                        {
+                                                            <li><a href="@Url.Action("Info","Student")"><i class="fa fa-user"></i>基本資料</a></li>
+                                                            <li><a href="@Url.Action("Password","Student")"><i class="fa fa-key"></i>密碼修改</a></li>
+                                                            <li><a href="@Url.Action("StudentSystem","Student")"><i class="fa fa-edit"></i>題庫系統</a></li>
+                                                            <li><a href="@Url.Action("AnalystList","Student")"><i class="fa fa-area-chart"></i> 統計報表</a></li>
+                                                            <li><a href="@Url.Action("Grade","Student")"><i class="fa fa-trophy"></i> 成就</a></li>
+                                                        }
+                                                        else if (Model.LoginType == "P")
+                                                        {
+                                                            <li><a href="@Url.Action("Info","Student")"><i class="fa fa-user"></i>基本資料</a></li>
+                                                            <li><a href="@Url.Action("Password","Student")"><i class="fa fa-key"></i>密碼修改</a></li>
+                                                            <li><a href="@Url.Action("AnalystList","Student")"><i class="fa fa-area-chart"></i> 統計報表</a></li>
+                                                        }
+                                                        else if (Model.LoginType == "T")
+                                                        {
+                                                            <li><a href="@Url.Action("Info","Teacher")"><i class="fa fa-user"></i>基本資料</a></li>
+                                                            <li><a href="@Url.Action("Password","Teacher")"><i class="fa fa-key"></i>密碼修改</a></li>
+                                                            <li><a href="@Url.Action("AnalystList","Teacher")"><i class="fa fa-area-chart"></i> 統計報表</a></li>
+                                                        }
+                                                        <li class="divider hidden-xs"></li>
+                                                        <li class="text-center btn_box"><a href="@Url.Action("Logout","Home")"><span class="btn_01">登出</span></a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                            <!--系統登入選單 end-->
+                                            <ul class="nav nav-pills">
+                                                @Html.Raw(Model.MainMenu)
+                                            </ul>
+                                            <!--手機版上方選單 start-->
+                                            <ul class="nav visible-xs top_link_mobile">
+                                                @Html.Raw(Model.TopMenu)
+                                            </ul>
+                                            <!--手機版上方選單 end-->
+                                        </nav>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    @RenderBody()
+    <!--map end-->
+    <!--footer start-->
+    <footer>
+        <div class="container">
+            @Html.Raw(Model.FooterString)
+        </div>
+    </footer>
+    <!--footer end-->
+    <script src="@Url.Content("~/Scripts/bootstrap.js")"></script>
+    <script src="@Url.Content("~/Scripts/theme.js")"></script>
+    <script src="@Url.Content("~/Scripts/theme.init.js")"></script>
+    <script src="@Url.Content("~/Scripts/scrollReveal.js")"></script>
+    <script>
+        $(function () {
+            $("#header").removeAttr("style");
+            $(".header-logo").removeAttr("style");
+        });
+    </script>
+</body>
+</html>
+@RenderSection("scripts", required: false)
+@Html.Raw(WebSiteProject.Code.CacheMapping.SEOScript)

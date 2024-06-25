@@ -1,0 +1,456 @@
+﻿@model EventListEditModel
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+@*<script src="//cdn.ckeditor.com/4.12.1/full/ckeditor.js"></script>*@
+<!-- 載入 summernote 中文語系 -->
+<script src="js/summernote-zh-TW.js"></script>
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Model")">模組管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","EventList")">大事記要模組</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("ModelItem","EventList",new { mainid=Model.ModelID})">清單</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            編輯
+        </li>
+    </ul>
+
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">@Model.ModelName</div>
+
+<div class="portlet light bordered">
+
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveItem")' enctype="multipart/form-data">
+        <!--<div class="search_padding">
+            <button type="button" class="btn blue" id="btn_seoshow">進階設定</button>
+        </div>-->
+        @Html.HiddenFor(Model => Model.ItemID)
+        @Html.HiddenFor(Model => Model.ModelID)
+        @Html.HiddenFor(Model => Model.UploadFileName)
+        @Html.HiddenFor(Model => Model.UploadFilePath)
+        @Html.HiddenFor(Model => Model.ImageFileName)
+        @Html.HiddenFor(Model => Model.RelateImageName)
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body2">
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item"><span class="red">*</span>發佈日期</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <div class="date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                    @Html.EditorFor(model => model.PublicshStr, new { htmlAttributes = new { @class = "form-control checkitem input-small", placeholder = "發佈日期" } })
+                                    <span class="required" id="PublicshStr-error" style="display:none;">發佈日期 必須填寫！</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item">顯示日期</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <div class="input-group input-large" style="float:left">
+                                    <div class="date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                        @Html.EditorFor(model => model.StDateStr, new { htmlAttributes = new { @class = "form-control", placeholder = "開始日期" } })
+                                    </div>
+                                    <span class="input-group-addon"> to </span>
+                                    <div class="date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                        @Html.EditorFor(model => model.EdDateStr, new { htmlAttributes = new { @class = "form-control", placeholder = "結束日期" } })
+                                    </div>
+                                </div>
+                                <div class="" style="float:left; padding-left:5px;">
+                                    <button type="button" class="btn blue" id="btn_clear">清空</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item"><span class="red">*</span>標題</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <input id="Title" type="text" class="form-control checkitem" />
+                                <span class="required" id="Title-error" style="display:none;">標題 必須填寫！</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item"><span class="red">*</span>年度</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Year, new { htmlAttributes = new { @class = "form-control checkitem", maxlength = "4", style = "width:100px" } })
+                                <span class="required" id="Year-error" style="display:none;">年度 必須填寫！</span>
+                                <span class="required" id="YearInt-error" style="display:none;">年度 必須為整數！</span>
+                            </div>
+                        </div>
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 col-sm-12 search_item">列表圖片</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <div class="col-md-12">
+                                    <div id="div_oldrelatefile" style="display:none"><a href="@Model.RelateImagelUrl" target="preview">@Html.Raw(Model.RelateImageFileOrgName)</a><label style="color:blue;margin-left:10px;cursor:pointer" id="delrelateimage">刪除</label></div>
+                                    <div style="display:inline">
+                                        <label for="exampleInputFile" class="control-label display_inline">圖片上傳</label>
+                                        <input id="file_relateimage" type="file" class="display_inline" name="ImageFile" accept="image/*" />
+                                    </div>
+                                </div><span class="red">檔案類型jpg、png、gif，建議檔案大小2MB內，尺寸寬度1000px內</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">開啟格式設定</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white table_font">
+                                @Html.RadioButtonFor(model => model.Link_Mode, 1, new { style = "margin-left :0px", @checked = "checked" }) 可開啟內容頁
+                                @Html.RadioButtonFor(model => model.Link_Mode, 2, new { style = "margin-left :40px" }) 不可開啟內容頁
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">內容</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <textarea cols="80" id="HtmlContent" rows="20">@Model.HtmlContent</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 col-sm-12 search_item">圖片上傳</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <div class="col-md-12">
+                                    <div id="div_oldfile" style="display:none"><a href="@Model.ImageUrl" target="preview">@Html.Raw(Model.ImageFileOrgName)</a><label style="color:blue;margin-left:10px;cursor:pointer" id="delimage">刪除</label></div>
+                                    <label for="ImageFile" class="col-md-2">圖片上傳</label>
+                                    <div class="col-md-10">
+                                        <input id="file_image" type="file" class="display_inline" name="ImageFile" accept="image/*" />
+                                        <div class="red">檔案類型jpg、png、gif，建議檔案大小2MB內，尺寸寬度1000px內</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">圖片說明</label>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ImageFileDesc, new { htmlAttributes = new { @class = "form-control mobile_input display_inline" } })
+                                        <span class="required" id="ImageFileDesc-error" style="display:none;">圖片說明 必須填寫！</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">圖片位置</label>
+                                    <div class="col-md-10">
+                                        <select name="@Html.IdFor(model=>model.ImageFileLocation)" id="@Html.IdFor(model=>model.ImageFileLocation)" class="form-control w-auto"><option value="1">左</option><option value="2">中</option><option value="3">右</option></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">相關連結</div>
+                            <div class="col-md-10  col-sm-12 col-xs-12 bg-white mobile_white">
+                                <div class="col-md-12">
+                                    <label class="col-md-2">相關連結</label>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.LinkUrl, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">連結說明</label>
+                                    <div class="col-md-10 margin_bottom">
+                                        @Html.EditorFor(model => model.LinkUrlDesc, new { htmlAttributes = new { @class = "form-control" } })
+                                        <span class="required" id="LinkUrlDesc-error" style="display:none;">連結說明 必須填寫！</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 col-sm-12 search_item">檔案上傳</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <div class="col-md-12">
+                                    <div id="div_olduploadfile" style="display:none"><a href="@Url.Action("FileDownLoad")?modelid=@Model.ModelID&&itemid=@Model.ItemID" target="preview">@Model.UploadFileName</a><label style="color:blue;margin-left:10px;cursor:pointer" id="delupfile">刪除</label></div>
+
+                                    <div id="div_nofile" style="display:inline">
+                                        <label for="UploadFile" class="col-md-2">檔案上傳</label>
+                                        <div class="col-md-10">
+                                            <input type="file" id="uploadfile" class="display_inline" name="UploadFile">
+                                            <span class="red">建議檔案大小5MB內</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">檔案說明</label>
+                                    <div class="col-md-10 margin_bottom">
+                                        @Html.EditorFor(model => model.UploadFileDesc, new { htmlAttributes = new { @class = "form-control mobile_input display_inline" } })
+                                        <span class="required" id="UploadFileDesc-error" style="display:none;">檔案說明 必須填寫！</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @if (Model.ItemID >= 0)
+                        {
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 col-xs-12 search_item">審核狀態</div>
+                                <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white table_font">
+                                    @Model.VerifyStatus
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 col-xs-12 search_item">新增</div>
+                                <div class="col-md-10 col-sm-12 mobile_white language_set">
+                                    <div class="col-md-12">
+                                        <label for="exampleInputFile" class="col-md-2">人員</label>
+                                        <div class="col-md-10 label_font">@Model.CreateUser</div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-2">時間</label>
+                                        <div class="col-md-10 label_font">@Model.CreateDatetime</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 col-xs-12 search_item">最後修改</div>
+                                <div class="col-md-10 col-sm-12 mobile_white language_set">
+                                    <div class="col-md-12">
+                                        <label for="exampleInputFile" class="col-md-2">人員</label>
+                                        <div class="col-md-10 label_font">@Model.UpdateUser</div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-2">時間</label>
+                                        <div class="col-md-10 label_font">@Model.UpdateDatetime</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 col-xs-12 search_item">最後審核</div>
+                                <div class="col-md-10 col-sm-12 mobile_white language_set">
+                                    <div class="col-md-12">
+                                        <label for="exampleInputFile" class="col-md-2">人員</label>
+                                        <div class="col-md-10 label_font">@Model.VerifyUser</div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-2">時間</label>
+                                        <div class="col-md-10 label_font">@Model.VerifyDateTime</div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center search_padding" id="div_buttons">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+            <button type="button" class="btn grey-mint" id="btn_return">返回列表</button>
+            <button type="button" class="btn grey-mint " id="preview" onclick="callpreview()">預覽</button>
+        </div>
+    </form>
+
+</div>
+@section scripts {
+    <script>
+        $(function () {
+            var fileupload = '@Model.UploadFileName';
+            $('#btn_clear').click(function () {
+                $('#StDateStr').val('');
+                $('#EdDateStr').val('');
+            });
+            $('#ImageFileLocation').val('@Model.ImageFileLocation');
+            var title = "@Html.Raw(Model.Title.Replace("\"","'"))";
+            $('#Title').val(title);
+            if (fileupload!==""){
+                $("#div_olduploadfile").show();
+            }
+            $("#btn_seoshow").click(function () {
+                $("#div_seo").toggle(500);
+            });
+            $("#btn_return").click(function () { CreatePost('@Url.Action("ModelItem")', { mainid: '@Model.ModelID'});});
+           if ('@Model.ItemID'>0 && '@Model.ImageFileName'!='') {
+                $('#div_oldfile').show();
+            }
+              if ('@Model.ItemID'>0 && '@Model.RelateImageName'!='') {
+                  $('#div_oldrelatefile').show();
+            }
+            $('#delimage').click(function () {
+                $('#div_oldfile').hide();
+                $('#ImageFileName').val('');
+            });
+            $('#delupfile').click(function () {
+                $('#div_olduploadfile').hide();
+                $('#UploadFileName').val('');
+            });
+
+            $('#delrelateimage').click(function () {
+                $('#div_oldrelatefile').hide();
+                $('#RelateImageName').val('');
+            });
+
+           var ckedit = CKEDITOR.replace('HtmlContent', {
+                height: 300,
+               filebrowserImageUploadUrl: '@Url.Action("Upload")?command=QuickUpload&type=Images',
+               filebrowserUploadUrl: '@Url.Action("UploadFile")?command=QuickUpload&type=Files',
+            });
+            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+            CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_P;
+            CKEDITOR.on('instanceReady', function (ev) {
+                ev.editor.dataProcessor.writer.setRules('p',
+                    {
+                        indent: false,
+                        breakBeforeOpen: false,
+                        breakAfterOpen: false,
+                        breakBeforeClose: false,
+                        breakAfterClose: false
+                    });
+            });
+         CKEDITOR.on('instanceReady', function (ev) {
+                ev.editor.dataProcessor.writer.setRules('div',
+                    {
+                        indent: true,
+                        breakBeforeOpen: true,
+                        breakAfterOpen: true,
+                        breakBeforeClose: false,
+                        breakAfterClose: false
+                    });
+            });
+            $('#editform').submit(function (event) {
+                
+               $(".required").hide();
+                 var inputval = $("#form-body2 :input").filter(function () { return $(this).val() == "" && $(this).hasClass('checkitem'); });
+                for (var idx = 0; idx < inputval.length; idx++) {
+                    $("#" + inputval[idx].name + "-error").show();
+                }
+                if (inputval.length > 0) { return false; }
+                var file = $("#file_image");
+                var _validFileExtensions = [".jpg", ".png", ".gif", ".jpeg"];
+                var sFileName = file.val();
+                if (sFileName.length > 0) {
+                    var blnValid = false;
+                    for (var j = 0; j < _validFileExtensions.length; j++) {
+                        var sCurExtension = _validFileExtensions[j];
+                        if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                            blnValid = true;
+                            break;
+                        }
+                    }
+                    if (!blnValid) {
+                        alert("只能上傳Image檔案");
+                        file.outerHTML = file.outerHTML;
+                        return false;
+                    }
+                }
+
+                var rfile = $("#file_relateimage");
+                sFileName = rfile.val();
+                if (sFileName.length > 0) {
+                    var blnValid = false;
+                    for (var j = 0; j < _validFileExtensions.length; j++) {
+                        var sCurExtension = _validFileExtensions[j];
+                        if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                            blnValid = true;
+                            break;
+                        }
+                    }
+                    if (!blnValid) {
+                        alert("相關圖片只能上傳Image檔案");
+                        file.outerHTML = file.outerHTML;
+                        return false;
+                    }
+                }
+
+               var formData = new FormData();
+               var array = $('#editform').serializeArray();
+               $.each(array, function () {
+                   formData.append(this.name, this.value);
+               });
+               formData.append("HtmlContent", encodeURIComponent(CKEDITOR.instances.HtmlContent.getData()));
+                formData.append("Title", encodeURIComponent($('#Title').val()));
+                var iscon = true;
+                var tvalue = $("#Year").val().match(/^[0-9]+$/g);
+                if (tvalue == null) {
+                    $('#YearInt-error').show();
+                    iscon = false;
+                }
+
+                if ($('#LinkUrl').val() != "" && $('#LinkUrlDesc').val() == "") {
+                    $('#LinkUrlDesc-error').show();
+                    iscon = false;
+                }
+                var images = $('#file_image').get(0).files;
+                if (images.length > 0) {
+                    formData.append("ImageFile", images[0]);
+                    if ($('#ImageFileDesc').val() == "") {
+                        $('#ImageFileDesc-error').show();
+                        iscon = false;
+                    }
+                } else {
+                    formData.append("ImageFile", null);
+                    if ($('#ImageFileName').val() != "") {
+                        if ($('#ImageFileDesc').val() == "") {
+                            $('#ImageFileDesc-error').show();
+                            iscon = false;
+                        }
+                    }
+                }
+               //
+                var rimages = $('#file_relateimage').get(0).files;
+                if (rimages.length > 0) {
+                    formData.append("RelateImageFile", rimages[0]);
+                } else {
+                    formData.append("RelateImageFile", null);
+                }
+               //
+
+                var uploadfile = $('#uploadfile').get(0).files;
+                if (uploadfile.length > 0) {
+                    formData.append("UploadFile", uploadfile[0]);
+                    if ($('#UploadFileDesc').val() == "") {
+                        $('#UploadFileDesc-error').show();
+                        iscon = false;
+                    }
+                } else {
+                    formData.append("UploadFile", null);
+                    if ($('#UploadFileName').val() != "") {
+                        if ($('#UploadFileDesc').val() == "") {
+                            $('#UploadFileDesc-error').show();
+                            iscon = false;
+                        }
+                    }
+                }
+                if (iscon == false) { return false;}
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                        CreatePost('@Url.Action("ModelItem")', { mainid: '@Model.ModelID'});
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+            });
+               if ('@ViewBag.isview' == 'Y') {
+                  $('#sel_unit,#editform :input').attr('disabled', 'disabled');  
+                  CKEDITOR.config.readOnly = true;
+                  $('#delimage,#delupfile,#delrelateimage').hide();
+                   $('#div_buttons').empty().append('<button type="button" class="btn grey-mint"  onclick="window.location.href=\'@Url.Action("Verify", "Config")\'">返回列表</button><button type="button" class="btn grey-mint " id="preview" onclick="callpreview()">預覽</button>');
+            }
+        });
+        function callpreview() {
+
+            var htmlcontent = CKEDITOR.instances.HtmlContent.getData();
+            if (htmlcontent == "") { htmlcontent = "</br>" }
+            bootbox.alert({
+                title: "預覽",
+                message: htmlcontent,
+                size: 'large'
+            });
+        }
+    </script>
+
+}
+

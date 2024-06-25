@@ -1,0 +1,61 @@
+﻿<!--page banner start-->
+@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel, Model.LangId);
+}
+@model FormFrontIndexModel
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<audio id="myspech" src="" type="audio/mpeg"></audio>
+<div id="content" class="page_content">
+    <div class="container">
+
+        <div class="page_top">
+            <a href="#;return false;" title="@Common.GetLangText("主要內容區")" accesskey="@if(Model.LangId == "1"){@("C") }else{ @("C")}" id="main-content">:::</a>
+            @Html.Raw(Model.LinkStr)
+        </div>
+
+        <div class="title">
+            <h2 >@Model.Title</h2>
+            <!--header start-->
+            <!--header end-->
+
+        </div>
+        <form action="@Url.Action("SaveFormNoJs")" method="post" id="inputform">
+            @Html.AntiForgeryToken()
+            <div class="content_con">
+                <div class="right">
+                    @Html.Raw(Model.LeftMenu)
+                </div>
+                <div class="left">
+                    <input id="itemid" type="hidden" name="mid" value="@Model.MenuID" />
+                    <input id="itemid" type="hidden" name="itemid" value="@Model.MainID" />
+                    <input id="CatchStr" type="hidden" name="CatchStr" value="@Model.CatchStr" />
+                    @Html.Raw(Model.Desc)
+                    <div class="form_con">
+                        <div class="table form_box" id="table_list">@Html.Raw(Model.Formhtml)</div>
+                    </div>
+                    <div class="submit_btn">
+                        <input type="submit" class="btn_01" id="btn_send" value="@Common.GetLangText("送出")" title="@Common.GetLangText("送出")" form="inputform">
+                    </div>
+                </div>
+            </div>
+        </form>
+     
+
+    </div>
+</div>
+@section scripts {
+    <script>
+        $("#i_voice_play").on("click", function (e) {
+            console.log($("#i_voice_play").attr("data-voice"));
+            getVoices($("#i_voice_play").attr("data-voice"));
+        });
+
+        function getVoices(log) {
+            var voices = window.speechSynthesis.getVoices();
+            var msg = new SpeechSynthesisUtterance(log);
+            msg.voice = voices[35]; // 每台電腦/瀏覽器結果可能略有不同
+            window.speechSynthesis.speak(msg);
+        }
+    </script>
+}
+<!--main content end-->

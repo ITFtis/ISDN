@@ -90,6 +90,7 @@ namespace WebSiteProject.Controllers
                 model.Title = menu.DisplayName.IsNullorEmpty()?  menu.MenuName: menu.DisplayName;
                 if (mapmodel.Count() > 0)
                 {
+                    var ss = mapmodel.First().ID.ToString();
                     model.EditInfo = _IModelWebsiteMapManager.GetModelByID(mapmodel.First().ID.ToString());
                 }
                 else {

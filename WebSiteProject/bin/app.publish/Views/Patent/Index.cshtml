@@ -1,0 +1,199 @@
+﻿<!--page banner start-->
+@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel, Model.LangId);
+}
+@model PatentFrontIndexModel
+<div id="content" class="page_content">
+    <div class="container">
+
+        <div class="page_top">
+            <a href="#;return false;" title="@Common.GetLangText("主要內容區")" accesskey="@if(Model.LangId == "1"){@("C") }else{ @("C")}" id="main-content">:::</a>
+            @Html.Raw(Model.LinkStr)
+        </div>
+
+        <div class="title">
+            <h2 >@Model.Title</h2>
+ 
+        </div>
+
+        <div class="content_con">
+
+            <div class="left">
+                <div class="con_font">
+                  @Html.Raw(Model.Intro)
+                    <br /><br />
+                </div>
+                <!--page_search start-->
+                <div class="page_search">
+                    <ul>
+                        @if (Model.Hasgroup)
+                        {
+                            <li>
+                                <label for='GroupId'>
+                                    <div class='item_title'>@Common.GetLangText("類別") </div>
+                                    @Html.DropDownList("GroupId", (IEnumerable<SelectListItem>)Model.GroupList, new { @class = "form-control w-auto" })
+                                </label>
+                            </li>
+                        }
+                        <li>
+                            <label for="DisplayFrom">
+                                <div class='item_title'>@Common.GetLangText("公開年度")</div>
+                                <div class="input-group input-large date-picker input-daterange" data-date-format="yyyy" data-date-start-View="2"  data-date-min-View-Mode="2">
+                                    <input id="DisplayFrom" type="text" class="form-control" name="DisplayFrom" placeholder="@Common.GetLangText("開始年度")">
+                                    <span class="input-group-addon"> ~ </span>
+                                    <label for="DisplayTo">
+                                        <input type="text" class="form-control" name="DisplayTo" placeholder="@Common.GetLangText("結束年度")" id="DisplayTo">
+                                    </label>
+                                </div>
+                            </label>
+                        </li>
+                        <li>
+                            <label for="keyword">
+                                <div class="item_title">@Common.GetLangText("關鍵字")</div>
+                                <input id="keyword" name="keyword" type="text" class="form-control input-small" placeholder="@Common.GetLangText("關鍵字")">
+                            </label>
+                            <button class="btn" type="button" id="btn_search" title="@Common.GetLangText("送出")">@Common.GetLangText("送出")
+</li>
+                        <li style="display:none;">
+                            <div class="list_icon">
+                                <button class="btn" id="btn_textview" title="@Common.GetLangText("圖文顯示")" type="button"><i class="fas fa-th-large"></i></button><!--英文Grid-->
+                            </div>
+                            <div class="list_icon">
+                                <button class="btn" id="btn_listview" title="@Common.GetLangText("列表顯示")" type="button"><i class="fas fa-th-list"></i></button><!--英文List-->
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!--page_search end-->
+                <!--list start-->
+                <div class="table-scrollable news_list_01">
+                    <table class="table table-hover" id="div_patentlist" summary="@Model.Title@Common.GetLangText("列表")">
+                        <thead>
+                            <tr>
+                                @{
+                                    var list =Model.ColumnSetting;
+                                    foreach (var c in list)
+                                    {
+                                        if (c.Sellected == 0) { continue; }
+                                        if (c.Name == "年度")
+                                        {
+                                            <th scope="col" width="15%">@Model.ColumnNameMapping["年度"]</th> }
+                                        else if (c.Name == "標題")
+                                        {
+                                            <th scope="col">@Model.ColumnNameMapping["標題"]</th> }
+                                        else if (c.Name == "類別")
+                                        {
+                                            <th scope="col"  width="15%">@Model.ColumnNameMapping["類別"]</th> }
+                                    }
+                                }
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <!--list end-->
+                <!--頁碼 start-->
+                <div id="page_number" class="table-toolbar">
+                    <div class="col-md-4 col-sm-12 col-xs-12 page_total" >
+                        @Common.GetLangText("總筆數")：<span id="totalcnt"></span>
+                    </div>
+                <div class="col-md-8 col-sm-12 col-xs-12 page_icon" data-sr="enter right over 1.5s" >
+                    <div class="btn-group"  id="pageinfo">
+                        <button type="button" class="btn_page accesskey btn_index" title="@Common.GetLangText("第一頁")" pageindex="1"><i class="fa fa-angle-double-left"></i></button>
+                        <button type="button" class="btn_page accesskey btn_index" title="@Common.GetLangText("上一頁")" pageindex="-1"><i class="fa fa-angle-left"></i></button>
+                        <select class="form-control page_list accesskey" id="page_list"></select>
+                        <button type="button" class="btn_page accesskey" title="@Common.GetLangText("跳頁")" id="btn_goto">
+                            @Common.GetLangText("跳頁")
+                        </button>
+                    <button type="button" class="btn_page accesskey btn_index" title="@Common.GetLangText("下一頁")" pageindex="+1"><i class="fa fa-angle-right"></i></button>
+                    <button type="button" class="btn_page accesskey btn_index" title="@Common.GetLangText("最末頁")" pageindex="" id="btn_pagemax"><i class="fa fa-angle-double-right"></i></button>
+                </div>
+            </div>
+            </div>
+            <!--頁碼 end-->
+
+            </div>
+
+            <div class="right">
+                @Html.Raw(Model.LeftMenu)
+            </div>
+        </div>
+
+    </div>
+</div>
+@section scripts {
+        <script>
+            var searchbase = {};
+            searchbase.Sort = "Sort";
+            searchbase.Search = "Y";
+            searchbase.Offset = "1";
+            searchbase.ModelID = "@Model.MainID";
+            searchbase.MenuId = "@Model.MenuID";
+            searchbase.Limit = "@Model.MaxTableCount";
+            var usesearch = false;
+            var maxpage = 1;
+            var token = $("input[name='__RequestVerificationToken']").val();
+            $(document).ready(function () {
+                $('#GroupId').val('@ViewBag.groupid');
+                GetData(@ViewBag.nowpage , true);
+            });
+            $("#btn_search").click(function () {usesearch = true;GetData(1, true);});
+            
+            $("#btn_listview").click(function () { $("#div_messagelist").removeClass("news_list").addClass("news_list_02"); });
+            $("#btn_textview").click(function () { $("#div_messagelist").removeClass("news_list_02").addClass("news_list"); });
+            $("#btn_goto").click(function () { GetData($("#page_list").val(), true);});
+            $(".btn_index").click(function () {
+                if (searchbase.Limit != "-1") {
+                    var index = $(this).attr('pageindex');
+                    if (index == "-1") {
+                        var nowpage = parseInt($("#page_list").val());
+                        if (nowpage != 1) { nowpage -= 1; $("#page_list").val(nowpage); GetData(nowpage); }
+                    } else if (index == "+1") {
+                        var nowpage = parseInt($("#page_list").val());
+                        var max = parseInt($("#btn_pagemax").attr('pageindex'));
+                        if (nowpage != max) { nowpage += 1; $("#page_list").val(nowpage); GetData(nowpage); }
+                    } else { GetData(index); $("#page_list").val(index) }
+                }
+            });
+
+            function GetData(page, setpage) {
+                searchbase.__RequestVerificationToken = token;
+                searchbase.GroupId = $('#GroupId').val();
+                var pagesize = searchbase.Limit;
+                searchbase.Offset = ((page - 1) * pagesize);
+                searchbase.NowPage = page;
+                if (usesearch) {
+                    searchbase.GroupId = $('#GroupId').val();
+                    searchbase.Title = $('#keyword').val();
+                    searchbase.DisplayFrom = $('#DisplayFrom').val();
+                    searchbase.DisplayTo = $('#DisplayTo').val();
+                    searchbase.Search = "Y";
+                }
+                $.post('@Url.Action("PagingItem")', searchbase, function (data) {
+                    $("#div_patentlist tbody").empty().append(data[0]);
+                    var endcnt = (searchbase.Offset + parseInt(pagesize)) > parseInt(data[1]) ? parseInt(data[1]) : (searchbase.Offset + parseInt(pagesize));
+                    $("#totalcnt").html(data[1] + "，@Common.GetLangText("顯示") : " + (searchbase.Offset + 1) + "~" + endcnt);
+                    $(window).scrollTop(0);
+                    $("#page_list").blur();
+                    if (setpage) {
+                        if (data[1] == "0" || searchbase.Limit == "-1" ) { $("#page_number").hide(); } else {
+                            $("#page_number").show();
+                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                            maxpage = data[2];
+                            var pagecnt = parseInt(data[2]);
+                            $("#page_list").empty();
+                            var strarr = [];$("#btn_pagemax").attr('pageindex', data[2]);
+                            for (var idx = 1; idx <= pagecnt; idx++) {
+                                strarr.push("<option>" + idx + "</option>");
+                            }
+                            $(strarr.join('')).appendTo($("#page_list")); $("#page_list").val(page);
+                             if (data[2] <= 1) { $("#pageinfo").hide(); } else { $("#pageinfo").show(); }
+                        }
+                    }
+                });
+            }
+        </script>
+    }
+<!--main content end-->

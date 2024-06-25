@@ -1,0 +1,401 @@
+﻿<!--等級 start-->
+@model StudentReport
+<div class="con_title">
+    <div class="title">等級</div>
+</div>
+
+<div class="table-scrollable">
+    <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0">
+        <thead>
+            <tr>
+                <th class="text-center"></th>
+                <th class="text-center">LV1</th>
+                <th class="text-center">LV2</th>
+                <th class="text-center">LV3</th>
+                <th class="text-center">LV4</th>
+                <th class="text-center">合計</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="text-center">題數</th>
+                <td class="text-center">@Model.L1Num</td>
+                <td class="text-center">@Model.L2Num</td>
+                <td class="text-center">@Model.L3Num</td>
+                <td class="text-center">@Model.L4Num</td>
+                <td class="text-center">@Model.TotalNum</td>
+            </tr>
+            <tr>
+                <th class="text-center">時間</th>
+                <td class="text-center">@Model.L1Time</td>
+                <td class="text-center">@Model.L2Time</td>
+                <td class="text-center">@Model.L3Time</td>
+                <td class="text-center">@Model.L4Time</td>
+                <td class="text-center">@Model.TotalTime</td>
+            </tr>
+            <tr>
+                <th class="text-center">答對率</th>
+                <td class="text-center">@Model.L1Rate%</td>
+                <td class="text-center">@Model.L2Rate%</td>
+                <td class="text-center">@Model.L3Rate%</td>
+                <td class="text-center">@Model.L4Rate%</td>
+                <td class="text-center">@Model.TotalRate%</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="chart_con">
+    <div class="con_01">
+        <div class="title">題數</div>
+        <div id="chart-pie"></div>
+    </div>
+    <div class="con_02">
+        <div class="title">時間</div>
+        <div id="chart-pie_02"></div>
+    </div>
+    <div class="con_03">
+        <div class="title">答對率</div>
+        <div id="chart-column"></div>
+    </div>
+</div>
+<!--等級 end-->
+<br><br><br>
+<!--題型 start-->
+<div class="con_title">
+    <div class="title">題型</div>
+</div>
+<div class="table-scrollable">
+    <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0">
+        <thead style="font-size:80%;">
+            <tr>
+                <th class="text-center"></th>
+                <th class="text-center">@Model.S1Str</th>
+                <th class="text-center">@Model.S2Str</th>
+                <th class="text-center">@Model.S3Str</th>
+                <th class="text-center">@Model.S4Str</th>
+                <th class="text-center">@Model.S5Str</th>
+                <th class="text-center">合計</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="text-center">題數</th>
+                <td class="text-center">@Model.S1Num</td>
+                <td class="text-center">@Model.S2Num</td>
+                <td class="text-center">@Model.S3Num</td>
+                <td class="text-center">@Model.S4Num</td>
+                <td class="text-center">@Model.S5Num</td>
+                <td class="text-center">@Model.TotalNum</td>
+            </tr>
+            <tr>
+                <th class="text-center">時間</th>
+                <td class="text-center">@Model.S1Time</td>
+                <td class="text-center">@Model.S2Time</td>
+                <td class="text-center">@Model.S3Time</td>
+                <td class="text-center">@Model.S4Time</td>
+                <td class="text-center">@Model.S5Time</td>
+                <td class="text-center">@Model.TotalTime</td>
+            </tr>
+            <tr>
+                <th class="text-center">答對率</th>
+                <td class="text-center">@Model.S1Rate%</td>
+                <td class="text-center">@Model.S2Rate%</td>
+                <td class="text-center">@Model.S3Rate%</td>
+                <td class="text-center">@Model.S4Rate%</td>
+                <td class="text-center">@Model.S5Rate%</td>
+                <td class="text-center">@Model.TotalRate%</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="chart_con">
+    <div class="one">
+        <div class="title">題數</div>
+        <div id="chart-pie_03"></div>
+    </div>
+    <div class="one">
+        <div class="title">時間</div>
+        <div id="chart-pie_04"></div>
+    </div>
+    <div class="one">
+        <div class="title">答對率</div>
+        <div id="chart-column_02"></div>
+    </div>
+</div>
+<!--題型 end-->
+
+<br><br><br>
+
+<!--綜合能力表 start-->
+<div class="con_title">
+    <div class="title">綜合能力表</div>
+</div>
+
+<div class="table-scrollable">
+    <table class="table table-bordered" border="0" cellspacing="0" cellpadding="0">
+        <thead>
+            <tr>
+                <th class="text-center">@Model.A1Str</th>
+                <th class="text-center">@Model.A2Str</th>
+                <th class="text-center">@Model.A3Str</th>
+                <th class="text-center">@Model.A4Str</th>
+                <th class="text-center">@Model.A5Str</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center fraction">@Model.A1Value </ td >
+                <td class="text-center fraction">@Model.A2Value </td>
+                <td class="text-center fraction">@Model.A3Value </td>
+                <td class="text-center fraction">@Model.A4Value </td>
+                <td class="text-center fraction">@Model.A5Value </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="chart_con">
+    <div id="chart-radar_02"></div>
+</div>
+<!--綜合能力表 end-->
+<!--page content end-->
+
+<script>
+    $(document).ready(function () {
+        //bylv使用量圓餅圖
+        am4core.useTheme(am4themes_animated);
+        var chart = am4core.create("chart-pie", am4charts.PieChart);
+        chart.data = [{
+            "grade": "LV1",
+            "quantity": @Model.L1Num
+        }, {
+            "grade": "LV2",
+            "quantity": @Model.L2Num
+        }, {
+            "grade": "LV3",
+            "quantity": @Model.L3Num
+        }, {
+            "grade": "LV4",
+            "quantity": @Model.L4Num
+        }];
+        var series = chart.series.push(new am4charts.PieSeries());
+        series.dataFields.value = "quantity";
+        series.dataFields.category = "grade";
+        series.slices.template.stroke = am4core.color("#fff");
+        series.slices.template.strokeWidth = 2;
+        series.slices.template.strokeOpacity = 1;
+        series.hiddenState.properties.opacity = 1;
+        series.hiddenState.properties.endAngle = -90;
+        series.hiddenState.properties.startAngle = -90;
+        series.labels.template.disabled = true;
+        series.ticks.template.disabled = true;
+        chart.legend = new am4charts.Legend();
+
+        //圓餅圖02
+        var chart02 = am4core.create("chart-pie_02", am4charts.PieChart);
+        chart02.data = [{
+            "grade02": "LV1",
+            "time02": @Model.L1Second
+        }, {
+            "grade02": "LV2",
+            "time02": @Model.L2Second
+        }, {
+            "grade02": "LV3",
+            "time02": @Model.L3Second
+        }, {
+            "grade02": "LV4",
+            "time02": @Model.L4Second
+        }];
+        var series02 = chart02.series.push(new am4charts.PieSeries());
+        series02.dataFields.value = "time02";
+        series02.dataFields.category = "grade02";
+        series02.slices.template.stroke = am4core.color("#fff");
+        series02.slices.template.strokeWidth = 2;
+        series02.slices.template.strokeOpacity = 1;
+        series02.hiddenState.properties.opacity = 1;
+        series02.hiddenState.properties.endAngle = -90;
+        series02.hiddenState.properties.startAngle = -90;
+        series02.labels.template.disabled = true;
+        series02.ticks.template.disabled = true;
+        chart02.legend = new am4charts.Legend();
+
+        //圓餅圖03
+        var chart04 = am4core.create("chart-pie_03", am4charts.PieChart);
+        var tempdata04= [{
+            "grade04": "@Model.S1Str",
+            "quantity04": @Model.S1Num
+        }, {
+            "grade04": "@Model.S2Str",
+            "quantity04": @Model.S2Num
+        }, {
+            "grade04": "@Model.S3Str",
+            "quantity04": @Model.S3Num
+        }, {
+            "grade04": "@Model.S4Str",
+            "quantity04": @Model.S4Num
+        }, {
+            "grade04": "@Model.S5Str",
+            "quantity04": @Model.S5Num
+        }];
+        var filtered = tempdata04.filter(function (value, index, arr) {
+            return value.grade04 !='無';
+        });
+
+        chart04.data =filtered;
+
+        var series04 = chart04.series.push(new am4charts.PieSeries());
+        series04.dataFields.value = "quantity04";
+        series04.dataFields.category = "grade04";
+        series04.slices.template.stroke = am4core.color("#fff");
+        series04.slices.template.strokeWidth = 2;
+        series04.slices.template.strokeOpacity = 1;
+        series04.hiddenState.properties.opacity = 1;
+        series04.hiddenState.properties.endAngle = -90;
+        series04.hiddenState.properties.startAngle = -90;
+        chart04.legend = new am4charts.Legend();
+
+        //圓餅圖04
+        var chart05 = am4core.create("chart-pie_04", am4charts.PieChart);
+        var tempdata05= [{
+            "grade05": "@Model.S1Str",
+            "time05": @Model.S1Second
+        }, {
+            "grade05": "@Model.S2Str",
+            "time05": @Model.S2Second
+        }, {
+            "grade05": "@Model.S3Str",
+            "time05": @Model.S3Second
+        }, {
+            "grade05": "@Model.S4Str",
+            "time05": @Model.S4Second
+        }, {
+            "grade05": "@Model.S5Str",
+            "time05": @Model.S5Second
+        }];
+        var filtered = tempdata05.filter(function (value, index, arr) {
+            return value.grade05 !='無';
+        });
+        chart05.data =filtered;
+        var series05 = chart05.series.push(new am4charts.PieSeries());
+        series05.dataFields.value = "time05";
+        series05.dataFields.category = "grade05";
+        series05.slices.template.stroke = am4core.color("#fff");
+        series05.slices.template.strokeWidth = 2;
+        series05.slices.template.strokeOpacity = 1;
+        series05.hiddenState.properties.opacity = 1;
+        series05.hiddenState.properties.endAngle = -90;
+        series05.hiddenState.properties.startAngle = -90;
+        chart05.legend = new am4charts.Legend();
+
+        //柱狀圖
+        var chart = am4core.create("chart-column", am4charts.XYChart);
+        chart.data = [{
+            "grade03": "LV1",
+            "quantity03": @Model.L1Rate
+        }, {
+            "grade03": "VL2",
+            "quantity03": @Model.L2Rate
+        }, {
+            "grade03": "VL3",
+            "quantity03": @Model.L3Rate
+        }, {
+            "grade03": "LV4",
+            "quantity03": @Model.L4Rate
+        }, {
+            "grade03": "平均",
+            "quantity03": @Model.TotalRate
+        }];
+        chart.padding(20, 20, 20, 20);
+        var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.renderer.grid.template.location = 0;
+        categoryAxis.dataFields.category = "grade03";
+        categoryAxis.renderer.minGridDistance = 10;
+        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        var series = chart.series.push(new am4charts.ColumnSeries());
+        series.dataFields.categoryX = "grade03";
+        series.dataFields.valueY = "quantity03";
+        series.tooltipText = "{valueY.value}"
+        series.columns.template.strokeOpacity = 0;
+        chart.cursor = new am4charts.XYCursor();
+        series.columns.template.adapter.add("fill", function (fill, target) {
+            return chart.colors.getIndex(target.dataItem.index);
+        });
+        //柱狀圖02
+        var chart = am4core.create("chart-column_02", am4charts.XYChart);
+           var tempdata06= [{
+            "grade06": "@Model.S1Str",
+            "quantity06": @Model.S1Rate
+        }, {
+            "grade06": "@Model.S2Str",
+            "quantity06": @Model.S2Rate
+        }, {
+            "grade06": "@Model.S3Str",
+            "quantity06": @Model.S3Rate
+        }, {
+            "grade06": "@Model.S4Str",
+            "quantity06": @Model.S4Rate
+        }, {
+            "grade06": "@Model.S5Str",
+            "quantity06": @Model.S5Rate
+        }];
+        var filtered = tempdata06.filter(function (value, index, arr) {
+            return value.grade06 !='無';
+        });
+        chart.data = filtered;
+        chart.padding(20, 20, 20, 20);
+        var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.renderer.grid.template.location = 0;
+        categoryAxis.dataFields.category = "grade06";
+        categoryAxis.renderer.minGridDistance = 10;
+        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        var series = chart.series.push(new am4charts.ColumnSeries());
+        series.dataFields.categoryX = "grade06";
+        series.dataFields.valueY = "quantity06";
+        series.tooltipText = "{valueY.value}"
+        series.columns.template.strokeOpacity = 0;
+        chart.cursor = new am4charts.XYCursor();
+        series.columns.template.adapter.add("fill", function (fill, target) {
+            return chart.colors.getIndex(target.dataItem.index);
+        });
+        //雷達圖
+        var chart = am4core.create("chart-radar_02", am4charts.RadarChart);
+        chart.data = [{
+            "direction": "@Model.A1Str",
+            "value": @(Model.A1Value== "" ? "0" : Model.A1Value)
+        }, {
+            "direction": "@Model.A2Str",
+                "value": @(Model.A2Value== "" ? "0" : Model.A2Value)
+        }, {
+            "direction": "@Model.A3Str",
+                "value": @(Model.A3Value== "" ? "0" : Model.A3Value)
+        }, {
+            "direction": "@Model.A4Str",
+                "value": @(Model.A4Value== "" ? "0" : Model.A4Value)
+        }, {
+            "direction": "@Model.A5Str",
+                "value": @(Model.A5Value== "" ? "0" : Model.A5Value)
+        }]
+
+        chart.padding(20, 20, 20, 20);
+
+        var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.renderer.grid.template.location = 0;
+        categoryAxis.dataFields.category = "direction";
+        categoryAxis.renderer.minGridDistance = 10;
+
+        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        valueAxis.renderer.gridType = "polygons"; //直角；預設圓形
+
+        var series = chart.series.push(new am4charts.RadarSeries());
+        series.dataFields.categoryX = "direction";
+        series.dataFields.valueY = "value";
+        series.tooltipText = "{valueY.value}"
+        series.fillOpacity = 0.4;
+        valueAxis.max = 100;
+        valueAxis.strictMinMax = true;
+        chart.cursor = new am4charts.RadarCursor();
+    });
+</script>
+

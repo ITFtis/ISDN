@@ -1,0 +1,179 @@
+﻿@model  PageNewsEditModel
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>版面設定<i class="fa fa-circle"></i></li>
+        <li>入口首頁配置</li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<h2>入口首頁管理</h2>
+<div class="portlet light bordered">
+
+    <!--management item start-->
+    <div class="table-toolbar">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="display_inline">
+                <p class="class_title">管理項目</p>
+                <select class="form-control_1" onChange="window.location.href=this.value">
+                    <option value="@Url.Action("PageSeminar")">說明會</option>
+                    <option value="#" selected>新聞動態</option>
+                    <option value="@Url.Action("PageActiveEdit")">活動訊息</option>
+                    <option value="@Url.Action("PageJournalEdit")">永續產業發展期刊</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SavePageNewEdit")' enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item"> 更多連結</div><!--以模組為基準-->
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.MoreInfo, new { htmlAttributes = new { @class = "form-control " } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item"><span class="red">*</span> 首頁標題</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control input-medium checkitem" } })
+                                <span class="required" id="Title-error" style="display:none;">首頁標題 必須填寫！</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item"><span class="red">*</span> 首頁標題(英文)</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.TitleEng, new { htmlAttributes = new { @class = "form-control input-medium checkitem" } })
+                                <span class="required" id="TitleEng-error" style="display:none;">首頁標題(英文) 必須填寫！</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item"> 連結項目</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <button class="btn green-meadow" id='btn_add' type="button">新增 <i class="fa fa-plus"></i></button>
+                                <div class="table-scrollable">
+                                    <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0"
+                                           id="eventtable"
+                                           data-url="@Url.Action("PagingNewsItem")"
+                                           data-sort-name='Sort'
+                                           data-page-size='10'
+                                           data-filed-id='ItemID'
+                                           data-max-pagination='10'>
+                                        <thead>
+                                            <tr>
+                                                <th width="80" class="text-center delete_th" filed-type='delcheckbox'>
+                                                    <label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>
+                                                        <input type='checkbox' class='checkboxes' id="chk_all" /><span></span>
+                                                    </label>
+                                                    <button class="btn red-mint btn-xs" id='btn_del' type="button"><i class="glyphicon glyphicon-trash"></i></button>
+                                                </th>
+                                                <th filed-name='Sort' width="160px" class="text-center" filed-type='numbertextcheck' filed-item-class="sortedit">排序</th>
+                                                <th filed-name='PublicshDate' width="100px" class="text-center">發佈日期</th>
+                                                <th filed-name='Title' class="text-center" filed-type='link'>標題</th>
+                                                <th filed-name='IsRange' width="80px" class="text-center" filed-item-class='text-center'>是否在顯示區間</th>
+                                                <th filed-name='Enabled' width="80px" class="text-center" filed-type='checkbox' filed-item-class="checkboxes chkstatus">上架</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <!--table end-->
+                                <!--頁碼 start-->
+                                <div id="page_number" class="table-toolbar">
+                                    <div class="col-md-4 col-sm-12 col-xs-12 page_total" id="tableinfo"></div>
+                                    <div class="col-md-8 col-sm-12 col-xs-12 page_icon">
+                                        <div class="btn-group" id="pagination">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--頁碼 end-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--table end-->
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue">確認</button>
+        </div>
+    </form>
+</div>
+@section scripts {
+    <script>
+            $(function () {
+               $("#btn_add").click(function () {
+                   CreatePost('@Url.Action("LinkNewEdit")', {});
+                });
+                mytable = $("#eventtable").myDataTable().TableList[0];
+                mytable.settingTdData = myDataTableTr;
+                mytable.settingTableInfo = function (tableinfoId, totalcnt, offsetcnt, nowpagecnt) {
+                    var totalclick = mytable.keepcheckid.length;
+                    $("#" + tableinfoId).html('總筆數:' + totalcnt + '，顯示' + (totalcnt <= 0 ? 0 : offsetcnt) + "~" + (offsetcnt + nowpagecnt - 1));
+                };
+                mytable.GetData(1);
+                RegisterOrder("#eventtable", ".sortedit", '@Url.Action("UpdateLinkItemSeq")', { type: 'News' });
+                RegisterClick("#eventtable", ".chkstatus", '@Url.Action("SetLinkItemStatus")', { type: 'News' });
+                RegisterClickAll("#chk_all", '#eventtable tbody .chksel', "#selvalue");
+                RegisterDelete("#btn_del", '#eventtable .chksel:checked', '@Url.Action("SetItemLinkDelete")', { keyindex: "3" });
+                RegisterClicklink("#eventtable", ".edit", '@Url.Action("LinkNewEdit")', { idkey: "itemid" }, "itemid");
+                $("#btn_savemore").click(function () {
+                    $.post('@Url.Action("SaveNewsMoreInfo")', { "url": $("#MoreInfo").val()}, function (data) {
+                        alert('設定完成');
+                    });
+                });
+
+                $('#editform').submit(function (event) {
+                    var iscon = true;
+                    var inputval = $("#editform :input").filter(function () { return $(this).val() == "" && $(this).hasClass('checkitem'); });
+                    for (var idx = 0; idx < inputval.length; idx++) {
+                        $("#" + inputval[idx].id + "-error").show();
+                        iscon = false;
+                    }
+                    if (iscon == false) { return false; }
+                    var selitem = mytable.keepcheckid;
+                    var formData = new FormData();
+                    var array = $('#editform').serializeArray();
+                    $.each(array, function () {
+                        formData.append(this.name, this.value);
+                    });
+
+                    $.ajax({
+                        url: this.action,
+                        data: formData,
+                        type: 'POST',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data == "") {
+                                alert("作業完成");
+                            } else {
+                                alert(data);
+                            }
+                        }, error: function () {
+                            // handle error
+                        }
+                    });
+                    return false;
+                });
+            });
+    </script>
+}
+
+

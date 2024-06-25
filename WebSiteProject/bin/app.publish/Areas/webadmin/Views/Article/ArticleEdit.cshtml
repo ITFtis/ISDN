@@ -1,0 +1,582 @@
+﻿@model ArticleEditModel
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+
+@*<script src="//cdn.ckeditor.com/4.12.1/full/ckeditor.js"></script>*@
+<!-- 載入 summernote 中文語系 -->
+<script src="js/summernote-zh-TW.js"></script>
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Model")">模組管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Article")">文章管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("ModelItem","Article",new { mainid=Model.ModelID})">清單</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            編輯
+        </li>
+    </ul>
+
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">@Model.ModelName</div>
+
+<div class="portlet light bordered">
+
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveItem")' enctype="multipart/form-data">
+        <!--<div class="search_padding">
+        <button type="button" class="btn blue" id="btn_seoshow">進階設定</button>
+    </div>-->
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(Model => Model.ItemID)
+        @Html.HiddenFor(Model => Model.ModelID)
+        @Html.HiddenFor(Model => Model.UploadFileName)
+        @Html.HiddenFor(Model => Model.UploadFilePath)
+        @Html.HiddenFor(Model => Model.ImageFileName)
+        @Html.HiddenFor(Model => Model.RelateImageName)
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body2">
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">類別</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <a href="#" class="class_select"><button class="btn blue" id="btn_group" type="button">選擇</button></a>
+                                <ul class="class_ul" id="ul_catestr">@Html.Raw(Model.GroupNameListStr)</ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item"><span class="red">*</span>發佈日期</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <div class="date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                    @Html.EditorFor(model => model.PublicshStr, new { htmlAttributes = new { @class = "form-control checkitem input-small", placeholder = "發佈日期" } })
+                                    <span class="required" id="PublicshStr-error" style="display:none;">發佈日期 必須填寫！</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item">顯示日期</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <div class="input-group input-large" style="float:left">
+                                    <div class="date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                        @Html.EditorFor(model => model.StDateStr, new { htmlAttributes = new { @class = "form-control", placeholder = "開始日期" } })
+                                    </div>
+                                    <span class="input-group-addon"> to </span>
+                                    <div class="date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                        @Html.EditorFor(model => model.EdDateStr, new { htmlAttributes = new { @class = "form-control", placeholder = "結束日期" } })
+                                    </div>
+                                </div>
+                                <div class="" style="float:left; padding-left:5px;">
+                                    <button type="button" class="btn blue" id="btn_clear">清空</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item"><span class="red">*</span>標題</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <input id="Title" type="text" class="form-control checkitem" />
+                                <span class="required" id="Title-error" style="display:none;">標題 必須填寫！</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">new標示</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline float-left">
+                                    @Html.CheckBoxFor(model => model.IsNew, new { htmlAttributes = new { @class = "checkboxes" } })是
+                                    <span></span>
+                                </label>
+                                <div class="input-group input-large date-picker input-daterange float-left" data-date="10/11/2012" data-date-format="yyyy/mm/dd">
+                                    @Html.EditorFor(model => model.StDateNewStr, new { htmlAttributes = new { @class = "form-control", placeholder = "開始日期" } })
+                                    <span class="input-group-addon"> to </span>
+                                    @Html.EditorFor(model => model.EdDateNewStr, new { htmlAttributes = new { @class = "form-control", placeholder = "結束日期" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">開啟格式設定</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white table_font">
+                                @Html.RadioButtonFor(model => model.Link_Mode, 1, new { style = "margin-left :0px", @checked = "checked" }) 可開啟內容頁
+                                @Html.RadioButtonFor(model => model.Link_Mode, 2, new { style = "margin-left :40px" }) 不可開啟內容頁
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">內容</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <textarea cols="80" id="HtmlContent" rows="20">@Model.HtmlContent</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 col-sm-12 search_item">圖片上傳</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <div class="col-md-12">
+                                    <div id="div_oldfile" style="display:none"><a href="@Model.ImageUrl" target="preview">@Html.Raw(Model.ImageFileOrgName)</a><label style="color:blue;margin-left:10px;cursor:pointer" id="delimage">刪除</label></div>
+                                    <label for="ImageFile" class="col-md-2">圖片上傳</label>
+                                    <div class="col-md-10">
+                                        <input id="file_image" type="file" class="display_inline" name="ImageFile" accept="image/*" />
+                                        <div class="red">檔案類型jpg、png、gif，建議檔案大小2MB內，尺寸寬度1000px內</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">圖片說明</label>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ImageFileDesc, new { htmlAttributes = new { @class = "form-control mobile_input display_inline" } })
+                                        <span class="required" id="ImageFileDesc-error" style="display:none;">圖片說明 必須填寫！</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">圖片位置</label>
+                                    <div class="col-md-10">
+                                        <select name="@Html.IdFor(model=>model.ImageFileLocation)" id="@Html.IdFor(model=>model.ImageFileLocation)" class="form-control w-auto"><option value="1">左</option><option value="2">中</option><option value="3">右</option></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">相關連結</div>
+                            <div class="col-md-10  col-sm-12 col-xs-12 bg-white mobile_white">
+                                <div class="col-md-12">
+                                    <label class="col-md-2">相關連結</label>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.LinkUrl, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">連結說明</label>
+                                    <div class="col-md-10 margin_bottom">
+                                        @Html.EditorFor(model => model.LinkUrlDesc, new { htmlAttributes = new { @class = "form-control" } })
+                                        <span class="required" id="LinkUrlDesc-error" style="display:none;">連結說明 必須填寫！</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 col-sm-12 search_item">檔案上傳</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <div class="col-md-12">
+                                    <div id="div_olduploadfile" style="display:none"><a href="@Url.Action("FileDownLoad")?modelid=@Model.ModelID&&itemid=@Model.ItemID" target="preview">@Model.UploadFileName</a><label style="color:blue;margin-left:10px;cursor:pointer" id="delupfile">刪除</label></div>
+
+                                    <div id="div_nofile" style="display:inline">
+                                        <label for="UploadFile" class="col-md-2">檔案上傳</label>
+                                        <div class="col-md-10">
+                                            <input type="file" id="uploadfile" class="display_inline" name="UploadFile">
+                                            <span class="required">建議檔案大小5MB內</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">檔案說明</label>
+                                    <div class="col-md-10 margin_bottom">
+                                        @Html.EditorFor(model => model.UploadFileDesc, new { htmlAttributes = new { @class = "form-control mobile_input display_inline" } })
+                                        <span class="required" id="UploadFileDesc-error" style="display:none;">檔案說明 必須填寫！</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">延伸閱讀</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+
+                                <a href="#" class="extended_read"><button class="btn blue" type="button" id="btn_extitem">選擇</button></a>
+                                <ul class="class_select_result" id="ext_list">@Html.Raw(Model.ExtLiList)</ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center search_padding" id="div_buttons">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+            <button type="button" class="btn grey-mint" id="btn_return">返回列表</button>
+        </div>
+    </form>
+    <div class="form-content" style="display:none;" id="dialog_content">
+        <!--第二層有勾選，該第一層自動打勾-->
+        <table class="class_list_select">
+            <tr>
+                <th width="50%">主類別</th>
+                <th width="50%">次類別</th>
+            </tr>
+            <tbody>
+                @{
+                    var list = (SQLModel.Models.GroupArticle[])ViewBag.GroupList;
+                    var itemlist = (SQLModel.Models.GroupItemArticle[])ViewBag.GroupSubList;
+                    for (var idx = 0; idx < list.Count(); idx++)
+                    {
+                        var l2arr = itemlist.Where(v => v.Group_ID == @list[idx].ID).OrderBy(v => v.Sort).ToArray();
+                        <tr>
+                            <td class="td_iname">
+                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes catechk" value="@list[idx].ID" id="mtd_@list[idx].ID"  @(l2arr.Count()>0?"disabled='disabled'":"")/>
+                                    @list[idx].Group_Name.Trim()<span></span>
+                                </label>
+                            </td>
+                            <td class="tdsubgroup">
+                                @{
+                                    if (l2arr.Count() > 0)
+                                    {
+                                        foreach (var l2 in l2arr)
+                                        {
+                                            <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                <input type="checkbox" class="checkboxes catechk" value="@l2.ID" id="td_@l2.ID" pid="@list[idx].ID" />@l2.Group_Name.Trim()<span></span>
+                                            </label>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span><label class="sellabel"></label></span>
+                                    }
+                                }
+                            </td>
+                        </tr> }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="table_dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <button class="bootbox-close-button close" aria-hidden="true" type="button" data-dismiss="modal">×</button>
+                  <h4 class="modal-title">選擇延伸閱讀文章</h4></div><div class="modal-body">
+                    <div class="bootbox-body">
+                        <!--table start-->
+                        <div class="table-scrollable">
+                            <table class="table table-bordered table-hover" 
+                                   id="eventtable" border="0" 
+                                   cellspacing="0" cellpadding="0" 
+                                   data-max-pagination="10" 
+                                   data-filed-id="ItemID" 
+                                   data-page-size="10" 
+                                   data-sort-name="Sort" 
+                                   data-url="@Url.Action("PagingItem")">
+                                <thead>
+                                    <tr>
+                                        <th width="60" class="text-center" filed-type="checkbox" filed-item-class="checkboxes chksel">選取</th>
+                                        <th width="10%" class="text-center" filed-item-class="text-center" filed-name="PublicshDate">發佈日期</th>
+                                        <th class="text-center" style="min-width: 100px;" filed-name="Title" filed-item-class='text-center'>標題</th>
+                                        <th width="115" class="text-center" filed-name="IsRange" filed-item-class='text-center'>是否在顯示區間</th>
+                                        <th width="70" class="text-center" filed-name='Enabled' filed-type='checkbox' filed-item-class="checkboxes  disabled">上架</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <!--table end-->
+                        <!--頁碼 start-->
+                        <div id="page_number" class="table-toolbar">
+                            <div class="col-md-4 col-sm-12 col-xs-12 page_total" id="tableinfo"></div>
+                            <div class="col-md-8 col-sm-12 col-xs-12 page_icon">
+                                <div class="btn-group" id="pagination">
+                                </div>
+                            </div>
+                        </div>
+                        <!--頁碼 end-->
+                    </div>
+                </div><div class="modal-footer">
+                     <button class="btn btn-default" type="button" data-bb-handler="cancel" data-dismiss="modal">取消</button>
+                      <button class="btn btn-primary" type="button" data-bb-handler="confirm" id="btn_extconfirm">確認</button></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section scripts {
+    <script>
+        var cateclick = '@Model.GroupItemList'.split(',');
+        var clickarr = '@Model.ExtItemList'.split(',');
+        var clickname = JSON.parse('@Html.Raw(Model.ExtItemObj)');
+        $(function () {
+            mytable = $("#eventtable").myDataTable().TableList[0];
+            mytable.settingTdData = myDataTableTr;
+            mytable.iskeepSelect = true;
+            mytable.keepcheckid = clickarr;
+            mytable.settingTableInfo = function (tableinfoId, totalcnt, offsetcnt, nowpagecnt) {
+                var totalclick = mytable.keepcheckid.length;
+                $("#" + tableinfoId).html('總筆數:' + totalcnt + '，顯示' + (totalcnt <= 0 ? 0 : offsetcnt) + "~" + (offsetcnt + nowpagecnt - 1));
+                $(".disabled").attr('disabled', 'disabled');
+            };
+            mytable.SearchModelBase.ModelID = '@Model.ModelID';
+            mytable.GetData(1);
+            var fileupload = '@Model.UploadFileName';
+            var selactiveitem = '@Model.ActiveItemID';
+
+            $('#btn_clear').click(function () {
+                $('#StDateStr').val('');
+                $('#EdDateStr').val('');
+            });
+            $('#ImageFileLocation').val('@Model.ImageFileLocation');
+            var title = "@Html.Raw(Model.Title.Replace("\"","'"))";
+            $('#Title').val(title);
+            if (fileupload!==""){
+                $("#div_olduploadfile").show();
+            }
+
+            $('#btn_group').click(function () {
+                setdialog();
+            });
+            $('#btn_extconfirm').click(function () {
+                clickarr = mytable.keepcheckid;
+                $('#table_dialog').modal('hide');
+            });
+            
+            $("#eventtable").delegate((".chksel"), "click", function () {
+                var selitem = mytable.keepcheckid;
+                var _index = $(this).val();
+                var name = $(this).parents('tr').find('td').eq(2).text();
+                if ($(this)[0].checked) {
+                    if (jQuery.inArray(_index, selitem) < 0) {
+                        mytable.keepcheckid.push(_index);
+                        var tobj = { id: _index, name: "<li>"+name+"</li>" };
+                        clickname.push(tobj);
+                    }
+                } else {
+                    mytable.keepcheckid = jQuery.grep(mytable.keepcheckid, function (value) {
+                        return value != _index;
+                    });
+                    clickname = jQuery.grep(clickname, function (value) {
+                        return value.id != _index;
+                    });
+                }
+                var liarr = [];
+                for (var idx = 0; idx < clickname.length; idx++){
+                    liarr.push(clickname[idx].name);
+                }
+                $("#ext_list").empty().append(liarr.join(''));
+            });
+
+            $("body").delegate((".tdsubgroup .catechk"), "change", function () {
+                var hascheck = $(this).parents('tr').find('[pid]:checked').length;
+                if (hascheck == 0) {
+                    $(this).parents('tr').find('.td_iname :checked').prop('checked', false);
+                } else {
+                    $(this).parents('tr').find('.td_iname :checkbox').prop('checked', true);
+                }
+            });
+
+            $('#btn_extitem').click(function () {
+                $('#table_dialog').modal('show');
+            });
+            $("#btn_return").click(function () { CreatePost('@Url.Action("ModelItem")', { mainid: '@Model.ModelID'});});
+           if ('@Model.ItemID'>0 && '@Model.ImageFileName'!='') {
+                $('#div_oldfile').show();
+            }
+              if ('@Model.ItemID'>0 && '@Model.RelateImageName'!='') {
+                  $('#div_oldrelatefile').show();
+            }
+            $('#delimage').click(function () {
+                $('#div_oldfile').hide();
+                $('#ImageFileName').val('');
+            });
+            $('#delupfile').click(function () {
+                $('#div_olduploadfile').hide();
+                $('#UploadFileName').val('');
+            });
+
+            $('#delrelateimage').click(function () {
+                $('#div_oldrelatefile').hide();
+                $('#RelateImageName').val('');
+            });
+
+           var ckedit = CKEDITOR.replace('HtmlContent', {
+                height: 300,
+               filebrowserImageUploadUrl: '@Url.Action("Upload")?command=QuickUpload&type=Images',
+               filebrowserUploadUrl: '@Url.Action("UploadFile")?command=QuickUpload&type=Files',
+            });
+            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+            CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_P;
+            CKEDITOR.on('instanceReady', function (ev) {
+                ev.editor.dataProcessor.writer.setRules('p',
+                    {
+                        indent: false,
+                        breakBeforeOpen: false,
+                        breakAfterOpen: false,
+                        breakBeforeClose: false,
+                        breakAfterClose: false
+                    });
+            });
+         CKEDITOR.on('instanceReady', function (ev) {
+                ev.editor.dataProcessor.writer.setRules('div',
+                    {
+                        indent: true,
+                        breakBeforeOpen: true,
+                        breakAfterOpen: true,
+                        breakBeforeClose: false,
+                        breakAfterClose: false
+                    });
+            });
+            $('#editform').submit(function (event) {
+               $(".required").hide();
+                 var inputval = $("#form-body2 :input").filter(function () { return $(this).val() == "" && $(this).hasClass('checkitem'); });
+                for (var idx = 0; idx < inputval.length; idx++) {
+                    $("#" + inputval[idx].name + "-error").show();
+                }
+                if (inputval.length > 0) { return false; }
+                var file = $("#file_image");
+                var _validFileExtensions = [".jpg", ".png", ".gif", ".jpeg"];
+                var sFileName = file.val();
+                if (sFileName.length > 0) {
+                    var blnValid = false;
+                    for (var j = 0; j < _validFileExtensions.length; j++) {
+                        var sCurExtension = _validFileExtensions[j];
+                        if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                            blnValid = true;
+                            break;
+                        }
+                    }
+                    if (!blnValid) {
+                        alert("只能上傳Image檔案");
+                        file.outerHTML = file.outerHTML;
+                        return false;
+                    }
+                }
+
+                var formData = new FormData();
+                var tempobj = $("#dialog_content").clone();
+                for (var idx = 0; idx < cateclick.length; idx++) {
+                    if (cateclick[idx] == "") { continue; }
+                    if ($(tempobj).find("#" + cateclick[idx]).attr('pid') !== undefined) {
+                        var pid = $(tempobj).find("#" + cateclick[idx]).attr('pid');
+                        if (cateclick.indexOf("mtd_" + pid) < 0) {
+                            cateclick.push("mtd_" + pid);
+                        }
+                    }
+                }
+                formData.append("GroupItemList", cateclick.join(','));
+               var array = $('#editform').serializeArray();
+               $.each(array, function () {
+                   formData.append(this.name, this.value);
+               });
+               formData.append("HtmlContent", encodeURIComponent(CKEDITOR.instances.HtmlContent.getData()));
+                formData.append("Title", encodeURIComponent($('#Title').val()));
+                formData.append("ExtItemList", clickarr.join(','));
+                
+                var iscon = true;
+                if ($('#LinkUrl').val() != "" && $('#LinkUrlDesc').val() == "") {
+                    $('#LinkUrlDesc-error').show();
+                    iscon = false;
+                }
+                var images = $('#file_image').get(0).files;
+                if (images.length > 0) {
+                    formData.append("ImageFile", images[0]);
+                    if ($('#ImageFileDesc').val() == "") {
+                        $('#ImageFileDesc-error').show();
+                        iscon = false;
+                    }
+                } else {
+                    formData.append("ImageFile", null);
+                    if ($('#ImageFileName').val() != "") {
+                        if ($('#ImageFileDesc').val() == "") {
+                            $('#ImageFileDesc-error').show();
+                            iscon = false;
+                        }
+                    }
+                }
+
+                var uploadfile = $('#uploadfile').get(0).files;
+                if (uploadfile.length > 0) {
+                    formData.append("UploadFile", uploadfile[0]);
+                    if ($('#UploadFileDesc').val() == "") {
+                        $('#UploadFileDesc-error').show();
+                        iscon = false;
+                    }
+                } else {
+                    formData.append("UploadFile", null);
+                    if ($('#UploadFileName').val() != "") {
+                        if ($('#UploadFileDesc').val() == "") {
+                            $('#UploadFileDesc-error').show();
+                            iscon = false;
+                        }
+                    }
+                }
+                if (iscon == false) { return false;}
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                        CreatePost('@Url.Action("ModelItem")', { mainid: '@Model.ModelID'});
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+            });
+              if ('@ViewBag.isview' == 'Y') {
+                  $('#sel_unit,#editform :input').attr('disabled', 'disabled');
+                  CKEDITOR.config.readOnly = true;
+                  $('#delimage,#delupfile,#delrelateimage').hide();
+                  $('#div_buttons').empty().append('<button type="button" class="btn grey-mint"  onclick="window.location.href=\'@Url.Action("Verify", "Config")\'">返回列表</button><button type="button" class="btn grey-mint " id="preview" onclick="callpreview()">預覽</button>');
+            }
+        });
+        function setdialog() {
+            var tempobj = $("#dialog_content").clone();
+            for (var idx = 0; idx < cateclick.length; idx++) {
+                if (cateclick[idx] == "") { continue;}
+                $(tempobj).find("#" + cateclick[idx]).attr('checked', 'checked');
+                if ($(tempobj).find("#" +cateclick[idx]).attr('pid') !== undefined) {
+                    var pid = $(tempobj).find("#" +cateclick[idx]).attr('pid');
+                    $(tempobj).find("#mtd_" + pid).attr('checked', 'checked');
+                }
+            }
+            var dialog = bootbox.dialog({
+                title: "類別選擇",
+                message: $(tempobj).html(),
+                buttons: {
+                    ok: {
+                        label: "確定", callback: function () {
+                            cateclick = [];
+                          var  inputtext = [];
+                            var click = $(".catechk:checked");
+                            var castr = "";
+                            for (var idx = 0; idx < click.length; idx++) {
+                                cateclick.push($(click[idx]).attr('id'));
+                                var tr = $(click[idx]).parents('tr');
+                                var l1text = $(tr).find('.td_iname').text();
+                                var l2text = $(click[idx]).parent().text();
+                                if ($(click[idx]).attr('pid') == undefined) {
+                                    if (inputtext.indexOf(l1text) < 0) {
+                                        castr += "<li>" + l1text + "</li>"
+                                        inputtext.push(l1text);
+                                    }
+                                } else {
+                                    if (inputtext.indexOf(l1text) < 0) {
+                                        castr += "<li>" + l1text + "</li>"
+                                        inputtext.push(l1text);
+                                    }
+                                    castr += "<li>" + l1text + "-" + l2text + "</li>"
+                                }
+                            }
+                            $("#ul_catestr").empty();
+                            $(castr).appendTo("#ul_catestr");
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+}
+

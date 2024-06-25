@@ -1,0 +1,134 @@
+﻿@{ Layout = null;}
+@model PatentFrontViewModel
+@Html.AntiForgeryToken()
+<!DOCTYPE html>
+<html lang="Zh-hant" xml:lang="Zh-hant">
+<!--英文版<html lang="en" xml:lang="en">-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; child-src 'none';script-src 'self'">
+    <title>@Common.GetLangText("產業永續發展整合資訊網")</title><!--英文 -->
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/bootstrap.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/theme.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/theme-elements.css")/">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/settings.css")" media="screen">
+
+    <!--fontawesome start-->
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/font-awesome.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/fontawesome.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/brands.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/solid.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/regular.min.css")">
+    <!--fontawesome end-->
+
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/style.css")">
+    <script src="@Url.Content("~/js/jquery.js")"></script>
+    <script src="@Url.Content("~/js/main.js")"></script>
+    <script src="@Url.Content("~/js/scrollReveal.js")"></script>
+    <noscript>
+        <link rel="stylesheet" href="@Url.Content("~/frontcss/css/noscript.css")">
+    </noscript>
+
+
+</head>
+<body style="max-width:806px; margin:0 auto; background: url(@Url.Content("~/img/bg_05.jpg"));">
+    <div class="con_box">
+        <div class="con_banner">
+            @if (Model.PrintImageUrl.IsNullorEmpty() == false)
+            {
+                <img src="@Url.Content(Model.PrintImageUrl)" alt="" />
+            }
+            else
+            {
+                <img src="@(Model.LangId=="1"? @Url.Content("~/img/print_banner.jpg") : @Url.Content("~/img/print_banner_en.jpg"))" alt="" />
+            }
+        </div><!--建議尺寸740*185px-->
+        <!--page content start-->
+        <div class="page_con">
+            <div class="left">
+                <div class="date">
+                    @Model.Year  @if (@Model.GroupName != "")
+                    {<span class="top_class">@Model.GroupName</span>}
+                </div>
+                <ul class="patent_list">
+                    <li>
+                        <h3>@Common.GetLangText("發明人")</h3>
+                        <div class="con_font">@Html.Raw(Model.Inventor)</div>
+                    </li>
+                    <li>
+                        <h3>@Common.GetLangText("領域")</h3>
+                        <div class="con_font">@Html.Raw(Model.Field)</div>
+                    </li>
+                    <li>
+
+                        <h3>@Common.GetLangText("簡介")</h3>
+                        <div class="con_font">
+                            @Html.Raw(Model.Content)
+                        </div>
+                    </li>
+                    <li>
+                        <div class="con_font">
+
+                            <!--list start--><!--國別項目後台可無限增加-->
+                            <div class="table-scrollable patent_table">
+                                <table class="table table-hover" summary="@Common.GetLangText("專利明細列表")">
+                                    <thead>
+                                        <tr>
+                                            @{
+                                                <th width="130" scope="col">@Common.GetLangText("國別")</th>
+                                                foreach (var n in Model.Nation)
+                                                {
+                                                    <th scope="col">@n</th>}}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td scope="row" class="text-center">@Common.GetLangText("專利證書號")</td>
+                                            @foreach (var pno in Model.Patentno)
+                                            {
+                                                <td class="text-center">@pno</td>}
+                                        </tr>
+                                        <tr>
+                                            <td scope="row" class="text-center">@Common.GetLangText("證書日期")</td>
+                                            @foreach (var pd in Model.PatentDate)
+                                            {
+                                                <td class="text-center">@pd</td>}
+                                        </tr>
+                                        <tr>
+                                            <td scope="row" class="text-center">@Common.GetLangText("早期公開日")</td>
+                                            @foreach (var ed in Model.EarlyPublicDate)
+                                            {
+                                                <td class="text-center">@ed</td>}
+                                        </tr>
+                                        <tr>
+                                            <td scope="row" class="text-center">@Common.GetLangText("早期公開號")</td>
+                                            @foreach (var eno in Model.EarlyPublicNo)
+                                            {
+                                                <td class="text-center">@eno</td>}
+                                        </tr>
+                                        <tr>
+                                            <td scope="row" class="text-center">@Common.GetLangText("專利權限期")</td>
+                                            @foreach (var dl in Model.Deadline)
+                                            {
+                                                <td class="text-center">@dl</td>}
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--list end-->
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--page content end-->
+
+    </div>
+    <div class="con_footer">@Html.Raw(Model.PrintContent)</div>
+</body>
+</html>

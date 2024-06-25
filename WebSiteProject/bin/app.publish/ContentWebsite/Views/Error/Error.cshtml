@@ -1,0 +1,27 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
+    ViewBag.Title = ViewBag.Title ?? "Internal Server Error";
+    Layout = null; 
+}
+
+@{
+    ViewBag.Title = "Error Page";
+}
+<h2>@ViewBag.Title.</h2>
+<h3> An unexpected error has occurred. Please contact the system administrator.</h3>
+@if (Model != null && HttpContext.Current.IsDebuggingEnabled)
+{
+    <div>
+        <p>
+            <b>Exception:</b> @Model.Exception.Message<br />
+            <b>Controller:</b> @Model.ControllerName<br />
+            <b>Action:</b> @Model.ActionName
+        </p>
+        <div style="overflow-x:auto">
+            <pre>
+                @Model.Exception.StackTrace
+            </pre>
+        </div>
+    </div>
+}
+

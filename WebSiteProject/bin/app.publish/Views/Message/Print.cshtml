@@ -1,0 +1,104 @@
+﻿@{ Layout = null;}
+@model MessageFrontViewModel
+@Html.AntiForgeryToken()
+<!DOCTYPE html>
+<html lang="Zh-hant" xml:lang="Zh-hant">
+<!--英文版<html lang="en" xml:lang="en">-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@Common.GetLangText("產業永續發展整合資訊網")</title><!--英文 -->
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; child-src 'none';script-src 'self'">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/bootstrap.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/theme.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/theme-elements.css")/">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/settings.css")" media="screen">
+
+    <!--fontawesome start-->
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/font-awesome.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/fontawesome.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/brands.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/solid.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/regular.min.css")">
+    <!--fontawesome end-->
+
+    <link rel="stylesheet" href="@Url.Content("~/frontcss/css/style.css")">
+    <script src="@Url.Content("~/js/jquery.js")"></script>
+    @*<script src="@Url.Content("~/js/main.js")"></script>
+    <script src="@Url.Content("~/js/scrollReveal.js")"></script>*@
+    <noscript>
+        <link rel="stylesheet" href="@Url.Content("~/frontcss/css/noscript.css")">
+    </noscript>
+
+
+</head>
+<body style="max-width:806px; margin:0 auto;">
+    <div class="con_box">
+        <div class="con_banner">
+            @if (Model.PrintImageUrl.IsNullorEmpty() == false)
+            {
+                <img src="@Url.Content(Model.PrintImageUrl)" alt="" />
+            }
+            else
+            {
+                <img src="@(Model.LangId=="1"? @Url.Content("~/img/print_banner.jpg") : @Url.Content("~/img/print_banner_en.jpg"))" alt="" />
+            }
+        </div><!--建議尺寸740*185px；後台未上傳圖片時show預設圖print_banner.jpg -->
+
+        <h2>@Model.Title</h2>
+        <!--page content start-->
+        <div class="page_con">
+            <div class="date">
+                @Model.PublicshDate  @if (@Model.GroupName != "")
+                {<span class="top_class">@Model.GroupName</span>}
+            </div>
+            @if (Model.ImageName != "")
+            {
+                <span>
+                    <!--圖片置左-->
+                    @if (Model.ImageFileLocation == "1")
+                    {
+                        <img src="@Url.Content("~/UploadImage/MessageItem/")@Model.ImageName" class="img_padding" alt="" align="left">
+                    }
+                    else if (Model.ImageFileLocation == "2")
+                    {
+                        <div align="center"><p class="text_center"><img src="@Url.Content("~/UploadImage/MessageItem/")@Model.ImageName" class="img_padding" alt=""></p></div>
+                    }
+                    else if (Model.ImageFileLocation == "3")
+                    {
+                        <img src="@Url.Content("~/UploadImage/MessageItem/")@Model.ImageName" class="img_padding" alt="" align="right">
+                    }
+                </span>
+            }
+            @Html.Raw(Model.Content)
+        </div>
+        <!--page content end-->
+        <div class="page_bottom">
+            @if (Model.LinkUrl != null)
+            {
+                <div class="item">
+                    <div class="title"><i class="fa fa-link" aria-hidden="true"></i>相關連結</div><!--英文Link-->
+                    <div class="con_font">
+                        <a href="@Model.LinkUrl" target="_blank" title="@Common.GetLangText("相關連結")-@(Model.LinkUrlDesc)(@(Common.GetLangText("另開新視窗")))">@Model.LinkUrlDesc</a>
+                    </div>
+                </div>
+            }
+            @if (Model.DownloadID != null)
+            {
+                <div class="item">
+                    <div class="title"><i class="fa fa-download" aria-hidden="true"></i>檔案下載</div><!--英文Download-->
+                    <div class="con_font">
+                        <a href="@Url.Action("FileDownLoad")?itemid=@Model.DownloadID" target="_blank"
+                           title="@Common.GetLangText("檔案下載")-@(Model.DownloadDesc)(@(Common.GetLangText("另開新視窗")))">@Model.DownloadDesc</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="con_footer">@Html.Raw(Model.PrintContent)</div>
+</body>
+
+</html>

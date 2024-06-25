@@ -1,0 +1,147 @@
+﻿@model  System.Collections.Generic.List<SQLModel.Models.Menu>
+@Html.AntiForgeryToken()
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+@*<script src="//cdn.ckeditor.com/4.12.1/full/ckeditor.js"></script>*@
+<!-- 載入 summernote 中文語系 -->
+<!--page bar start-->
+@{
+    List<SQLModel.Models.EPaperItem> _itemlist = ((List<SQLModel.Models.EPaperItem>)ViewBag.ItemList);
+}
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            模組元件
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index")">電子報管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            編輯自動電子報
+        </li>
+    </ul>
+
+</div>
+<!--page bar end-->
+<!--message start-->
+<h2>@ViewBag.Title</h2>
+
+<div class="portlet light bordered">
+    <div class="table-toolbar">
+        <div class="col-md-12 col-sm-12 col-xs-12 mobile_left">
+            <p class="display_inline">
+                <button class="btn grey-mint" onclick="location.href='@Url.Action("Index")'">回上一頁</button>
+            </p>
+        </div>
+    </div>
+    @using (Ajax.BeginForm("MainMenu", new AjaxOptions { UpdateTargetId = "eventtable" }))
+    {
+        <div class="table-scrollable" id="eventtable">
+            <table class="table table-bordered competence_table" style="width:100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                    @{
+                        var l1arr = Model.Where(v => v.MenuLevel == 1);
+                        foreach (var l1 in l1arr)
+                        {
+                            var l2arr = Model.Where(v => v.ParentID == l1.ID).ToArray();
+                            if (ViewBag.onlylevle1 == "Y")
+                            {
+                                l2arr = new SQLModel.Models.Menu[] { };
+                            }
+                            var l1rowcount = 0;
+                            var arrl2stratidx = new List<int>();
+                            var l3useidx = 0;
+                            foreach (var l2 in l2arr)
+                            {
+                                var l3cnt = Model.Where(v => v.ParentID == l2.ID).Count();
+                                arrl2stratidx.Add(l1rowcount);
+                                l1rowcount += Math.Max(1, l3cnt);
+                            }
+                            //先產生第一組tr
+                            l1rowcount = l1rowcount == 0 ? 1 : l1rowcount;
+                            IList<SQLModel.Models.Menu> _l3menu = null;
+                            for (var idx = 0; idx < l1rowcount; idx++)
+                            {
+                                <tr>
+                                    @if (idx == 0)
+                                    {
+                                        <td class='class_03' rowspan='@l1rowcount'>
+                                            @if (l1.ModelID == 2 || l1.ModelID == 3 || l1.ModelID == 7 || l1.ModelID == 12)
+                                            {
+                                                <button type='button' class='btn blue edit' index='@l1.ID' style='float:left; margin-left:2px'>選擇</button>
+                                            }
+                                            @{ var itemcount = _itemlist.Count(v => v.MenuID == l1.ID);}
+                                            <div class='training_class_title' style='float:left; margin-left:10px; margin-top:5px'>@l1.MenuName @(itemcount == 0 ? "" : "(已選擇" + itemcount.ToString() + "筆)")</div>
+                                        </td>
+                                        if (l2arr.Count() == 0)
+                                        {
+                                            <td class='class_03'>&nbsp;</td>
+                                            <td class='class_03'>&nbsp;</td>
+                                        }
+                                    }
+                                    @if (arrl2stratidx.Contains(idx))
+                                    {
+                                        var l2arridx = arrl2stratidx.IndexOf(idx);
+                                        if (l2arridx >= l2arr.Count())
+                                        {
+                                            <td class='class_03'>&nbsp;</td>
+                                        }
+                                        else
+                                        {
+                                            _l3menu = Model.Where(v => v.ParentID == @l2arr[l2arridx].ID).ToArray();
+                                            l3useidx = 0;
+                                            <td class='class_03' rowspan='@(_l3menu.Count()==0?1:_l3menu.Count())'>
+                                                @if (l2arr[l2arridx].ModelID == 2 || l2arr[l2arridx].ModelID == 3 || l2arr[l2arridx].ModelID == 7 || l2arr[l2arridx].ModelID == 12)
+                                                {
+                                                    <button type='button' class='btn blue edit' index='@l2arr[l2arridx].ID' style='float:left; margin-left:2px'>選擇</button>
+                                                }
+                                                @{ var itemcount = _itemlist.Count(v => v.MenuID == l2arr[l2arridx].ID);}
+                                                <div class='training_class_title' style='float:left; margin-left:10px; margin-top:5px'>@l2arr[l2arridx].MenuName @(itemcount == 0 ? "" : "(已選擇" + itemcount.ToString() + "筆)")</div>
+                                            </td>
+                                            if (_l3menu.Count() == 0)
+                                            {
+                                                <td class='class_03'>&nbsp;</td>
+                                            }
+                                        }
+                                    }
+
+                                    @if (_l3menu != null && l3useidx < _l3menu.Count())
+                                    {
+                                        <td class='class_03'>
+                                            <button type='button' class='btn blue edit' index='@_l3menu[l3useidx].ID' style='float:left; margin-left:2px'>選擇</button>
+                                            @{ var itemcount = _itemlist.Count(v => v.MenuID == _l3menu[l3useidx].ID);}
+                                            <div class='training_class_title' style='float:left; margin-left:10px; margin-top:5px'>@_l3menu[l3useidx].MenuName @(itemcount == 0 ? "" : "(已選擇" + itemcount.ToString() + "筆)")</div>
+                                        </td>
+                                        l3useidx += 1;
+                                    }
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+@section scripts {
+    <script>
+        $(function () {
+        	$(".edit").click(function () {
+				var obj = {};
+                obj.menuid = $(this).attr("index");
+                obj.id = '@ViewBag.ID';
+				CreatePost('@Url.Action("EPaperItemSelect")', obj);
+            });
+        });
+    </script>
+}
+

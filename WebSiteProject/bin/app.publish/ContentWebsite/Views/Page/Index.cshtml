@@ -1,0 +1,124 @@
+﻿<!--page banner start-->
+@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel);
+}
+@model PageFrontIndexModel
+ @{ 
+     var imageurl = string.IsNullOrEmpty(Model.BannerImage) ? "img/page_top_bg.jpg" : Model.BannerImage;
+  }
+<div class="page_banner" style="background: url('@imageurl');background-position: top center;background-size: cover;">
+    <!--建議尺寸1920*470px-->
+    <div class="container">
+        <div class="page_title" data-sr="enter top over 1.5s">@Model.Title</div>
+    </div>
+</div>
+<!--page banner end-->
+<!--page top start-->
+<div class="page_top">
+    <div class="container">
+        <div class="col-md-9 col-sm-9 col-xs-12" data-sr="enter left over 1.5s">
+            <ul>
+                @Html.Raw(Model.LinkStr)
+            </ul>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-12" data-sr="enter right over 1.5s">
+            <div class="page_top_right">
+                @if (Model.IsForward)
+                {
+                    <a href="@Url.Action("Forward", "Page", new { itemid = Model.MainID, mid = Model.MenuID, pageitemid = Model.PageItemID })" title="轉寄好友" target="_blank"><img src="@Url.Content("~/ContentWebsite/image/icon_mail.png")" alt="轉寄好友"></a>
+                }
+                @if (Model.IsPrint)
+                {
+                    <a href="@Url.Action("Print", "Page", new { itemid =  Model.MainID, mid = Model.MenuID, pageitemid =Model.PageItemID })" title="友善列印" target="_blank"><img src="@Url.Content("~/ContentWebsite/image/icon_print.png")" alt="友善列印"></a>
+                }
+
+                @if (Model.LinkUrl != null)
+                {
+                    <a href="@Model.LinkUrl" title="相關連結" target="_blank"><img src="@Url.Content("~/ContentWebsite/image/icon_link.png")" alt="相關連結"></a>
+                }
+                @if (Model.DownloadID != null)
+                {
+                    <a href="@Url.Action("FileDownLoad")?itemid=@Model.DownloadID" title="@Model.DownloadDesc"><img src="@Url.Content("~/ContentWebsite/image/icon_download.png")" alt="檔案說明"></a>
+                }
+                @if (Model.IsShare == true)
+                {
+                    <a href="#" class="share" stype="fb"><img src="@Url.Content("~/img/icon_facebook.png")" alt="fb分享(另開新視窗)"></a>
+                    <a href="#" class="share" stype="twitter"><img src="@Url.Content("~/img/icon_twitter.png")" alt="twitter分享(另開新視窗)"></a>
+                    <a href="#" class="share" stype="plurk"><img src="@Url.Content("~/img/icon_plurk.png")" alt="plurk分享(另開新視窗))"></a>
+                    <a href="#" class="share" stype="google"><img src="@Url.Content("~/img/icon_google.png")" alt="google分享(另開新視窗)"></a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!--page top end-->
+<!--main content start-->
+<div class="page_content">
+    <div class="container">
+     
+        <!--set item start-->
+        <div class="table-toolbar">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="display_inline" data-sr="enter left over 1.5s">
+                    @if (Model.ItemCnt > 1)
+                    {<label for="" class="class_title">頁面</label>
+                        @Html.DropDownList("GroupId", (IEnumerable<SelectListItem>)Model.ModelItemList, new { @class = "form_02" })
+                    }
+                </div>
+            </div>
+        </div>
+        <!--set item end-->
+        <!--list start-->
+        <div class="page_con">
+            @if (string.IsNullOrEmpty(Model.ImageName) == false)
+            {<span>
+                    @if (Model.ImageFileLocation == "1")
+                    {
+                        <img src="@Url.Content("~/UploadImage/PageEdit/")@Model.ImageName" class="img_padding" alt="@Model.ImageFileDesc" align="left">
+                    }
+                    else if (Model.ImageFileLocation == "2")
+                    {
+                        <div align="center"><img src="@Url.Content("~/UploadImage/PageEdit/")@Model.ImageName" class="img_padding" alt="@Model.ImageFileDesc"></div>
+                    }
+                    else if (Model.ImageFileLocation == "3")
+                    {
+                        <img src="@Url.Content("~/UploadImage/PageEdit/")@Model.ImageName" class="img_padding" alt="@Model.ImageFileDesc" align="right">
+                    }
+                </span>
+            }
+            @Html.Raw(Model.HtmlContent)
+
+        </div>
+
+    </div>
+</div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $(".share").click(function () {
+                var stype = $(this).attr('stype');
+                var url = encodeURIComponent(location.href);
+                if (stype == "fb") {
+                    window.open('http://www.facebook.com/share.php?u=' + url);
+                } else if (stype == "twitter") {
+                    window.open('http://twitter.com/intent/tweet?url=' + url + '&related=yarrcat');
+                } else if (stype == "plurk") {
+                    var title = encodeURIComponent(document.title);
+                    window.open('http://www.plurk.com/?qualifier=shares&amp;status=' + url + "(" + title + ")");
+                } else if (stype == "google") {
+                    var title = encodeURIComponent(document.title);
+                    window.open('https://plus.google.com/share?url=' + url);
+                }
+            });
+            $("#GroupId").val('@Model.PageItemID');
+            $("#GroupId").change(function () {
+                  var obj = {};
+                  obj.itemid = '@Model.MainID'
+                  obj.pageitemid = $("#GroupId").val();
+                  obj.mid = '@Model.MenuID'
+                  document.location.href = '@Url.Action("Index")' + "?" + $.param(obj)
+            });
+       });
+    </script>
+}
+<!--main content end-->

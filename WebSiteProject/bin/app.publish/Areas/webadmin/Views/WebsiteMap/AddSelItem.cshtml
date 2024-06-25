@@ -1,0 +1,17 @@
+﻿<tr id="tr_@(ViewBag.index)" class="selitem" seqidx="@(ViewBag.seqindex)">
+    <td class="text-center">
+        <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+            <input type="checkbox" class="checkboxes">
+            <span name="check_@(ViewBag.index)"></span>
+        </label>
+    </td>
+    <td class="text-center delete_th">
+        <button type="button" class="btn btn-default btn-xs seq_list" value="0"><i class="fa fa-angle-double-up"></i></button>
+        <button type="button" class="btn btn-default btn-xs seq_list" value="-1"><i class="fa fa-angle-up"></i></button>
+        <button type="button" class="btn btn-default btn-xs seq_list" value="+1"><i class="fa fa-angle-down"></i></button>
+        <button type="button" class="btn btn-default btn-xs seq_list" value="max"><i class="fa fa-angle-double-down"></i></button>
+    </td>
+    <td><input type="text" class="form-control areaname" value="" maxlength="50"></td>
+    <td><input type="text" class="form-control hotkey" value="" maxlength="50"></td>
+    <td><input type="text" class="form-control intro" value="" maxlength="100"></td>
+</tr>

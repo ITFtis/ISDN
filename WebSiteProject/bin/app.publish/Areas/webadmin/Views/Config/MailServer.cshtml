@@ -1,0 +1,106 @@
+﻿@model SiteConfigModel
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <span href="#">Home</span>
+            <i class="fa fa-circle"></i>
+            <span href="#">系統管理</span>
+            <i class="fa fa-circle"></i>
+            <span href="#">管理介面設定</span>
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">郵件設定/div>
+
+<div class="portlet light bordered">
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveMailServer")' enctype="multipart/form-data">
+        @Html.HiddenFor(Model => Model.ID)
+        @Html.AntiForgeryToken()
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body">
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 bg-grey_1 search_item">
+                                Mail Server IP or Host Name
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.MailServerIP, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                            <div class="col-md-2 col-sm-2 col-xs-12 search_item">連結埠</div>
+                            <div class="col-md-4 col-sm-4 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Port, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 search_item">帳號</div>
+                            <div class="col-md-4 col-sm-4 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.EMailAccount, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 search_item">密碼</div>
+                            <div class="col-md-4 col-sm-4 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.EMailPassword, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 search_item">是否需要驗證</div>
+                            <div class="col-md-4 col-sm-4 col-xs-12 bg-white mobile_white">
+                                @Html.CheckBoxFor(model => model.IsAuthMailServer, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+        </div>
+    </form>
+
+</div>
+@section scripts {
+    <script>
+        $(function () {
+            var message = '@TempData["Message"]';
+            if (message != "") { alert(message); }
+            $('#editform').submit(function (event) {
+               var checkint =$('#' + '@Html.IdFor(m=>m.Port)').val().match(/^[0-9]+$/g);
+                     if (checkint == null) {
+                         alert('連結埠必須為整數'); return false;
+                         return false;
+                }
+
+                var formData = new FormData();
+                var array = $('#editform').serializeArray();
+                $.each(array, function () {
+                    formData.append(this.name, this.value);
+                });
+              
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+
+
+            });
+
+        });
+    </script>
+
+}
+

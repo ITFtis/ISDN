@@ -1,0 +1,106 @@
+﻿@model SEOViewModel
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>模組元件<i class="fa fa-circle"></i></li>
+        <li>SEO優化設定</li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">SEO優化設定</div>
+<div class="portlet light bordered">
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("Save")'>
+        @Html.HiddenFor(Model => Model.ID)
+        @Html.AntiForgeryToken()
+        <div class="portlet light form-fit bordered" id="div_seo">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body">
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item">網頁標題名稱 (Title)</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.WebsiteTitle, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item">網頁內容摘要 (Description)</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <textarea cols="80" id="Description" rows="8" class="form-control" maxlength="500">@Model.Description</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item">網頁內容關鍵字 (Keywords)</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white form-horizontal">
+                                <input id="Keywords_1" type="text" class="form-control  input-small" style="display:inline-block;margin:2px 0;" name="Keywords[0]" value="@Model.Keywords[0]" />
+                                <input id="Keywords_2" type="text" class="form-control  input-small" style="display:inline-block;margin:2px 0;" name="Keywords[1]" value="@Model.Keywords[1]" />
+                                <input id="Keywords_3" type="text" class="form-control  input-small" style="display:inline-block;margin:2px 0;" name="Keywords[2]" value="@Model.Keywords[2]" />
+                                <input id="Keywords_4" type="text" class="form-control  input-small" style="display:inline-block;margin:2px 0;" name="Keywords[3]" value="@Model.Keywords[3]" />
+                                <input id="Keywords_5" type="text" class="form-control  input-small" style="display:inline-block;margin:2px 0;" name="Keywords[4]" value="@Model.Keywords[4]" />
+                                <input id="Keywords_6" type="text" class="form-control  input-small" style="display:inline-block;margin:2px 0;" name="Keywords[5]" value="@Model.Keywords[5]" />
+                                <input id="Keywords_7" type="text" class="form-control  input-small" style="display:inline-block;margin:2px 0;" name="Keywords[6]" value="@Model.Keywords[6]" />
+                                <input id="Keywords_8" type="text" class="form-control  input-small" style="display:inline-block;margin:2px 0;" name="Keywords[7]" value="@Model.Keywords[7]" />
+                                <input id="Keywords_9" type="text" class="form-control  input-small" style="display:inline-block;margin:2px 0;" name="Keywords[8]" value="@Model.Keywords[8]" />
+                                <input id="Keywords_10" type="text" class="form-control  input-small" style="display:inline-block;margin:2px 0;" name="Keywords[9]" value="@Model.Keywords[9]" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+        </div>
+        <div class="page_line"></div>
+
+        <div class="title_01">功能說明</div>
+        <div class="content_font">
+            一般稱SEO全稱為「<span class="red">Search Engine Optimization</span>」，也就是搜索引擎優化。網站經專業的優化程序處理後，將對於各大搜索引擎之搜尋結果將會有明顯的排序提升。網站優化的目的在於合理及專業的程序，是較具長遠性的作法，目的是使搜索引擎能更明確網站屬性及內容，做最恰當的歸類，進而迅速提高排名及提升網站曝光率。本功能有助於提升網站於搜尋結果中的排序，所有輸入的內容請詳加規劃。<br><br>
+            <span class="red">註：使用本功能將不保證絕對排名及實質效益，搜尋結果更新須至少7個工作天以上。</span>
+        </div>
+    </form>
+    @section scripts {
+        <script>
+            $(function () {
+                $('#editform').submit(function (event) {
+                    var formData = new FormData();
+                    var array = $('#editform').serializeArray();
+                    $.each(array, function () {
+                        formData.append(this.name, this.value);
+                    });
+                    formData.append("Description", encodeURIComponent($('#Description').val()));
+                    $.ajax({
+                        url: this.action,
+                        data: formData,
+                        type: 'POST',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data == "") {
+                                alert("儲存成功");
+                                $("#txt_oldpwd").val('');
+                                $("#txt_newpwd").val('');
+                                $("#txt_pwdcpnfirm").val('');
+                            } else {
+                                alert(data);
+                            }
+                        }, error: function () {
+                            // handle error
+                        }
+                    });
+
+                    return false;
+                })
+            });
+        </script>
+
+    }
+
+</div>

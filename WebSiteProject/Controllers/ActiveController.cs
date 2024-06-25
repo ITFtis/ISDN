@@ -326,6 +326,7 @@ namespace WebSiteProject.Controllers
             UrlHelper helper = new UrlHelper(Request.RequestContext);
             foreach (var _d in data.rows)
             {
+                sb.Append("<div class='item'>");
                 if (searchmodel.MenuId != "-1")
                 {
                     sb.Append("<a href='" + Url.Action("ActiveView", new { id = _d.ItemID, mid = searchmodel.MenuId, page = searchmodel.NowPage, groupid = searchmodel.GroupId }) + "' title='" + _d.Title + "' data-sr='enter bottom over 1.5s'>");
@@ -334,7 +335,7 @@ namespace WebSiteProject.Controllers
                 {
                     sb.Append("<a href='" + Url.Action("ActiveView", new { id = _d.ItemID, page = searchmodel.NowPage, groupid = searchmodel.GroupId }) + "' title='" + _d.Title + "' data-sr='enter bottom over 1.5s'> ");
                 }
-                sb.Append("<div class='item'>");
+                
                 if (_d.RelatceImageFileName != "")
                 {
                     sb.Append("<img src = '" + helper.Content("~/UploadImage/ActiveItem/" + _d.RelatceImageFileName) + "'  alt='' align='left' >");
@@ -348,7 +349,7 @@ namespace WebSiteProject.Controllers
                 sb.Append("<div class='title'>" + _d.Title + (_d.IsNew ? "<span class='new_icon'>new</span>" : "") + "</div>");
                 sb.Append("<div class='text-shadow-container'></div>");
 
-                sb.Append("</div></a>");
+                sb.Append("</a></div>");
             }
             decimal pagecnt = -1;
             if (searchmodel.Limit != -1)

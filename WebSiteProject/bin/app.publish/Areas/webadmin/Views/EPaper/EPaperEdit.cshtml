@@ -1,0 +1,189 @@
+﻿@model EPaperEditModel
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+@*<script src="//cdn.ckeditor.com/4.12.1/full/ckeditor.js"></script>*@
+<!-- 載入 summernote 中文語系 -->
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            模組元件
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index")">電子報管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            編輯
+        </li>
+    </ul>
+
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">@ViewBag.Title</div>
+
+<div class="portlet light bordered">
+
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveItem")' enctype="multipart/form-data">
+        <!--<div class="search_padding">
+        <button type="button" class="btn blue" id="btn_seoshow">進階設定</button>
+    </div>-->
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(Model => Model.ID)
+        @Html.HiddenFor(Model => Model.TopBannerImgName)
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body2">
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item"><span class="red">*</span>發佈日期</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <div class="date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                    @Html.EditorFor(model => model.PublicshStr, new { htmlAttributes = new { @class = "form-control checkitem input-small", placeholder = "發佈日期" } })
+                                    <span class="required" id="PublicshStr-error" style="display:none;">發佈日期 必須填寫！</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 search_item"><span class="red">*</span>電子報名稱</div>
+                            <div class="col-md-4 col-sm-4 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control checkitem" } })
+                                <span class="required" id="Title-error" style="display:none;">電子報名稱 必須填寫！</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 search_item"><span class="red">*</span>編輯模式</div>
+                            <div class="col-md-4 col-sm-4 col-xs-12 bg-white mobile_white">
+                                @Html.RadioButtonFor(model => model.PaperMode, 1, new { style = "margin-left :0px", @checked = "checked" }) 手動
+                                @Html.RadioButtonFor(model => model.PaperMode, 2, new { style = "margin-left :40px" }) 自動
+                            </div>
+                        </div>
+
+                        <div class="form-group bg-grey_1">
+                            <div class="col-md-2 col-sm-12 search_item">
+                                上方主視覺圖片
+                            </div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <div class="col-md-12">
+                                    <div id="div_topimagefile" style="display:none"><a href="@Model.TopBannerImgUrl" target="preview">@Html.Raw(Model.TopBannerImgOrgName)</a><label style="color:blue;margin-left:10px;cursor:pointer" id="delbannerimage">刪除</label></div>
+                                    <div style="display:inline">
+                                        <input id="file_bannerimage" type="file" class="form-control mobile_input display_inline" name="TopBannerImg" accept="image/*" />
+                                        <span style="color:red">檔案類型 jpg、jpeg、png、gif，建議檔案大小2MB內，建議尺寸 800 x 200px</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-2 col-xs-12 search_item">頁尾聯絡資訊</div>
+                            <div class="col-md-10 col-sm-10 col-xs-12 bg-white mobile_white">
+                                <textarea cols="80" id="PageEndHtmlContent" rows="20">@Model.PageEndHtmlContent</textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center search_padding" id="div_buttons">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+            <button type="button" class="btn grey-mint" id="btn_return">返回列表</button>
+        </div>
+    </form>
+
+</div>
+@section scripts {
+    <script>
+        $(function () {
+            if ('@Model.ID'>0 && '@Model.TopBannerImgName'!='') {
+                $('#div_topimagefile').show();
+            }
+            $("#table_selContent").delegate((".deladfile"), "click", function () {
+                $(this).parents('tr').attr('adpath','');
+                $(this).parents('.adfile').remove();
+            });
+            $('#delbannerimage').click(function () {
+                $('#div_topimagefile').hide();
+                $('#TopBannerImgName').val('');
+            });
+          
+            var PageEndHtmlContent = CKEDITOR.replace('PageEndHtmlContent', {
+                height: 300,
+                filebrowserImageUploadUrl: '@Url.Action("Upload")?command=QuickUpload&type=Images',
+               filebrowserUploadUrl: '@Url.Action("UploadFile")?command=QuickUpload&type=Files',
+            });
+            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+            CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_P;
+            CKEDITOR.on('instanceReady', function (ev) {
+                ev.editor.dataProcessor.writer.setRules('p',
+                    {
+                        indent: false,
+                        breakBeforeOpen: false,
+                        breakAfterOpen: false,
+                        breakBeforeClose: false,
+                        breakAfterClose: false
+                    });
+            });
+            CKEDITOR.on('instanceReady', function (ev) {
+                ev.editor.dataProcessor.writer.setRules('div',
+                    {
+                        indent: true,
+                        breakBeforeOpen: true,
+                        breakAfterOpen: true,
+                        breakBeforeClose: false,
+                        breakAfterClose: false
+                    });
+            });
+
+
+            $('#editform').submit(function (event) {
+                $(".required").hide();
+                var inputval = $("#editform :input").filter(function () { return $(this).val() == "" && $(this).hasClass('checkitem'); });
+                for (var idx = 0; idx < inputval.length; idx++) {
+                    $("#" + inputval[idx].name + "-error").show();
+                }
+                if (inputval.length > 0) { return false; }
+                var formData = new FormData();
+                formData.append("ID", '@Model.ID');
+                var array = $('#editform').serializeArray();
+                $.each(array, function () {
+                    formData.append(this.name, this.value);
+                });
+                var images = $('#file_bannerimage').get(0).files;
+                if (images.length > 0) {
+                    formData.append("TopBannerImg", images[0]);
+                } else {
+                    formData.append("TopBannerImg", null);
+                }
+                formData.append("PageEndHtmlContent", encodeURIComponent(CKEDITOR.instances.PageEndHtmlContent.getData()));
+                var trs = $("#table_selContent tbody tr");
+                var idx = 0;
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                       CreatePost('@Url.Action("Index")',null);
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+}
+

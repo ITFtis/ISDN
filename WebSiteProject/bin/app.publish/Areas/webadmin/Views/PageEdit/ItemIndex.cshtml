@@ -1,0 +1,118 @@
+﻿@model AuthoritySearchModel
+@Html.AntiForgeryToken()
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<script src="@Url.Content("~/Scripts/clipboard.min.js")"></script>
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Model")">模組管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","PageEdit")">圖文編輯</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            單元項目
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<div class="title_01">@ViewBag.Title</div>
+<div class="portlet light bordered">
+    <!--set item start-->
+    <div class="table-toolbar">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+
+        </div>
+        <div class="col-md-6 col-sm-12 col-xs-12 mobile_left">
+            <p class="display_inline">
+                <button class="btn green-meadow" id='btn_add'>新增<i class="fa fa-plus"></i></button>
+                <button type="button" class="btn blue" id="btn_return" onclick="document.location.href='@Url.Action("ModelItem")?id=@ViewBag.modelid'">回上一層</button>
+            </p>
+        </div>
+    </div>
+    <div class="table-scrollable">
+        <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0"
+               id="eventtable"
+               data-url="@Url.Action("PagingItem")"
+               data-sort-name='Sort'
+               data-page-size='10'
+               data-filed-id='ItemID'
+               data-max-pagination='10'>
+            <thead>
+                <tr class="bg-grey_1" filed-class='odd gradeX'>
+                    <th width="80" class="text-center" filed-type='delcheckbox'>
+                        <label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>
+                            <input type='checkbox' class='checkboxes' id="chk_all" /><span></span>
+                        </label>
+                        <button class="btn red-mint btn-xs" id='btn_del'><i class="glyphicon glyphicon-trash"></i></button>
+                    </th>
+                    <th filed-name='Sort' width="40px" class="text-center" filed-type='numbertextcheck' filed-item-class="sortedit">排序</th>
+                    <th filed-name='ItemName' class="text-center" filed-type='link'>頁面名稱</th>
+                    <th filed-name='customertr' width="450px" class="text-center" filed-type='function'>頁面路徑</th>
+                    <th filed-name='Enabled' width="80px" class="text-center" filed-type='checkbox' filed-item-class="checkboxes chkstatus">顯示</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="page_number" class="table-toolbar">
+        <div class="col-md-4 col-sm-12 col-xs-12 page_total" id="tableinfo"></div>
+        <div class="col-md-8 col-sm-12 col-xs-12 page_icon">
+            <div class="btn-group" id="pagination">
+            </div>
+        </div>
+    </div>
+    <!--table end-->
+</div>
+
+<!--message end-->
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            mytable = $("#eventtable").myDataTable().TableList[0];
+            mytable.settingTdData = myDataTableTr;
+            mytable.settingTableInfo = function (tableinfoId, totalcnt, offsetcnt, nowpagecnt) {
+                var totalclick = mytable.keepcheckid.length;
+                $("#" + tableinfoId).html('總筆數:' + totalcnt + '，顯示' + (totalcnt <= 0 ? 0 : offsetcnt) + "~" + (offsetcnt + nowpagecnt - 1));
+                $("#eventtable tbody tr td :checkbox").eq(0).attr('disabled', 'disabled');
+            };
+            var SearchModelBase = mytable.SearchModelBase;
+            SearchModelBase.Key = '@ViewBag.modelid';
+            mytable.GetData(1);
+            var obj = {};
+            obj.item = "單元項目";
+            obj.modelid = '@ViewBag.modelid';
+            RegisterOrder("#eventtable", ".sortedit", '@Url.Action("UpdateItemSeq")', obj);
+            RegisterClickAll("#chk_all", '#eventtable tbody .chksel', "#selvalue");
+            $("#chk_all").click(function () {
+                var thischk = this.checked; $('#eventtable tbody .chksel').prop('checked', thischk);
+                var totalclick = $(".chksel:checked").length; $('#selvalue').text(totalclick);
+                $("#eventtable tbody tr td :checkbox").eq(0).prop('checked', false);
+            });
+            RegisterDelete("#btn_del", '#eventtable .chksel:checked', '@Url.Action("SetItemDelete")', obj);
+            RegisterClicklink("#eventtable", ".edit", '@Url.Action("EditItemUnit")', obj, 'UpdateItem');
+            RegisterClicklink("#eventtable", ".manage", '@Url.Action("ModelItem")', { id: '@ViewBag.modelid',idkey: 'itemid'});
+            RegisterClick("#eventtable", ".chkstatus", '@Url.Action("SetStatus")', obj);
+
+            $("#btn_add").click(function () { CallAddDialog('@Url.Action("EditItemUnit")', obj); });
+            var clipboard = new Clipboard('.btn', {
+                text: function (event) {
+                    return $(event).attr('copy');
+                }
+            });
+        });
+        function customertr(row, columnidx, idx, filedname, tableid, type, fileditemclass) {
+            return "<td><input  type='text' readonly=readonly style='width:350px; display:inline' class='form-control' value='Page/Index?itemid=" + row['ModelID'] +
+                "&pageitemid=" + row[tableid] + "'/><button class='btn blue' style='margin-left:20px' copy='Page/Index?itemid=" + row['ModelID'] + "&pageitemid="+row[tableid]+"'>複製</button></td>";
+        }
+    </script>
+}

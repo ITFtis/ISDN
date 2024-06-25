@@ -1,0 +1,23 @@
+﻿<!--page banner start-->
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!--page banner end-->
+<!--主要內容區 start-->
+<div class="main_content">
+    <div class="container">
+        <div class="main_content_box">
+            <!--left menu start-->
+            <div class="left_content">
+                @Html.Raw(Model.LeftMenu)
+            </div>
+            <!--left menu end-->
+            <!--right content start-->
+            <div class="right_content">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</div>
+
+@RenderSection("scripts", required: false)

@@ -1,0 +1,64 @@
+﻿@model ArticleSearchModel
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <span href="#">Home</span>
+            <i class="fa fa-circle"></i>
+            <span href="#">模組管理</span>
+            <i class="fa fa-circle"></i>
+            <span href="#">網站地圖</span>
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<div class="member_title">網站地圖</div>
+<div class="portlet light bordered">
+    <!--set item start-->
+    <div class="table-toolbar">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="display_inline">
+                <p class="btn_03">管理項目</p>
+                <select class="form_02" id="sel_unit">
+                    <option value="1" selected>內容管理</option>
+                    <option value="2">單元設定</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-12 col-xs-12 mobile_left">
+            <p class="display_inline">
+                <button type="button" class="btn blue" id="btn_return" onclick="document.location.href='@Url.Action("Index")'">返回</button>
+            </p>
+        </div>
+    </div>
+
+    <div class="table-scrollable">
+
+    </div>
+    無設定項目
+</div>
+
+<!--message end-->
+@section scripts {
+    <script>
+
+        $(document).ready(function () {
+            var mainid ='@ViewBag.mainid'
+          $("#sel_unit").change(function () {
+              var obj = {};
+              obj.mainid = mainid;
+                if ($("#sel_unit").val() == "2") {
+                    CreatePost('@Url.Action("UnitSetting")', obj);
+                }else if ($("#sel_unit").val() == "3") {
+                    CreatePost('@Url.Action("SEOSetting")', obj);
+                }
+
+            });
+        });
+    </script>
+}

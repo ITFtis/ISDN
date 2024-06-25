@@ -1,0 +1,35 @@
+﻿<!--page banner start-->
+@{
+    Layout = WebSiteProject.Code.Common.GetLayout(Model.ShowModel);
+}
+@model MasterPageModel
+<script src="@Url.Content("~/Scripts/core.js")"></script>
+<script src="@Url.Content("~/Scripts/charts.js") "></script>
+<script src="@Url.Content("~/Scripts/animated.js") "></script>
+<!--page top start-->
+<div class="page_top page_margin">
+    <div class="container">
+        <div class="col-md-12 col-sm-12 col-xs-12" data-sr="enter left over 1.5s">
+            <ul>
+                <li><a href="@Url.Action("Index","Home")">HOME</a></li>
+                <li><a href="@Url.Action("LoginForm","Home")">系統登入</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--page top end-->
+<!--main content start-->
+<div id="particles-js" style="position:absolute; z-index:-1"></div>
+<div class="page_content">
+    <div class="container">
+        <!--<div class="page_title" data-sr="enter left over 1.5s">公司介紹</div>-->
+        <div class="page_con">
+            <div class="con_font">
+                  @Html.Raw(ViewBag.desc == null ? "" : ViewBag.desc.Replace("\n", "<br>").Replace("<<br>", "<\n").Replace("><br>", ">\n"))
+            </div>
+        </div>
+    </div>
+</div>
+<!--main content end-->
+
+<!--main content end-->

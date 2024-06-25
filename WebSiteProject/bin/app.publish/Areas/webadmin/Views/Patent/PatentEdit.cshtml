@@ -1,0 +1,416 @@
+﻿@model PatentEditModel
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Model")">模組管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Patent")">專利管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("ModelItem","Patent",new { mainid=Model.ModelID})">清單</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            編輯
+        </li>
+    </ul>
+
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">@Model.ModelName</div>
+
+<div class="portlet light bordered">
+
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveItem")' enctype="multipart/form-data">
+
+        @Html.HiddenFor(Model => Model.ItemID)
+        @Html.HiddenFor(Model => Model.ModelID)
+        @Html.HiddenFor(Model => Model.UploadFileName)
+        @Html.HiddenFor(Model => Model.UploadFilePath)
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body2">
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">類別名稱</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                @Html.DropDownList(@Html.IdFor(m => m.Group_ID).ToString(), (IEnumerable<SelectListItem>)ViewBag.grouplist, new { @class = "form_02" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item"><span class="red">*</span>發佈日期</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <div class="date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                    @Html.EditorFor(model => model.PublicshStr, new { htmlAttributes = new { @class = "form-control checkitem input-small", placeholder = "發佈日期" } })
+                                    <span class="required" id="PublicshStr-error" style="display:none;">發佈日期 必須填寫！</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item">顯示日期</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <div class="input-group input-large" style="float:left">
+                                    <div class="date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                        @Html.EditorFor(model => model.StDateStr, new { htmlAttributes = new { @class = "form-control", placeholder = "開始日期" } })
+                                    </div>
+                                    <span class="input-group-addon"> to </span>
+                                    <div class="date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                        @Html.EditorFor(model => model.EdDateStr, new { htmlAttributes = new { @class = "form-control", placeholder = "結束日期" } })
+                                    </div>
+                                </div>
+                                <div class="" style="float:left; padding-left:5px;">
+                                    <button type="button" class="btn blue" id="btn_clear">清空</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item"><span class="red">*</span>標題</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control checkitem" } })
+                                <span class="required" id="Title-error" style="display:none;">標題 必須填寫！</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item"><span class="red">*</span>公開年度</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Year, new { htmlAttributes = new { @class = "form-control checkitem", maxlength = "4", style = "width:100px" } })
+                                <span class="required" id="Year-error" style="display:none;">公開年度 必須填寫！</span>
+                                <span class="required" id="YearInt-error" style="display:none;">年度 必須為整數！</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">發明人</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <textarea cols="80" id="Inventor" rows="3" name="Inventor" class="form-control" maxlength="500">@Model.Inventor</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">領域</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Field, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">簡介</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                <textarea cols="80" id="HtmlContent" rows="20">@Model.HtmlContent</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">專利內容</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white language_set">
+
+                                <div class="display_inline margin_bottom">
+                                    <button class="btn green-meadow" id="btn_add" type="button">新增 <i class="fa fa-plus"></i></button>
+                                    <button class="btn red" id="btn_del" type="button">刪除 <i class="glyphicon glyphicon-trash"></i></button>
+                                </div>
+                                <!--table start-->
+                                <table class="table table-bordered nomarginbottom" border="0" cellspacing="0" cellpadding="0" id="table_selContent">
+                                    <thead>
+                                        <tr>
+                                            <th width="60" class="text-center" filed-type="delcheckbox">刪除</th>
+                                            <th class="text-center" width="120px">國別</th>
+                                            <th class="text-center">專利證書號</th>
+                                            <th class="text-center" width="125">證書日期</th>
+                                            <th class="text-center" width="125">早期公開日</th>
+                                            <th class="text-center">早期公開號</th>
+                                            <th class="text-center" width="125px">專利權限期	</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            if (Model.Nation != null)
+                                            {
+                                                for (var idx = 0; idx < Model.Nation.Length; idx++)
+                                                {
+                                                    <tr id="tr_@idx" class="selitem" seqidx="@(idx+1)">
+                                                        <td class="text-center">
+                                                            <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                                <input type="checkbox" class="checkboxes">
+                                                                <span name="check_@idx"></span>
+                                                            </label>
+                                                        </td>
+                                                        <td><input type="text" class="form-control Nation" value="@Model.Nation[idx]" /></td>
+                                                        <td><input type="text" class="form-control Patentno" value="@Model.Patentno[idx]" /></td>
+                                                        <td>
+                                                            <div class="input-group  date-picker input-daterange" data-date-format="yyyy/mm/dd">
+                                                                <input type="text" style="" class="form-control seltext sdate PatentDate" value="@Model.PatentDate[idx]" placeholder="開始日期" id="PatentDate@idx">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-group date-picker input-daterange" data-date-format="yyyy/mm/dd" style="width:125px">
+                                                                <input type="text" class="form-control seltext sdate EarlyPublicDate" value="@Model.EarlyPublicDate[idx]" placeholder="開始日期" id="EarlyPublicDate@idx">
+                                                            </div>
+                                                        </td>
+                                                        <td><input type="text" class="form-control EarlyPublicNo" value="@Model.EarlyPublicNo[idx]" /></td>
+                                                        <td>
+                                                            <div class="input-group  date-picker input-daterange" data-date-format="yyyy/mm/dd" style="width:125px">
+                                                                <input type="text" class="form-control seltext sdate Deadline" value="@Model.Deadline[idx]" placeholder="開始日期" id="Deadline@idx">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                                <!--table end-->
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item">相關連結</div>
+                            <div class="col-md-10  col-sm-12 col-xs-12 bg-white mobile_white">
+                                <div class="col-md-12">
+                                    <label class="col-md-2">相關連結</label>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.LinkUrl, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">連結說明</label>
+                                    <div class="col-md-10 margin_bottom">
+                                        @Html.EditorFor(model => model.LinkUrlDesc, new { htmlAttributes = new { @class = "form-control" } })
+                                        <span class="required" id="LinkUrlDesc-error" style="display:none;">連結說明 必須填寫！</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 search_item">檔案上傳</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white language_set">
+                                <div class="col-md-12">
+                                    <div id="div_olduploadfile" style="display:none"><a href="@Url.Action("FileDownLoad")?modelid=@Model.ModelID&&itemid=@Model.ItemID" target="preview">@Model.UploadFileName</a><label style="color:blue;margin-left:10px;cursor:pointer" id="delupfile">刪除</label></div>
+                                    <label for="UploadFile" class="col-md-2">檔案上傳</label>
+                                    <div class="col-md-10">
+                                        <input type="file" id="uploadfile" class="display_inline" name="UploadFile">
+                                        <span class="required">建議檔案大小5MB內</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-2">檔案說明</label>
+                                    <div class="col-md-10 margin_bottom">
+                                        @Html.EditorFor(model => model.UploadFileDesc, new { htmlAttributes = new { @class = "form-control " } })
+                                        <span class="required" id="UploadFileDesc-error" style="display:none;">檔案說明 必須填寫！</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @if (Model.ItemID >= 0)
+                        {
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 col-xs-12 search_item">審核狀態</div>
+                                <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white table_font">
+                                    @Model.VerifyStatus
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 col-xs-12 search_item">新增</div>
+                                <div class="col-md-10 col-sm-12 mobile_white language_set">
+                                    <div class="col-md-12">
+                                        <label for="exampleInputFile" class="col-md-2">人員</label>
+                                        <div class="col-md-10 label_font">@Model.CreateUser</div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-2">時間</label>
+                                        <div class="col-md-10 label_font">@Model.CreateDatetime</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 col-xs-12 search_item">最後修改</div>
+                                <div class="col-md-10 col-sm-12 mobile_white language_set">
+                                    <div class="col-md-12">
+                                        <label for="exampleInputFile" class="col-md-2">人員</label>
+                                        <div class="col-md-10 label_font">@Model.UpdateUser</div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-2">時間</label>
+                                        <div class="col-md-10 label_font">@Model.UpdateDatetime</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 col-xs-12 search_item">最後審核</div>
+                                <div class="col-md-10 col-sm-12 mobile_white language_set">
+                                    <div class="col-md-12">
+                                        <label for="exampleInputFile" class="col-md-2">人員</label>
+                                        <div class="col-md-10 label_font">@Model.VerifyUser</div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-2">時間</label>
+                                        <div class="col-md-10 label_font">@Model.VerifyDateTime</div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center search_padding" id="div_buttons">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+            <button type="button" class="btn grey-mint" id="btn_return">返回列表</button>
+        </div>
+    </form>
+
+</div>
+@section scripts {
+    <script>
+        $(function () {
+              var fileupload = '@Model.UploadFileName';
+              $('#btn_clear').click(function () {
+                $('#StDateStr').val('');
+                $('#EdDateStr').val('');
+            });
+
+            if (fileupload!==""){
+                $("#div_olduploadfile").show();
+            }
+            $("#btn_seoshow").click(function () {
+                $("#div_seo").toggle(500);
+            });
+            $("#btn_return").click(function () { CreatePost('@Url.Action("ModelItem")', { mainid: '@Model.ModelID'});});
+            $('#delupfile').click(function () {
+                $('#div_olduploadfile').hide();
+                $('#UploadFileName').val('');
+            });
+
+          $('#btn_add').click(function () {
+                var selitems = $(".selitem").length;
+                if (selitems < 3) {
+                    $.post('@Url.Action("AddSelItem")', { "index": selitems }, function (data) {
+                        $(data).appendTo("#table_selContent tbody");
+                    });
+                } else {
+                    alert('超過最上設定上限(3組)');
+                }
+
+            });
+            $("#btn_del").click(function () {
+                var checked = $("#table_selContent :checked");
+                for (var idx = 0; idx < checked.length; idx++) {
+                    $(checked[idx]).parents('tr').remove();
+                }
+                var voteitems = $(".selitem");
+                for (var idx = 0; idx < voteitems.length; idx++) {
+                    var seqtext = $(voteitems[idx]).find(".seq_list");
+                    $(seqtext).val((idx + 1));
+                }
+            });
+           var ckedit = CKEDITOR.replace('HtmlContent', {
+                height: 300,
+               filebrowserImageUploadUrl: '@Url.Action("Upload")?command=QuickUpload&type=Images',
+               filebrowserUploadUrl: '@Url.Action("UploadFile")?command=QuickUpload&type=Files',
+            });
+            $("#preview").on("click", function () {
+                var htmlcontent = CKEDITOR.instances.HtmlContent.getData();
+                bootbox.alert({
+                    title: "預覽",
+                    message: htmlcontent,
+                    size: 'large'
+                });
+            });
+            RegisterClickAll("#chk_all", '#table_selContent tbody .checkboxes', "#selvalue");
+           $('#editform').submit(function (event) {
+               $(".required").hide();
+
+               var inputval = $("#editform :input").filter(function () { return $(this).val() == "" && $(this).hasClass('checkitem'); });
+                for (var idx = 0; idx < inputval.length; idx++) {
+                    $("#" + inputval[idx].name + "-error").show();
+                }
+                if (inputval.length > 0) { return false; }
+                var formData = new FormData();
+                var array = $('#editform').serializeArray();
+                $.each(array, function () {
+                    formData.append(this.name, this.value);
+                });
+                var iscon = true;
+                var uploadfile = $('#uploadfile').get(0).files;
+                if (uploadfile.length > 0) {
+                    formData.append("UploadFile", uploadfile[0]);
+                    if ($('#UploadFileDesc').val() == "") {
+                        $('#UploadFileDesc-error').show();
+                        iscon = false;
+                    }
+                } else {
+                    formData.append("UploadFile", null);
+                    if ($('#UploadFileName').val() != "") {
+                        if ($('#UploadFileDesc').val() == "") {
+                            $('#UploadFileDesc-error').show();
+                            iscon = false;
+                        }
+                    }
+               }
+               var tvalue = $("#Year").val().match(/^[0-9]+$/g);
+               if (tvalue == null) {
+                   $('#YearInt-error').show();
+                   iscon = false;
+               }
+               var seltext = $('.selitem');
+               var arr = [];
+               for (var idx = 0; idx < seltext.length; idx++) {
+                   var Nation = $(seltext[idx]).find('.Nation').val();
+                   var Patentno = $(seltext[idx]).find('.Patentno').val();
+                   var PatentDate = $(seltext[idx]).find('.PatentDate').val();
+                   var EarlyPublicDate = $(seltext[idx]).find('.EarlyPublicDate').val();
+                   var EarlyPublicNo = $(seltext[idx]).find('.EarlyPublicNo').val();
+                   var Deadline = $(seltext[idx]).find('.Deadline').val();
+                   if (Nation == "" || Patentno == "" || PatentDate == ""|| EarlyPublicDate == "" || EarlyPublicNo == "" || Deadline == "") {
+                       alert('專利內容第' + (idx + 1) + "組請確實輸入");
+                       iscon == false
+                       return false;
+                   }
+                   formData.append("Nation[" + idx + "]", Nation);
+                   formData.append("Patentno[" + idx + "]", Patentno);
+                   formData.append("PatentDate[" + idx + "]", PatentDate);
+                   formData.append("EarlyPublicDate[" + idx + "]", EarlyPublicDate);
+                   formData.append("EarlyPublicNo[" + idx + "]", EarlyPublicNo);
+                   formData.append("Deadline[" + idx + "]", Deadline);
+               }
+               formData.append("HtmlContent", encodeURIComponent(CKEDITOR.instances.HtmlContent.getData()));
+                if (iscon == false) { return false; }
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                       CreatePost('@Url.Action("ModelItem")', { mainid: '@Model.ModelID'});
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+            });
+             if ('@ViewBag.isview' == 'Y') {
+                $('#sel_unit,#editform :input').attr('disabled', 'disabled');  
+                CKEDITOR.config.readOnly = true;
+                $('#delimage,#delupfile,#delrelateimage').hide();
+                 $('#div_buttons').empty().append('<button type="button" class="btn grey-mint"  onclick="window.location.href=\'@Url.Action("Verify", "Config")\'">返回列表</button>');
+            }
+        });
+    </script>
+
+}
+

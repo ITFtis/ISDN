@@ -1,0 +1,205 @@
+﻿@model SearchModelBase
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            系統管理
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("UserList")">權限管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>群組管理設定</li>
+    </ul>
+</div>
+<!--page bar end-->
+<div class="title_01"> 群組管理設定</div>
+<div class="portlet light bordered">
+    <!--set item start-->
+    <div class="table-toolbar">
+        <div class="col-md-6 col-sm-12 col-xs-12 mobile_left ">
+        </div>
+        <div class="col-md-6 col-sm-12 col-xs-12 mobile_left ">
+            <p class="display_inline ">
+                <button class="btn green-meadow" id='btn_add'>新增 <i class="fa fa-plus"></i></button>
+                <button type="button" class="btn grey-mint" id="btn_return">返回列表</button>
+            </p>
+        </div>
+    </div>
+    @using (Html.BeginForm("Save", "Authority", FormMethod.Post, new { id = "editform" }))
+    {@Html.AntiForgeryToken()
+    <input id="hid_seq" type="hidden" name="selmanager" />
+    <input id="hid_groupname" type="hidden" name="ID" value="@ViewBag.ID" />
+}
+    <!--set item end-->
+    <!--table start-->
+    <div class="table-scrollable">
+        <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0" style="width:500px"
+               id="eventtable"
+               data-url="@Url.Action("PagingGroup")"
+               data-sort-name='Sort'
+               data-page-size='10'
+               data-filed-id='ID'
+               data-max-pagination='10'>
+            <thead>
+                <tr class="bg-grey_1" filed-class='odd gradeX'>
+                    <th width="80px" class="text-center" filed-type='function' filed-name='customerdeltr'>
+                        <label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>
+                            <input type='checkbox' class='checkboxes' id="chk_all" /><span></span>
+                        </label>
+                        <button class="btn red-mint btn-xs" id='btn_del'><i class="glyphicon glyphicon-trash"></i></button>
+                    </th>
+                    <th filed-name='Sort' width="160px" class="text-center" filed-type='numbertextcheck' filed-item-class="sortedit">排序</th>
+                    <th filed-name='customertr' class="text-center" filed-type='function'>群組名稱</th>
+                    <th width="80px" filed-name='UserCount' class="text-center">帳號數</th>
+                    <th width="80px" filed-name='customerstatustr' class="text-center" filed-type='function' filed-item-class="chkstatus">啟用</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div id="page_number" class="table-toolbar">
+        <div class="col-md-4 col-sm-12 col-xs-12 page_total" id="tableinfo"></div>
+        <div class="col-md-8 col-sm-12 col-xs-12 page_icon">
+            <div class="btn-group" id="pagination">
+            </div>
+        </div>
+    </div>
+    <!--table end-->
+
+</div>
+<!--message end-->
+@section scripts {
+    <script>
+        var selvalue = [];
+        $(document).ready(function () {
+             $("#btn_return").click(function () { CreatePost('@Url.Action("UserList")', null);});
+            mytable = $("#eventtable").myDataTable().TableList[0];
+            mytable.settingTdData = myDataTableTr;
+            mytable.settingTableInfo = function (tableinfoId, totalcnt, offsetcnt, nowpagecnt) {
+                var totalclick = mytable.keepcheckid.length;
+                $("#" + tableinfoId).html('總筆數:' + totalcnt + '，顯示' + (totalcnt <= 0 ? 0 : offsetcnt) + "~" + (offsetcnt + nowpagecnt - 1) );
+            };
+            mytable.GetData(1);
+            RegisterClicklink("#eventtable", ".edit", '@Url.Action("GroupAuth")', {});
+
+            $("#eventtable").delegate((".chksel"), "click", function () {
+                var totalclick = $(".chksel:checked").length;
+                $("#selvalue").text(totalclick);
+            });
+            $("#btn_add").click(function () {
+                var obj = {};
+               obj.id = "-1";
+                CreatePost('@Url.Action("GroupAuth")', obj);
+            });
+            $("#chk_all").click(function () {
+                var thischk = this.checked;
+                $('#eventtable tbody .chksel').prop('checked', thischk);
+                var totalclick = $(".chksel:checked").length;
+                $("#selvalue").text(totalclick);
+            });
+            //狀態
+            $("#eventtable").delegate((".chkstatus"), "click", function () {
+                $(".chkstatus").attr('disabled', 'disabled');
+                $.post('@Url.Action("SetGroupStatus")', { id: $(this).attr('value'), status: this.checked }, function (data) {
+                    $(".chkstatus").removeAttr('disabled');
+                    alert(data);
+                });
+           });
+            $("#eventtable").delegate((".sortedit"), "change", function () {
+                $(".sortedit").attr('disabled', 'disabled');
+                $(".seqerror").text('').hide();
+                var oldvalue = $(this).prev();
+                var tvalue = $(this).val().match(/^[0-9]+$/g);
+                if (tvalue == null) {
+                    var error = $(this).next();
+                    if (error.length > 0) {
+                       error.text('必須為整數！');
+                       error.show();
+                    }
+                    //if (oldvalue.length > 0) { $(this).val(oldvalue.val()); }
+                    $(".sortedit").removeAttr('disabled');
+                    return false;
+                }
+                var idx = $(this).attr('idindex');
+                $.post('@Url.Action("EditGroupSeq")', {
+                    seq: $(this).val(), groupid: $(this).attr('idindex')
+                }, function (data) {
+                    $(".sortedit").removeAttr('disabled');
+                    alert(data);
+                    mytable.GetData(1);
+                 }, "json");
+            });
+            //刪除//
+             $("#btn_del").click(function () {
+                var check = $('#eventtable .chksel:checked');
+                var str = [];
+                var idlist=[]
+                for (var idx = 0; idx < check.length; idx++) {
+                    var index = check[idx].getAttribute('index');
+                    str.push($("#tr_" + index).find('td').eq(2).text());
+                    idlist.push(check[idx].getAttribute('value'));
+                }
+                if (idlist.length == 0) { return false; }
+                var strname = str.join('，');
+                bootbox.confirm({
+                    title: "確定刪除?",
+                    message: "是否確定刪除以下群組:" + strname + "?",
+                    buttons: {
+                        cancel: {
+                            label: '<i class="fa fa-times"></i>取消'
+                        },
+                        confirm: {
+                            label: '<i class="fa fa-check"></i> 確認'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                                $.post('@Url.Action("SetGroupDelete")', { idlist: idlist, delaccount: strname }, function (data) {
+                                            alert(data);
+                                            mytable.GetData();
+                                 });
+                        }
+                    }
+                });
+            });
+        });
+
+        function customertr(row, columnidx, idx, filedname, tableid, type, fileditemclass) {
+            if (row["Readonly"]) {
+                return "<td>總管理者</td>";
+            } else {
+                return "<td><a href='#' class='edit' value='" + row[tableid] + "'>" + row["Group_Name"] + "</a></td>";
+            }
+        }
+        function customerstatustr(row, columnidx, idx, filedname, tableid, type, fileditemclass) {
+            if (row["Readonly"]) {
+                return "<td class='text-center'></td>";
+            } else {
+                if (row["Enabled"]) {
+                    return "<td class='text-center'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>" +
+                        "<input type='checkbox' class='" + fileditemclass + "' checked='checked' value='" + row[tableid] + "' index='" + idx + "'/><span></span></label></td>";
+                } else {
+                    return "<td class='text-center'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>" +
+                        "<input type='checkbox' class='" + fileditemclass + "' value='" + row[tableid] + "' index='" + idx + "'/><span></span></label></td>";
+                }
+            }
+        }
+
+        function customerdeltr(row, columnidx, idx, filedname, tableid, type, fileditemclass) {
+            if (row["Readonly"]) {
+                return "<td class='text-center'></td>";
+            } else {
+                return "<td class='text-center'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>" +
+                    "<input type='checkbox' class='checkboxes chksel'  value='" + row[tableid] + "'  index='" + idx + "'/><span></span></label></td>";
+            }
+        }
+    </script>
+}

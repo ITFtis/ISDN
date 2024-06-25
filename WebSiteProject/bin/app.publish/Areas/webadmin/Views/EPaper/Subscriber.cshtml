@@ -1,0 +1,176 @@
+﻿@model MessageSearchModel
+@Html.AntiForgeryToken()
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script src="@Url.Content("~/Scripts/components-date-time-pickers.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+<!--page bar start-->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            模組元件
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            電子報管理
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<h2>電子報管理</h2>
+
+<div class="portlet light bordered">
+
+    <!--management item start-->
+    <div class="table-toolbar">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="display_inline">
+                <p class="class_title">管理項目</p>
+                <select class="form-control_1" onChange="window.location.href=this.value">
+                    <option value="@Url.Action("Index")">編輯管理</option>
+                    <option value="@Url.Action("UnitSetting")">模組設定</option>
+                    <option value="#" selected>訂閱者管理</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <!--management item end-->
+    <!--set item start-->
+    <div class="table-toolbar">
+        <div class="col-md-12 col-sm-12 col-xs-12 mobile_left">
+            <p class="display_inline">
+                <button class="btn blue search_icon">搜尋 <i class="fa fa-search"></i></button>
+                <a href="#" class="epaper_sub"><button class="btn green-meadow" id="btn_add">新增 <i class="fa fa-plus"></i></button></a>
+                <button class="btn grey-cascade" id='btn_export'>匯出</button>
+            </p>
+        </div>
+    </div>
+    <!--set item end-->
+    <!--search item start-->
+    <div class="search_menu" style="display: none;">
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <div class="col-md-2 search_item_1">訂閱/取消日期</div>
+                            <div class="col-md-10 bg-white">
+                                <div class="input-group input-large date-picker input-daterange" data-date="10/11/2012" data-date-format="yyyy/mm/dd">
+                                    <input type="text" class="form-control" name="from" placeholder="開始日期" id="txt_OPDateFrom">
+                                    <span class="input-group-addon"> to </span>
+                                    <input type="text" class="form-control" name="to" placeholder="結束日期" id="txt_OPDateTo">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 search_item_1">Email</div>
+                            <div class="col-md-10 bg-white">
+                                <input type="text" class="form-control" id="txt_EMail">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 search_item_1">訂閱狀況</div>
+                            <div class="col-md-10 bg-white">
+                                <select class="form-control w-auto" id="sel_Status">
+                                    <option selected value="">全部</option>
+                                    <option value="1">已訂閱</option>
+                                    <option value="0">取消訂閱</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center search_padding">
+            <button type="button" class="btn blue" id="btn_search">搜尋 <i class="fa fa-search"></i></button>
+        </div>
+    </div>
+    <!--search item end-->
+    <!--table start-->
+    <div class="table-scrollable">
+        <table class="table table-bordered table-hover" border="0" cellspacing="0" cellpadding="0"
+               id="eventtable"
+               data-url="@Url.Action("PagingEpaperOrder")"
+               data-sort-name='OPDateStr'
+               data-page-size='10'
+               data-filed-id='ID'
+               data-max-pagination='10'>
+            <thead>
+                <tr>
+                    <th width="80" class="text-center delete_th" filed-type='delcheckbox'>
+                        <label class='mt-checkbox mt-checkbox-single mt-checkbox-outline'>
+                            <input type='checkbox' class='checkboxes' id="chk_all" /><span></span>
+                        </label>
+                        <button class="btn red-mint btn-xs" id='btn_del'><i class="glyphicon glyphicon-trash"></i></button>
+                    </th>
+                    <th width="10%" class="text-center" filed-name='OPDateStr' filed-item-class='text-center'>訂閱／取消日期</th>
+                    <th class="text-center" style="min-width:100px" filed-name='EMail' filed-item-class='text-center'>Email</th>
+                    <th filed-name='Status' width="80px" class="text-center" filed-type='checkbox' filed-item-class="checkboxes chkstatus">是否訂閱</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <!--table end-->
+    <!--頁碼 start-->
+    <div id="page_number" class="table-toolbar">
+        <div class="col-md-4 col-sm-12 col-xs-12 page_total" id="tableinfo"></div>
+        <div class="col-md-8 col-sm-12 col-xs-12 page_icon">
+            <div class="btn-group" id="pagination">
+            </div>
+        </div>
+    </div>
+    <!--頁碼 end-->
+
+
+</div>
+<!--message end-->
+<!--message end-->
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            RegisterSearchItem();
+        mytable = $("#eventtable").myDataTable().TableList[0];
+        mytable.settingTdData = myDataTableTr;
+        mytable.settingTableInfo = function (tableinfoId, totalcnt, offsetcnt, nowpagecnt) {
+            var totalclick = mytable.keepcheckid.length;
+            $("#" + tableinfoId).html('總筆數:' + totalcnt + '，顯示' + (totalcnt <= 0 ? 0 : offsetcnt) + "~" + (offsetcnt + nowpagecnt - 1));
+        };
+        mytable.SearchModelBase.Key = "0";
+        mytable.SearchModelBase.OrderEPaper = "1";
+        mytable.GetData(1);
+        $("#btn_add").click(function () { CallAddDialog('@Url.Action("AddSubscriber")', { sid: -1, item: "Mail", title: "請輸入訂閱者Mail" }); });
+         RegisterClickAll("#chk_all", '#eventtable tbody .chksel', "#selvalue");
+         RegisterDelete("#btn_del", '#eventtable .chksel:checked', '@Url.Action("DelSubscriber")', {});
+            RegisterClick("#eventtable", ".chkstatus", '@Url.Action("SetSubscriberStatus")', {});
+         $("#btn_search").click(function () {
+                var SearchModelBase = mytable.SearchModelBase;
+                SearchModelBase.OPDateTo = $('#txt_OPDateTo').val();
+               SearchModelBase.OPDateFrom = $('#txt_OPDateFrom').val();
+                SearchModelBase.EMail = $('#txt_EMail').val();
+                SearchModelBase.Status = $('#sel_Status' ).val();
+                SearchModelBase.Search = "Y";
+                mytable.GetData();
+            });
+
+            $("#btn_export").click(function () {
+                var SearchModelBase = mytable.SearchModelBase;
+                SearchModelBase.OPDateTo = $('#txt_OPDateTo').val();
+                SearchModelBase.OPDateFrom = $('#txt_OPDateFrom').val();
+                SearchModelBase.EMail = $('#txt_EMail').val();
+                SearchModelBase.Status = $('#sel_Status').val();
+                SearchModelBase.Search = "Y";
+                CreatePost('@Url.Action("Export")', SearchModelBase);
+            });
+    });
+    </script>
+}

@@ -1,0 +1,226 @@
+﻿<!--page top start-->
+<script src="@Url.Content("~/Scripts/particles.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<div class="page_top page_margin">
+    <div class="container">
+        <div class="col-md-12 col-sm-12 col-xs-12" data-sr="enter left over 1.5s">
+            <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="login.html">系統登入</a></li>
+                <li><a href="student_system.html">題庫系統</a></li>
+            </ul>
+        </div>
+        <!--<div class="col-md-3 col-sm-4 col-xs-12" data-sr="enter right over 1.5s">
+            <script>$.include("blocks/page_top_right.html");</script>
+        </div>-->
+    </div>
+</div>
+<!--page top end-->
+<!--main content start-->
+<div id="particles-js" style="position:absolute; z-index:-1"></div>
+<div class="page_content">
+    <div class="container">
+
+        <div class="top_back" data-sr="enter right over 2.5s"><a href="student_system_test.html"><button class="btn_01">回上一層</button></a></div>
+        <div class="page_title top_back_padding" data-sr="enter left over 1.5s">一、分數的乘除法</div>
+
+        <div class="page_con">
+
+            <!--page content start-->
+            <ul class="question_list">
+                <a href="#"><li class="correct">題目1</li></a><!--已完成題目(答對)-->
+                <a href="#"><li class="wrong">題目2</li></a><!--已完成題目(答錯)-->
+                <a href="#"><li class="action">題目3</li></a><!--目前出題題目-->
+                <a href="#"><li>題目4</li></a>
+                <a href="#"><li>題目5</li></a>
+                <a href="#"><li>題目6</li></a>
+            </ul>
+
+            <br><br>
+
+            <div class="question_con">
+                <img src="img/question_01.jpg" alt="" />
+            </div>
+
+            <br><br>
+
+            <div class="answer_con">
+
+                <div class="tool">
+                    <div class="spend_time">
+                        花費時間 <span class="time">08:16</span>
+                    </div>
+                    <div class="main_btn">
+                        <button type="button" class="btn" id="btn_startexercise">出題</button>
+                        <button type="button" class="btn">訂正</button>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn"><i class="fa fa-trash"></i> 清空</button>
+                        <button type="button" class="btn"><i class="fa fa-eraser"></i> 橡皮擦</button>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn"><i class="fa fa-pencil"></i> 鉛筆</button>
+                        <button type="button" class="btn pen_border">
+                            筆畫
+                            <select class="form-control w-auto">
+                                <option selected>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                            </select>
+                        </button>
+                        <button type="button" class="btn color">顏色 <input type="color" id="txt_color"></button>
+                    </div>
+                </div>
+
+                <div class="edit" id="div_canvas"><canvas style="" id="canvas"></canvas></div>
+
+                <div class="answer_input">答：</div>
+
+            </div>
+
+            <div class="btn_box">
+                <button type="button" class="btn_01 bootbox_correct">*完成</button> <!--正確class="bootbox_correct" ； 錯誤class="bootbox_wrong"-->
+                <button type="button" class="btn_01 bootbox_answer bg_gray">*解題</button>
+                <a href="student_system_grade.html"><button type="button" class="btn_01 bg_gray">*成績</button></a>
+            </div>
+            <br>
+            <!--page content end-->
+            <!--正確bootbox start-->
+            <div class="form_correct" style="display:none;">
+                <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x text-success"></i>
+                    <i class="fa fa-check fa-stack-1x fa-inverse"></i>
+                </span>
+                完成！答題正確！
+            </div>
+            <!--正確bootbox end-->
+            <!--錯誤bootbox start-->
+            <div class="form_wrong" style="display:none;">
+                <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x text-danger"></i>
+                    <i class="fa fa-remove fa-stack-1x fa-inverse"></i>
+                </span>
+                完成！答題錯誤！
+            </div>
+            <!--錯誤bootbox end-->
+            <!--解題bootbox start-->
+            <div class="form_answer" style="display:none;"><img src="img/answer_01.jpg" alt="" /></div>
+            <!--解題bootbox end-->
+        </div>
+
+    </div>
+</div>
+<!--main content end-->
+@section scripts {
+    <script>
+        var maincanvas = document.getElementById("canvas");
+        maincanvas.width = $("#div_canvas").width();
+        maincanvas.height = $("#div_canvas").height();
+        var mainctx = maincanvas.getContext("2d");
+        var maincanvasOffset = $("#canvas").offset();
+        var mainoffsetX = maincanvasOffset.left;
+        var mainoffsetY = maincanvasOffset.top;
+        var maindrawing = false;
+        //var canvashistory = {
+        //    redo_list: [],
+        //    undo_list: [],
+        //    saveState: function (canvas, list, keep_redo) {
+        //        keep_redo = keep_redo || false;
+        //        if (!keep_redo) {
+        //            this.redo_list = [];
+        //        }
+        //        (list || this.undo_list).push(canvas.toDataURL());
+        //    },
+        //    undo: function (canvas, ctx) {
+        //        this.restoreState(canvas, ctx, this.undo_list, this.redo_list);
+        //    },
+        //    redo: function (canvas, ctx) {
+        //        this.restoreState(canvas, ctx, this.redo_list, this.undo_list);
+        //    },
+        //    restoreState: function (canvas, ctx, pop, push) {
+        //        if (pop.length) {
+        //            this.saveState(canvas, push, true);
+        //            var restore_state = pop.pop();
+        //            var img = new Image();
+        //            img.src = restore_state;
+        //            img.onload = function () {
+        //                ctx.clearRect(0, 0, maincanvas.width, maincanvas.height);
+        //                ctx.drawImage(img, 0, 0, maincanvas.width, maincanvas.height, 0, 0, maincanvas.width, maincanvas.height);
+        //            }
+        //        }
+        //    }
+        //};
+        $(document).ready(function () {
+            var color = $("#txt_color").val();
+            $('#canvas').mousedown(function (e) {StartDrawing(e, maincanvas, mainctx,'main');});
+            $('#canvas').mousemove(function (e) { MoveDrawing(e, maincanvas, mainctx); });
+            $('#canvas').mouseup(function (e) { MoveUpDrawing(e, maincanvas, mainctx); });
+            $('#canvas').mouseleave(function (e) { LeaveDrawing(e, maincanvas, mainctx); });
+            $('#btn_startexercise').click(function () {
+               // canvashistory.undo(maincanvas, mainctx);
+            });
+            //debugger
+            @*ctx.beginPath();
+            ctx.moveTo(25, 25);
+            ctx.lineTo(105, 25);
+            ctx.lineTo(25, 105);
+            ctx.fill();
+
+            // Stroked triangle
+            ctx.beginPath();
+            ctx.moveTo(125, 125);
+            ctx.lineTo(125, 45);
+            ctx.lineTo(45, 125);
+            ctx.closePath();
+            ctx.stroke();
+
+            debugger
+          $("#btn_clearcanvas").click(function () {
+                var val = canvas.toDataURL();
+                $.post('@Url.Action("Base64Image")', { mid: val}, function (data) {
+                    if (data == "") {
+                        alert("儲存成功");
+                    } else {
+                        alert(data);
+                    }
+              });
+          });*@
+            //ctx.setTransform(1, 0, 0, 1, 0, 0);
+            //ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            //// Restore the transform
+            //ctx.restore();
+        });
+
+        function StartDrawing(ev, _usecanvas, _usectx, type) {
+           
+            var x = ev.pageX- mainoffsetX;
+            var y = ev.pageY - mainoffsetY;
+            _usectx.beginPath();
+            _usectx.moveTo(x, y);
+            canvashistory.saveState(_usecanvas);
+            if (type == "main") { maindrawing = true;}
+
+        }
+
+        function MoveDrawing(ev,_usecanvas, _usectx) {
+            if (maindrawing) {
+                var x = ev.pageX - mainoffsetX;
+                var y = ev.pageY - mainoffsetY;
+                _usectx.lineTo(x, y);
+                _usectx.stroke();
+            }
+        }
+
+        function MoveUpDrawing(ev, _usecanvas, _usectx) {
+            maindrawing = false;
+        }
+
+        function LeaveDrawing(ev, _usecanvas, _usectx) {
+            maindrawing = false;
+        }
+    </script>
+}

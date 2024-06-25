@@ -1,0 +1,311 @@
+﻿@model FormItemSettingModel
+<script src="@Url.Content("~/Scripts/datatable.js")"></script>
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Model")">模組管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Form")">表單管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">欄位編輯</a>
+            <i class="fa fa-circle"></i>
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">@ViewBag.mainname</div>
+<div class="portlet light bordered">
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveSelItem")'>
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(Model => Model.ID)
+        @Html.HiddenFor(Model => Model.MainID)
+        @Html.HiddenFor(Model => Model.SelList)
+        <div class="portlet light form-fit bordered" id="div_seo">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body">
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item"><span class="red">*</span>欄位名稱</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control checkitem" } })
+                                <span class="required" id="Title-error" style="display:none;">欄位名稱 必須填寫！</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item">欄位說明</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item">表單元件</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white form-horizontal table_font">
+                                <label id="lbl_ItemMode"></label>
+                                @Html.RadioButtonFor(model => model.ItemMode, 1, new { style = "margin-left :0px", @checked = "checked", @class = "ItemMode" }) <label class="lblItemMode">單行輸入</label>
+                                @Html.RadioButtonFor(model => model.ItemMode, 2, new { style = "margin-left :40px", @class = "ItemMode" }) <label class="lblItemMode">多行輸入</label>
+                                @Html.RadioButtonFor(model => model.ItemMode, 3, new { style = "margin-left :40px", @class = "ItemMode" }) <label class="lblItemMode">單選</label>
+                                @Html.RadioButtonFor(model => model.ItemMode, 4, new { style = "margin-left :40px", @class = "ItemMode" }) <label class="lblItemMode">複選</label>
+                                @Html.RadioButtonFor(model => model.ItemMode, 5, new { style = "margin-left :40px", @class = "ItemMode" }) <label class="lblItemMode">下拉選單</label>
+                            </div>
+                        </div>
+                        <div class="form-group" id="div_textitem">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item">表單元件選項</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white form-horizontal">
+                                <p>欄位寬度 @Html.EditorFor(model => model.ColumnNum, new { htmlAttributes = new { @class = "form-control input-xsmall inline-block checkmaxlength" } })字</p>
+                                <p id="p_rowcount" style="display:none">欄位列數 @Html.EditorFor(model => model.RowNum, new { htmlAttributes = new { @class = "form-control input-xsmall inline-block checkmaxlength" } })字</p>
+                                <p>最大可輸入字數 @Html.EditorFor(model => model.TextLength, new { htmlAttributes = new { @class = "form-control input-xsmall inline-block checkmaxlengths" } })字</p>
+                                <p>預設文字 @Html.EditorFor(model => model.DefaultText, new { htmlAttributes = new { @class = "form-control  inline-block", style = "width:80%" } }) </p>
+                            </div>
+                        </div>
+                        <div class="form-group" id="div_selitem" style="display:none">
+                            <div class="col-md-2 col-sm-12 search_item">表單元件選項</div>
+                            <div class="col-md-10 col-sm-12 bg-white mobile_white">
+                                <button type="button" class="btn green-meadow margin_bottom" id="btn_seladd">新增 <i class="fa fa-plus"></i></button>
+                                <button type="button" class="btn red-mint margin_bottom" id="btn_del">刪除 <i class="glyphicon glyphicon-trash"></i></button>
+                                <br>
+                                <!--投票項目列表 start-->
+                                <div class="table-scrollable">
+                                    <table class="table table-bordered nomarginbottom" border="0" cellspacing="0" cellpadding="0" id="table_selContent">
+                                        <thead>
+                                            <tr>
+                                                <th width="60" class="text-center">
+                                                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                        <input type='checkbox' class='checkboxes' id="chk_all" /><span></span>
+                                                        <span name="check_1"></span>
+                                                    </label>
+                                                </th>
+                                                <th width="120px" class="text-center">排序</th>
+                                                <th class="text-center">選項名稱</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                if (string.IsNullOrEmpty(Model.SelList) == false)
+                                                {
+                                                    var arr = Model.SelList.Split('^');
+                                                    var idx = 0;
+                                                    foreach (var sel in arr)
+                                                    {
+                                                        <tr id="tr_@idx" class="selitem" seqidx="@(idx+1)">
+                                                            <td class="text-center">
+                                                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                                    <input type="checkbox" class="checkboxes">
+                                                                    <span name="check_@idx"></span>
+                                                                </label>
+                                                            </td>
+                                                            <td class="text-center delete_th">
+                                                                <button type="button" class="btn btn-default btn-xs seq_list" value="0"><i class="fa fa-angle-double-up"></i></button>
+                                                                <button type="button" class="btn btn-default btn-xs seq_list" value="-1"><i class="fa fa-angle-up"></i></button>
+                                                                <button type="button" class="btn btn-default btn-xs seq_list" value="+1"><i class="fa fa-angle-down"></i></button>
+                                                                <button type="button" class="btn btn-default btn-xs seq_list" value="max"><i class="fa fa-angle-double-down"></i></button>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <input type="text" class="form-control seltext" value="@sel">
+                                                            </td>
+                                                        </tr>
+                                                        idx += 1;
+                                                    }
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!--投票項目列表 end-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+            <button type="button" class="btn grey-mint" id="btn_return" onclick="document.location.href='@Url.Action("Index")'">返回</button>
+        </div>
+    </form>
+    @section scripts {
+        <script>
+        $(function () {
+            if ('@Model.ID' != '-1') {
+                $('.ItemMode,.lblItemMode').hide();
+                $('#lbl_ItemMode').html('@Model.ItemModeName')
+                   if ('@Model.ItemMode' == "2") {
+                        $('#p_rowcount').show();
+                    }
+                if ('@Model.ItemMode' != '1' && '@Model.ItemMode' != '2') {
+                    $('#div_textitem').hide();
+                    $('#div_selitem').show();
+                }
+            }
+                 $("#btn_return").click(function () { CreatePost('@Url.Action("FormManager")', { mainid: '@Model.MainID'});});
+            $('.ItemMode').change(function () {
+                var value = $('input[name=ItemMode]:checked').val();
+                if (value == "1" || value == "2") {
+                    $('#div_textitem').show();
+                    $('#div_selitem').hide();
+                    $('#' +'@Html.IdFor(m=>m.ColumnNum)').val('');
+                     $('#'+'@Html.IdFor(m=>m.DefaultText)').val('');
+                     $('#' + '@Html.IdFor(m=>m.TextLength)').val('');
+                      $('#' + '@Html.IdFor(m=>m.RowNum)').val('');
+                      if (value == "2") {
+                          $('#p_rowcount').show();
+                      } else {
+                          $('#p_rowcount').hide();
+                      }
+                } else {
+                    $("#table_selContent tbody").empty();
+                    $('#div_textitem').hide();
+                    $('#div_selitem').show();
+                }
+            });
+            $('#btn_seladd').click(function () {
+                var selitems = $(".selitem").length;
+                $.post('@Url.Action("AddSelItem")', { "index": selitems }, function (data) {
+                    $(data).appendTo("#table_selContent tbody");
+                });
+            });
+
+            $("#btn_del").click(function () {
+                var checked = $("#table_selContent :checked");
+                for (var idx = 0; idx < checked.length; idx++) {
+                    $(checked[idx]).parents('tr').remove();
+                }
+                var voteitems = $(".selitem");
+                for (var idx = 0; idx < voteitems.length; idx++) {
+                    var seqtext = $(voteitems[idx]).find(".seq_list");
+                    $(seqtext).val((idx + 1));
+                }
+            });
+            RegisterClickAll("#chk_all", '#table_selContent tbody .checkboxes', "#selvalue");
+            $("#table_selContent").delegate((".seq_list"), "click", function () {
+                var alltr = $("#table_selContent tbody tr");
+                var nowtridx = $(this).parents('tr').attr('seqidx');
+                var sval = $(this).val();
+                var newtridx = 0;
+
+                if (sval == "+1") {
+                    newtridx = parseInt(nowtridx) + 1;
+                } else if (sval == "-1") {
+                    newtridx = parseInt(nowtridx) - 1;
+                } else if (sval == "max") {
+                    newtridx = alltr.length;
+                }
+                if (newtridx == "0") { newtridx = "1"; }
+                if (newtridx == "" || newtridx == nowtridx) {
+                    return false;
+                }
+                if (newtridx > alltr.length) { newtridx = alltr.length; }
+                if (nowtridx == newtridx.toString()) {
+                    return false;
+                }
+
+                var nowidxhtml = $(this).parents('tr')[0];
+                var addarr = [];
+                for (var idx = 1; idx <= alltr.length; idx++) {
+                    var nowtr = alltr[idx - 1];
+                    if (idx.toString() != nowtridx) {
+                        if ((newtridx > nowtridx)) {
+                            addarr.push($(nowtr));
+                            if (idx == newtridx) {
+                                addarr.push($(nowidxhtml));
+                            }
+                        } else {
+                            if (idx == newtridx) {
+                                addarr.push($(nowidxhtml));
+                            }
+                            addarr.push($(nowtr));
+                        }
+                    }
+                }
+                $("#table_selContent tbody").empty();
+
+                for (var idx = 0; idx < addarr.length; idx++) {
+                    $(addarr[idx]).attr("id", "tr_" + idx).attr('seqidx', (idx + 1));
+                    $("#table_selContent tbody").append(addarr[idx]);
+                }
+            });
+
+            $('#editform').submit(function (event) {
+                $(".required").hide();
+               var inputval = $("#editform :input").filter(function () { return $(this).val() == "" && $(this).hasClass('checkitem'); });
+                for (var idx = 0; idx < inputval.length; idx++) {
+                    $("#" + inputval[idx].name + "-error").show();
+                }
+                if (inputval.length > 0) { return false; }
+                var value = $('input[name=ItemMode]:checked').val();
+                var formData = new FormData();
+                if (value != "1" && value != "2") {
+                    var seltext = $('.seltext');
+                    if (seltext.length == 0) { alert('請確實輸入項目'); return false; }
+                    var arr = [];
+                    for (var idx = 0; idx < seltext.length; idx++) {
+                        if ($(seltext[idx]).val() == '') {
+                            alert('請確實輸入項目'); return false;
+                        }
+                        arr.push($(seltext[idx]).val());
+                    }
+                    $('#SelList').val(arr.join('^'));
+                } else {
+                    if ($('#' + '@Html.IdFor(m=>m.ColumnNum)').val() == '') {
+                        alert('請確實輸入欄位寬度'); return false;
+                    }
+                     if ($('#' + '@Html.IdFor(m=>m.TextLength)').val() == '') {
+                         alert('請確實輸入最大可輸入字數'); return false;
+                    }
+                     if (value == "2") {
+                            if ($('#' + '@Html.IdFor(m=>m.RowNum)').val() == '') {
+                                alert('請確實輸入欄位列數'); return false;}
+                      var checkintrow =$('#' + '@Html.IdFor(m=>m.RowNum)').val().match(/^[0-9]+$/g);
+                      if (checkintrow == null) {
+                          alert('欄位列數必須為整數'); return false;
+                         return false;
+                       }
+                     }
+                     var checkint =$('#' + '@Html.IdFor(m=>m.ColumnNum)').val().match(/^[0-9]+$/g);
+                     if (checkint == null) {
+                         alert('欄位寬度必須為整數'); return false;
+                         return false;
+                     }
+
+                    checkint =$('#' + '@Html.IdFor(m=>m.TextLength)').val().match(/^[0-9]+$/g);
+                     if (checkint == null) {
+                         alert('可輸入字數必須為整數'); return false;
+                         return false;
+                     }
+                }
+                var array = $('#editform').serializeArray();
+                $.each(array, function () {
+                    formData.append(this.name, this.value);
+                });
+                $.ajax({
+                    url: this.action,
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                       CreatePost('@Url.Action("FormManager")', { mainid: '@Model.MainID'});
+                    }, error: function () {
+                        // handle error
+                    }
+                });
+                return false;
+            });
+        });
+        </script>
+
+    }
+
+</div>

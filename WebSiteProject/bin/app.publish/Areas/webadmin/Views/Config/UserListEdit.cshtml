@@ -1,0 +1,112 @@
+﻿@model AdminMemberModel
+<!--page bar start-->
+<div class="page-bar all_width">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="@Url.Action("Index","Home")">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            系統管理
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Config/UserList")">權限管理</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            @ViewBag.Title
+        </li>
+    </ul>
+</div>
+<!--page bar end-->
+<!--message start-->
+<div class="title_01">@ViewBag.Title</div>
+<div class="portlet light bordered">
+    <form class="form-horizontal form-bordered" method="Post" id="editform" action='@Url.Action("SaveUserList")'>
+        @Html.AntiForgeryToken()
+        <div class="portlet light form-fit bordered">
+            <div class="portlet-body form">
+                <div class="form-horizontal form-bordered">
+                    <div class="form-body" id="form-body">
+                        @Html.HiddenFor(model => model.ID)
+                        <input id="hid_isAdd" type="hidden" name="isAdd" value='@ViewBag.IsAdd' />
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 bg-grey_1 search_item">所屬群組</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                @Html.DropDownList("SelGroupId", (IEnumerable<SelectListItem>)ViewBag.grouplist, new { @class = "form-control w-auto" })
+                                @Html.HiddenFor(model => model.GroupId)
+                                <span class="required" id="SelGroupId-error" style="display:none">請選擇群組</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item"><span class="red">*</span>帳號</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Account, new { htmlAttributes = new { @class = "form-control" } })
+                                <span class="required" id="Account-error" style="display:none;">帳號 必須填寫！</span>
+                            </div>
+                        </div>
+                        @if (Model.ID < 0)
+                        {
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-12 col-xs-12 search_item"><span class="red">*</span>密碼</div>
+                                <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white form_blank">
+                                    <input id="Password" type="password" class="form-control" name="Password" />
+                                    <span class="required" id="Password-error" style="display:none;">密碼 必須填寫！</span>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-12 col-xs-12 search_item"><span class="red">*</span>使用者姓名</div>
+                            <div class="col-md-10 col-sm-12 col-xs-12 bg-white mobile_white">
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                <span class="required" id="Name-error" style="display:none;">使用者姓名 必須填寫！</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center search_padding">
+            <button type="submit" class="btn blue" id="btn_submit">確認送出</button>
+            <button type="button" class="btn grey-mint" id="btn_return" onclick="document.location.href='@Url.Action("UserList")'">返回列表</button>
+        </div>
+    </form>
+</div>
+@section scripts {
+    <script>
+        $(function () {
+            var issave = false;
+            @*if ($("#hid_isAdd").val() != 'Y') {
+                $("#" + '@Html.IdFor(model => model.Account)').attr('disabled', 'disabled');
+            }*@
+            if ($("#ID").val() != "-1") { $("#SelGroupId").val($("#GroupId").val());}
+            $('#editform').submit(function (event) {
+                    var inputval = $("#form-body :input").filter(function () { return $(this).val() == "" && $(this).attr('name') !== undefined; });
+                    for (var idx = 0; idx < inputval.length; idx++) {
+                        $("#" + inputval[idx].name + "-error").show();
+                    }
+                    if (inputval.length > 0) { return false; }
+                    $("#GroupName").val($("#" + '@Html.IdFor(model => model.GroupId)' + " option:selected").text());
+                    $("#GroupId").val($("#SelGroupId").val());
+                    $.ajax({
+                        url: this.action,
+                        type: this.method,
+                        data: $(this).serialize(),
+                        success: function (result) {
+                            if (result == "") {
+                                alert("儲存成功");
+                                document.location.href = '@Url.Action("UserList")'
+                            } else {
+                                alert(result);
+                            }
+                        }
+                   });
+                    return false;
+            })
+        });
+    </script>
+
+}
+
